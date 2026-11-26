@@ -1,8 +1,9 @@
 import { useState, useRef, type FormEvent, type ChangeEvent } from 'react';
 import { dbService } from '../../lib/db';
-import type { Category } from '../../lib/db';
+import type { Category, ProductVariant } from '../../lib/db';
 import { ImagePlus, Link, Upload, X, Image as ImageIcon, AlertCircle, Loader2 } from 'lucide-react';
 import Modal from '../ui/Modal';
+import VariantEditor from './VariantEditor';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -19,6 +20,12 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
   const [newProductPrice, setNewProductPrice] = useState('');
   const [newProductCategory, setNewProductCategory] = useState(categories.length > 0 ? categories[0].name : '');
   const [newProductQty, setNewProductQty] = useState('20');
+  const [unit, setUnit] = useState('pcs');
+  const [sku, setSku] = useState('');
+  const [barcode, setBarcode] = useState('');
+  const [cost, setCost] = useState('');
+  const [minStock, setMinStock] = useState('5');
+  const [variants, setVariants] = useState<ProductVariant[]>([]);
 
   // Image handling
   const [imageMode, setImageMode] = useState<ImageInputMode>('url');
@@ -40,6 +47,12 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
     setImagePreview(null);
     setImageMode('url');
     setSubmitError('');
+    setUnit('pcs');
+    setSku('');
+    setBarcode('');
+    setCost('');
+    setMinStock('5');
+    setVariants([]);
   };
 
   // Convert uploaded file to base64 data URL for storage
@@ -86,7 +99,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
 
   const handleUrlChange = (url: string) => {
     setImageUrl(url);
-    if (url.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|avif)/i) || url.match(/^https?:\/\/(images\.unsplash|i\.imgur)/i)) {
+    if (url.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|avif)/i)) {
       setImagePreview(url);
     } else if (url.length > 10) {
       // Try loading even non-standard URLs
@@ -113,7 +126,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
       const priceNum = parseFloat(newProductPrice.replace(/\./g, '')) || 0;
       const stockQty = parseInt(newProductQty) || 0;
       const stockStatus = stockQty === 0 ? 'Out of Stock' : stockQty <= 5 ? 'Low Stock' : 'In Stock';
-      const finalImageUrl = imageUrl || getCategoryDefaultImage(newProductCategory);
+      const finalImageUrl = imageUrl || '';
       const effectiveCategory = newProductCategory || (categories.length > 0 ? categories[0].name : 'Umum');
 
       const newProduct = await dbService.addProduct({
@@ -123,7 +136,14 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
         image_url: finalImageUrl,
         category: effectiveCategory,
         stock_status: stockStatus,
-        stock_quantity: stockQty
+        stock_quantity: stockQty,
+        sku: sku.trim() || undefined,
+        barcode: barcode.trim() || undefined,
+        unit: unit.trim() || 'pcs',
+        cost: parseFloat(cost.replace(/\./g, '')) || 0,
+        min_stock: parseInt(minStock) || 5,
+        active: true,
+        variants,
       }, storeId);
 
       resetForm();
@@ -203,7 +223,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
               {imageMode === 'url' ? (
                 <input
                   type="text"
-                  placeholder="https://images.unsplash.com/photo-..."
+                  placeholder="https://contoh.com/gambar-produk.jpg"
                   value={imageUrl}
                   onChange={(e) => handleUrlChange(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-300"
@@ -247,7 +267,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
           <input
             type="text"
             required
-            placeholder="e.g. Vanilla Beans Espresso"
+            placeholder="Mis. Nasi Goreng Spesial"
             value={newProductName}
             onChange={(e) => setNewProductName(e.target.value)}
             className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
@@ -285,6 +305,44 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
             />
           </div>
         </div>
+
+        {/* SKU / BARCODE / UNIT */}
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">SKU</label>
+            <input type="text" value={sku} onChange={e => setSku(e.target.value)} placeholder="SKU-001"
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Barcode</label>
+            <input type="text" value={barcode} onChange={e => setBarcode(e.target.value)} placeholder="899..."
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Satuan</label>
+            <input type="text" value={unit} onChange={e => setUnit(e.target.value)} placeholder="pcs"
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+        </div>
+
+        {/* COST / MIN STOCK */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Harga Modal (Rp)</label>
+            <input type="text" value={cost}
+              onChange={e => { const d = e.target.value.replace(/\D/g, ''); setCost(d ? new Intl.NumberFormat('id-ID').format(parseInt(d)) : ''); }}
+              placeholder="0"
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Stok Minimum</label>
+            <input type="number" value={minStock} onChange={e => setMinStock(e.target.value)} placeholder="5"
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+        </div>
+
+        {/* VARIANTS */}
+        <VariantEditor variants={variants} onChange={setVariants} />
 
         {/* CATEGORY */}
         <div>
@@ -326,13 +384,3 @@ export default function AddProductModal({ isOpen, onClose, onSuccess, storeId, c
   );
 }
 
-// Default placeholder images per category
-function getCategoryDefaultImage(category: string): string {
-  switch (category) {
-    case 'Coffee': return 'https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=300';
-    case 'Non-Coffee': return 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?q=80&w=300';
-    case 'Food': return 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=300';
-    case 'Pastries': return 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=300';
-    default: return 'https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=300';
-  }
-}

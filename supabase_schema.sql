@@ -1,5 +1,5 @@
 -- =====================================================================
--- Kasirnya POS — Supabase Schema (cerminan DB produksi `kasir-nya`)
+-- KasirToko POS — Supabase Schema (cerminan DB produksi `kasir-toko`)
 -- Project ref: wnrlgduriwyeesxjlbrl
 --
 -- Multi-store: isolasi data antar toko via store_id (bigint FK ke stores.id),
@@ -215,15 +215,15 @@ $$;
 --
 --   4) (opsional) Isi kategori — store_id = <STORE_ID>:
 -- INSERT INTO public.categories (name, emoji, store_id) VALUES
---   ('Kopi',    '☕', <STORE_ID>),
---   ('Non-Kopi','🍵', <STORE_ID>),
---   ('Makanan', '🍚', <STORE_ID>);
+--   ('Makanan', '🍽️', <STORE_ID>),
+--   ('Minuman', '🥤', <STORE_ID>),
+--   ('Snack',   '🍟', <STORE_ID>);
 --
 --   5) (opsional) Isi produk — harga dalam Rupiah (angka polos, tanpa titik):
 -- INSERT INTO public.products
 --   (name, description, price, category, stock_status, stock_quantity, store_id) VALUES
---   ('Kopi Susu Gula Aren', 'Espresso + susu + gula aren', 22000, 'Kopi', 'In Stock', 50, <STORE_ID>),
---   ('Americano',           'Espresso + air',             18000, 'Kopi', 'In Stock', 50, <STORE_ID>);
+--   ('Nasi Goreng Spesial', 'Nasi goreng telur + ayam', 25000, 'Makanan', 'In Stock', 50, <STORE_ID>),
+--   ('Es Teh Manis',        'Teh manis dingin',         5000,  'Minuman', 'In Stock', 50, <STORE_ID>);
 --
 --   ⚠️ Catatan penting:
 --   - Produk & kategori juga bisa diisi langsung dari menu Catalog di app

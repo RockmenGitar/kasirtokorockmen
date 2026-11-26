@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
-import { X, Printer, Receipt } from 'lucide-react';
+import { X, Printer, Receipt, Undo2 } from 'lucide-react';
 import { authService } from '../../lib/db';
-import type { Transaction } from '../../lib/db';
+import type { Transaction, UserProfile } from '../../lib/db';
+import RefundModal from '../../components/modal/RefundModal';
 
 interface ReceiptSidebarProps {
   transaction: Transaction | null;
   onClose: () => void;
   storeId: number;
+  currentUser?: UserProfile;
+  onRefresh?: () => void;
 }
 
-export default function ReceiptSidebar({ transaction, onClose, storeId }: ReceiptSidebarProps) {
-  const [storeName, setStoreName] = useState('Kasir-Nya Store');
+export default function ReceiptSidebar({ transaction, onClose, storeId, currentUser, onRefresh }: ReceiptSidebarProps) {
+  const [storeName, setStoreName] = useState('KasirToko');
+  const [showRefund, setShowRefund] = useState(false);
 
   // Fetch store name from database
   useEffect(() => {
@@ -202,7 +206,7 @@ export default function ReceiptSidebar({ transaction, onClose, storeId }: Receip
             {/* Store footer */}
             <div className="space-y-0.5 pt-1">
               <span className="text-[8px] text-slate-400 font-semibold block">{formatDate(transaction.created_at)}</span>
-              <span className="text-[7px] text-slate-300 font-medium block tracking-wide">Powered by Kasir-Nya POS</span>
+              <span className="text-[7px] text-slate-300 font-medium block tracking-wide">Powered by KasirToko</span>
               <span className="text-[8px] text-slate-400 font-bold block mt-1">Terima kasih atas kunjungan Anda!</span>
             </div>
           </div>
@@ -269,7 +273,7 @@ export default function ReceiptSidebar({ transaction, onClose, storeId }: Receip
                   <div class="status">${transaction.status === 'Success' ? 'LUNAS' : transaction.status.toUpperCase()}</div>
                   <div class="footer" style="margin-top:8px">${formatDate(transaction.created_at)}</div>
                   <div class="footer" style="margin-top:4px">Terima kasih atas kunjungan Anda!</div>
-                  <div class="footer" style="margin-top:2px">Powered by Kasir-Nya POS</div>
+                  <div class="footer" style="margin-top:2px">Powered by KasirToko</div>
                 </div>
                 </body></html>
               `);
@@ -282,7 +286,27 @@ export default function ReceiptSidebar({ transaction, onClose, storeId }: Receip
           <Printer className="h-4 w-4" />
           <span>Cetak Struk</span>
         </button>
+
+        {currentUser && transaction.status === 'Success' && (
+          <button
+            onClick={() => setShowRefund(true)}
+            className="w-full flex items-center justify-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold py-2.5 rounded-xl text-xs cursor-pointer transition-all mt-2 border border-rose-100"
+          >
+            <Undo2 className="h-4 w-4" />
+            <span>Refund / Batalkan</span>
+          </button>
+        )}
       </div>
+
+      {showRefund && currentUser && (
+        <RefundModal
+          transaction={transaction}
+          storeId={storeId}
+          currentUser={currentUser}
+          onClose={() => setShowRefund(false)}
+          onDone={() => { setShowRefund(false); onClose(); onRefresh?.(); }}
+        />
+      )}
 
     </div>
   );

@@ -1,4 +1,4 @@
-# Menjalankan Kasirnya dengan Docker
+# Menjalankan KasirToko dengan Docker
 
 Dokumen ini menjelaskan cara menjalankan aplikasi melalui Docker, sehingga repo dapat di-clone dan dijalankan di berbagai perangkat tanpa perlu memasang Node atau npm secara langsung.
 
@@ -10,7 +10,7 @@ Dokumen ini menjelaskan cara menjalankan aplikasi melalui Docker, sehingga repo 
 
 ```bash
 git clone <repo-url>
-cd kasir-nya
+cd kasir-toko
 ```
 
 ## 2. Atur kredensial Supabase (opsional)

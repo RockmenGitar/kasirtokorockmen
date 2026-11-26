@@ -67,7 +67,7 @@ export async function exportSalesReport(input: ExportInput): Promise<void> {
   const { storeName, rangeLabel, transactions, products, topProducts, categoryData } = input;
 
   const wb = new ExcelJS.Workbook();
-  wb.creator = 'Kasirnya POS';
+  wb.creator = 'KasirToko';
   wb.created = new Date();
 
   // ═══════════════════════════════════════════════════════════
@@ -322,7 +322,7 @@ export async function exportSalesReport(input: ExportInput): Promise<void> {
   r += 2;
   s1.mergeCells(`B${r}:F${r}`);
   const footerCell = s1.getCell(`B${r}`);
-  footerCell.value = 'Laporan otomatis dari Kasirnya POS';
+    footerCell.value = 'Laporan otomatis dari KasirToko';
   footerCell.font = { ...FONT, italic: true, size: 9, color: { argb: COLOR.slate400 } };
   footerCell.alignment = { horizontal: 'center' };
 

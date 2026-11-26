@@ -4,15 +4,21 @@ import { ScreenOrientation } from '@capacitor/screen-orientation';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { authService, dbService, type UserProfile } from '../../lib/db';
+import { authService, dbService, type UserProfile, type Store } from '../../lib/db';
 
 import Dashboard from '../../pages/admin/Dashboard';
 import Catalog from '../../pages/admin/Catalog';
 import Sales from '../../pages/admin/Sales';
 import Staff from '../../pages/admin/Staff';
 import Profile from '../../pages/admin/Profile';
+import Inventory from '../../pages/admin/Inventory';
+import Customers from '../../pages/admin/Customers';
+import Expenses from '../../pages/admin/Expenses';
+import Promos from '../../pages/admin/Promos';
+import SettingsPage from '../../pages/admin/Settings';
 import POS from '../../pages/shared/POS';
 import Invoices from '../../pages/shared/Invoices';
+import Shifts from '../../pages/shared/Shifts';
 import Help from '../../pages/shared/Help';
 
 interface MainLayoutProps {
@@ -21,9 +27,14 @@ interface MainLayoutProps {
 }
 
 export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
-  const [activeTab, setActiveTab] = useState<string>(
-    currentUser.role === 'admin' ? 'dashboard' : 'pos'
-  );
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    if (currentUser.role === 'admin') return 'dashboard';
+    const granted = currentUser.permissions ?? ['pos', 'invoices'];
+    if (granted.includes('pos')) return 'pos';
+    if (granted.includes('dashboard')) return 'dashboard';
+    if (granted.includes('invoices')) return 'invoices';
+    return granted[0] ?? 'profile';
+  });
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(
     () => localStorage.getItem('kasirnya_sidebar_collapsed') === '1'
@@ -34,6 +45,36 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
       try { localStorage.setItem('kasirnya_sidebar_collapsed', next ? '1' : '0'); } catch {}
       return next;
     });
+  };
+
+  // ── Outlet selection ──────────────────────────────────────────────────
+  const allowedStoreIds = useMemo<number[]>(() => {
+    if (currentUser.role === 'admin') return currentUser.store_ids ?? [currentUser.store_id];
+    return currentUser.store_ids ?? [currentUser.store_id];
+  }, [currentUser]);
+
+  const [stores, setStores] = useState<Store[]>([]);
+  const [activeStoreId, setActiveStoreId] = useState<number>(() => {
+    const saved = Number(localStorage.getItem('kasirnya_active_store'));
+    if (saved && allowedStoreIds.includes(saved)) return saved;
+    return currentUser.store_id;
+  });
+
+  useEffect(() => {
+    authService.listStores().then(all => {
+      const mine = currentUser.role === 'admin'
+        ? all
+        : all.filter(s => allowedStoreIds.includes(s.id));
+      setStores(mine);
+    }).catch(() => {});
+  }, [currentUser, allowedStoreIds]);
+
+  const switchStore = (id: number) => {
+    if (id === activeStoreId) return;
+    setActiveStoreId(id);
+    try { localStorage.setItem('kasirnya_active_store', String(id)); } catch {}
+    setMountedTabs(new Set([activeTab]));
+    setRefreshTrigger(prev => prev + 1);
   };
 
   const [mountedTabs, setMountedTabs] = useState<Set<string>>(() => new Set([activeTab]));
@@ -64,33 +105,40 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
   const [storeName, setStoreName] = useState<string>('');
 
   useEffect(() => {
-    authService.getStoreById(currentUser.store_id).then(store => {
+    setAvatarUrl(localStorage.getItem(`kasirnya_avatar_${activeStoreId}`) ?? '');
+    authService.getStoreById(activeStoreId).then(store => {
       if (store?.avatar_url) {
-        localStorage.setItem(`kasirnya_avatar_${currentUser.store_id}`, store.avatar_url);
+        localStorage.setItem(`kasirnya_avatar_${activeStoreId}`, store.avatar_url);
         setAvatarUrl(store.avatar_url);
+      } else {
+        setAvatarUrl('');
       }
       if (store?.name) setStoreName(store.name);
     }).catch(() => {});
-  }, [currentUser.store_id]);
+  }, [activeStoreId]);
 
   useEffect(() => {
     Promise.all([
-      dbService.getProducts(currentUser.store_id),
-      dbService.getCategories(currentUser.store_id),
-      dbService.getTransactions(currentUser.store_id),
+      dbService.getProducts(activeStoreId),
+      dbService.getCategories(activeStoreId),
+      dbService.getTransactions(activeStoreId),
     ]).catch(() => {});
-  }, [currentUser.store_id]);
-
-  const activeStoreId = currentUser.store_id;
+  }, [activeStoreId]);
 
   const tabContents = useMemo(() => ({
     dashboard: <Dashboard storeId={activeStoreId} refreshTrigger={refreshTrigger} />,
     pos: <POS storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,
-    invoices: <Invoices storeId={activeStoreId} refreshTrigger={refreshTrigger} setActiveTab={setActiveTab} />,
+    invoices: <Invoices storeId={activeStoreId} refreshTrigger={refreshTrigger} setActiveTab={setActiveTab} currentUser={currentUser} triggerRefresh={triggerRefresh} />,
     catalog: <Catalog storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
+    inventory: <Inventory storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,
+    customers: <Customers storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
+    promos: <Promos storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
     sales: <Sales storeId={activeStoreId} refreshTrigger={refreshTrigger} />,
-    staff: <Staff storeId={activeStoreId} refreshTrigger={refreshTrigger} />,
-    profile: <Profile currentUser={currentUser} avatarUrl={avatarUrl} onAvatarChange={setAvatarUrl} />,
+    expenses: <Expenses storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,
+    shifts: <Shifts storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,
+    settings: <SettingsPage storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
+    staff: <Staff storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} allStores={stores} />,
+    profile: <Profile currentUser={currentUser} avatarUrl={avatarUrl} onAvatarChange={setAvatarUrl} onStoreNameChange={setStoreName} />,
     help: <Help currentUser={currentUser} />,
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [activeStoreId, refreshTrigger, currentUser, avatarUrl]);
@@ -107,6 +155,9 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
         onLogout={onLogout}
         storeName={storeName}
         avatarUrl={avatarUrl}
+        stores={stores}
+        activeStoreId={activeStoreId}
+        onSwitchStore={switchStore}
         collapsed={sidebarCollapsed}
         onToggleCollapsed={toggleSidebar}
       />

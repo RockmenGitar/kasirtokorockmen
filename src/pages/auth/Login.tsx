@@ -42,7 +42,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
           <div className="h-14 w-14 bg-gradient-to-tr from-indigo-500 to-indigo-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-200">
             <KasirIcon className="h-7 w-7" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-800 leading-tight">Kasirnya POS Console</h2>
+          <h2 className="text-2xl font-extrabold text-slate-800 leading-tight">KasirToko</h2>
           <span className="text-[10px] text-slate-400 font-bold block mt-1.5 uppercase tracking-wider">
             Multi-Tenant SaaS Retail Suite
           </span>

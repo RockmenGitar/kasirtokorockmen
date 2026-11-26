@@ -1,5 +1,27 @@
-import { Search } from 'lucide-react';
+import { Search, ImageOff } from 'lucide-react';
+import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
+
+function ProductImage({ src, alt }: { src: string; alt: string }) {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center text-slate-300 gap-1.5">
+        <ImageOff className="h-7 w-7" />
+        <span className="text-[9px] font-bold uppercase tracking-wider">No Image</span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="h-full w-full object-cover"
+      loading="lazy"
+      onError={() => setError(true)}
+    />
+  );
+}
 
 interface ProductGridProps {
   products: Product[];
@@ -26,10 +48,14 @@ export default function ProductGrid({
     ? ['All', ...categories.map(c => c.name)]
     : ['All', ...Array.from(new Set(products.map(p => p.category)))];
   
-  // Filter products based on search and selected category
+  // Filter products based on search (name, SKU, barcode, description) and selected category
+  const q = searchQuery.toLowerCase().trim();
   const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = !q ||
+      p.name.toLowerCase().includes(q) ||
+      (p.description || '').toLowerCase().includes(q) ||
+      (p.sku || '').toLowerCase().includes(q) ||
+      (p.barcode || '').toLowerCase().includes(q);
     const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
@@ -95,12 +121,7 @@ export default function ProductGrid({
                 <div>
                   {/* Photo with floating tags */}
                   <div className="h-32 w-full rounded-2xl overflow-hidden relative border border-slate-50 shadow-inner bg-slate-55 bg-gradient-to-br from-slate-100 to-indigo-50/20">
-                    <img 
-                      src={p.image_url} 
-                      alt={p.name} 
-                      className="h-full w-full object-cover" 
-                      loading="lazy"
-                    />
+                    <ProductImage src={p.image_url} alt={p.name} />
                     
                     {/* Floating stock pill */}
                     <span className={`absolute top-3 left-3 px-2 py-0.5 rounded-lg text-[9px] font-extrabold uppercase tracking-wide shadow-xs ${

@@ -10,11 +10,18 @@ import {
   UserPlus,
   ShoppingCart,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  Boxes,
+  Users,
+  Wallet,
+  Settings,
+  Tag,
+  Clock
 } from 'lucide-react';
-import { authService, type UserProfile } from '../../lib/db';
+import { authService, type UserProfile, type Store } from '../../lib/db';
 import SignOutModal from '../modal/SignOutModal';
 import KasirIcon from '../ui/KasirIcon';
+import { ChevronDown, Store as StoreIcon } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
@@ -23,6 +30,9 @@ interface SidebarProps {
   onLogout: () => void;
   storeName?: string;
   avatarUrl?: string;
+  stores?: Store[];
+  activeStoreId?: number;
+  onSwitchStore?: (id: number) => void;
   collapsed: boolean;
   onToggleCollapsed: () => void;
 }
@@ -34,11 +44,15 @@ export default function Sidebar({
   onLogout,
   storeName,
   avatarUrl,
+  stores = [],
+  activeStoreId,
+  onSwitchStore,
   collapsed,
   onToggleCollapsed
 }: SidebarProps) {
   const [showSignOut, setShowSignOut] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [showOutletMenu, setShowOutletMenu] = useState(false);
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -46,23 +60,28 @@ export default function Sidebar({
     onLogout();
   };
 
+  const ALL_MENU = [
+    { id: 'dashboard', name: 'Ringkasan', icon: LayoutDashboard },
+    { id: 'pos', name: 'Kasir', icon: ShoppingCart },
+    { id: 'invoices', name: 'Penjualan', icon: ReceiptText },
+    { id: 'catalog', name: 'Produk', icon: Package },
+    { id: 'inventory', name: 'Inventori', icon: Boxes },
+    { id: 'promos', name: 'Promo', icon: Tag },
+    { id: 'customers', name: 'Pelanggan', icon: Users },
+    { id: 'shifts', name: 'Shift Kasir', icon: Clock },
+    { id: 'sales', name: 'Laporan', icon: BarChart3 },
+    { id: 'expenses', name: 'Pengeluaran', icon: Wallet },
+    { id: 'settings', name: 'Pengaturan', icon: Settings },
+    { id: 'staff', name: 'Outlet & Tim', icon: UserPlus },
+  ];
+
   const getMenuItems = () => {
     if (currentUser.role === 'cashier') {
-      return [
-        { id: 'pos', name: 'POS Cashier', icon: ShoppingCart },
-        { id: 'invoices', name: 'Invoices', icon: ReceiptText },
-        { id: 'profile', name: 'Profile', icon: User },
-      ];
+      const granted = currentUser.permissions ?? ['pos', 'invoices'];
+      const filtered = ALL_MENU.filter(item => granted.includes(item.id));
+      return [...filtered, { id: 'profile', name: 'Profil', icon: User }];
     }
-    return [
-      { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
-      { id: 'pos', name: 'POS Cashier', icon: ShoppingCart },
-      { id: 'invoices', name: 'Invoices', icon: ReceiptText },
-      { id: 'catalog', name: 'Catalog', icon: Package },
-      { id: 'sales', name: 'Sales Performance', icon: BarChart3 },
-      { id: 'staff', name: 'Manage Staff', icon: UserPlus },
-      { id: 'profile', name: 'Profile', icon: User },
-    ];
+    return [...ALL_MENU, { id: 'profile', name: 'Profil', icon: User }];
   };
 
   const menuItems = getMenuItems();
@@ -87,10 +106,45 @@ export default function Sidebar({
             <KasirIcon className="h-5 w-5" />
           </div>
           <div className={`${labelTransition} ${labelState}`}>
-            <h1 className="font-extrabold text-slate-800 text-base leading-tight tracking-tight">Kasirnya</h1>
+            <h1 className="font-extrabold text-slate-800 text-base leading-tight tracking-tight">KasirToko</h1>
             <span className="text-[10px] font-semibold text-slate-400 block tracking-wider uppercase mt-0.5">POS Command Center</span>
           </div>
         </div>
+
+        {/* Outlet switcher */}
+        {stores.length > 1 && (
+          <div className={`mt-4 relative ${collapsed ? 'hidden' : ''}`}>
+            <button
+              onClick={() => setShowOutletMenu(v => !v)}
+              className="w-full flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-100 rounded-xl px-3 py-2.5 cursor-pointer transition-colors"
+            >
+              <StoreIcon className="h-4 w-4 text-indigo-500 shrink-0" />
+              <span className="flex-1 text-left text-xs font-bold text-slate-700 truncate">
+                {stores.find(s => s.id === activeStoreId)?.name ?? storeName ?? 'Outlet'}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+            </button>
+            {showOutletMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowOutletMenu(false)} />
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-100 rounded-xl shadow-lg z-40 overflow-hidden">
+                  {stores.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => { onSwitchStore?.(s.id); setShowOutletMenu(false); }}
+                      className={`w-full text-left px-3 py-2.5 text-xs font-semibold cursor-pointer transition-colors flex items-center justify-between ${
+                        s.id === activeStoreId ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span className="truncate">{s.name}</span>
+                      {s.id === activeStoreId && <span className="text-indigo-500">●</span>}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto overflow-x-hidden">

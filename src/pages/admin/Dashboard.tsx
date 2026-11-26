@@ -15,10 +15,10 @@ export default function Dashboard({ storeId, refreshTrigger }: DashboardProps) {
       <div>
         <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
           <LayoutDashboard className="h-5 w-5 text-indigo-650" />
-          <span>Business Overview</span>
+          <span>Ringkasan Bisnis</span>
         </h2>
         <p className="text-slate-400 text-xs mt-1.5 font-medium">
-          Welcome back! Here is what's happening across your active cafe outlet today.
+          Selamat datang! Berikut ringkasan aktivitas outlet Anda hari ini.
         </p>
       </div>
 

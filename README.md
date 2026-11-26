@@ -1,6 +1,6 @@
-# Kasirnya
+# KasirToko
 
-Aplikasi kasir (POS) dan dashboard admin untuk usaha cafe dan retail skala kecil hingga menengah di Indonesia. Dibangun dengan React 19, TypeScript, Tailwind v4, dan Supabase. Aplikasi dapat dijalankan dalam mode demo tanpa perlu menyiapkan database terlebih dahulu.
+Aplikasi kasir (POS) dan dashboard admin untuk usaha retail dan F&B skala kecil hingga menengah di Indonesia. Dibangun dengan React 19, TypeScript, Tailwind v4, dan Supabase. Aplikasi dapat dijalankan dalam mode demo tanpa perlu menyiapkan database terlebih dahulu.
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -24,7 +24,7 @@ Aplikasi kasir (POS) dan dashboard admin untuk usaha cafe dan retail skala kecil
 
 ## Tentang Proyek
 
-Kasirnya adalah aplikasi web POS yang ditujukan untuk usaha cafe dan retail skala kecil hingga menengah. Aplikasi ini menyasar pemilik usaha yang membutuhkan sistem kasir digital beserta dashboard admin, tanpa harus menyiapkan server sendiri atau berlangganan layanan SaaS berbiaya tinggi.
+KasirToko adalah aplikasi web POS yang ditujukan untuk usaha retail dan F&B skala kecil hingga menengah. Aplikasi ini menyasar pemilik usaha yang membutuhkan sistem kasir digital beserta dashboard admin, tanpa harus menyiapkan server sendiri atau berlangganan layanan SaaS berbiaya tinggi.
 
 Beberapa karakteristik utamanya:
 
@@ -81,8 +81,8 @@ Tersedia dua cara. Pilih salah satu sesuai perangkat yang digunakan.
 Cocok bagi yang tidak ingin memasang Node atau npm secara langsung, atau ingin lingkungan yang konsisten di berbagai perangkat. Syaratnya hanya [Docker Desktop](https://www.docker.com/products/docker-desktop/) yang sedang berjalan.
 
 ```bash
-git clone https://github.com/your-username/kasir-nya.git
-cd kasir-nya
+git clone https://github.com/your-username/kasir-toko.git
+cd kasir-toko
 docker compose up dev
 ```
 
@@ -95,8 +95,8 @@ Untuk menghentikan, tekan `Ctrl+C` lalu jalankan `docker compose down`. Penjelas
 Membutuhkan [Node.js](https://nodejs.org/) versi 20 ke atas (disarankan 22 atau 24).
 
 ```bash
-git clone https://github.com/your-username/kasir-nya.git
-cd kasir-nya
+git clone https://github.com/your-username/kasir-toko.git
+cd kasir-toko
 npm install
 npm run dev
 ```

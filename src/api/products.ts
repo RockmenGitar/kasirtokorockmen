@@ -1,6 +1,27 @@
 import { supabase } from './client';
 import { fromCache, toCache, bustCache } from './cache';
+import { productStockService } from './productStock';
 import type { Product } from './types';
+
+/** Apply per-outlet stock overrides so each product reflects this outlet's stock. */
+async function applyOutletStock(products: Product[], storeId: number): Promise<Product[]> {
+  try {
+    const stockMap = await productStockService.getStockMap(storeId);
+    if (Object.keys(stockMap).length === 0) return products;
+    return products.map(p => {
+      if (stockMap[p.id] === undefined) return p;
+      const qty = stockMap[p.id];
+      const threshold = p.min_stock ?? 5;
+      return {
+        ...p,
+        stock_quantity: qty,
+        stock_status: qty <= 0 ? 'Out of Stock' : qty <= threshold ? 'Low Stock' : 'In Stock',
+      };
+    });
+  } catch {
+    return products;
+  }
+}
 
 export const productService = {
 
@@ -15,14 +36,16 @@ export const productService = {
       if (error) {
         console.error('Supabase getProducts error, falling back to LocalStorage', error);
       } else if (data) {
-        const result = data.map(d => ({ ...d, store_id: Number(d.store_id) })) as Product[];
+        const base = data.map(d => ({ ...d, store_id: Number(d.store_id) })) as Product[];
+        const result = await applyOutletStock(base, storeId);
         toCache(cacheKey, result);
         return result;
       }
     }
 
     const products: Product[] = JSON.parse(localStorage.getItem('kasirnya_products') || '[]');
-    const result = products.filter(p => p.store_id === storeId);
+    const base = products.filter(p => p.store_id === storeId);
+    const result = await applyOutletStock(base, storeId);
     toCache(cacheKey, result);
     return result;
   },

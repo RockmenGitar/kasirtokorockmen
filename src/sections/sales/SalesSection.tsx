@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Download, LayoutGrid, Package, CreditCard, ListOrdered } from 'lucide-react';
+import { Download, LayoutGrid, Package, CreditCard, ListOrdered, CalendarDays } from 'lucide-react';
 import { dbService, authService } from '../../lib/db';
 import type { Transaction, Product } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
@@ -15,8 +15,9 @@ import DayOfWeekChart from './DayOfWeekChart';
 import CashierPerformanceTable from './CashierPerformanceTable';
 import PeriodComparison from './PeriodComparison';
 import LowStockAlert from './LowStockAlert';
+import ReportsSection from '../reports/ReportsSection';
 
-type SubTab = 'summary' | 'products' | 'operations' | 'transactions';
+type SubTab = 'summary' | 'products' | 'operations' | 'transactions' | 'monthly';
 
 // ─── Shared Types ──────────────────────────────────────────────────────────
 export interface ChartPoint  { label: string; amount: number; }
@@ -399,6 +400,7 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
           { id: 'products', label: 'Produk', icon: Package },
           { id: 'operations', label: 'Operasional', icon: CreditCard },
           { id: 'transactions', label: 'Transaksi', icon: ListOrdered },
+          { id: 'monthly', label: 'Rekap Bulanan', icon: CalendarDays },
         ] as const).map(t => {
           const Icon = t.icon;
           const isActive = activeSubTab === t.id;
@@ -455,6 +457,12 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
       {activeSubTab === 'transactions' && (
         <div className="animate-fadeIn">
           <SalesTable transactions={filteredTx} />
+        </div>
+      )}
+
+      {activeSubTab === 'monthly' && (
+        <div className="animate-fadeIn">
+          <ReportsSection storeId={storeId} refreshTrigger={refreshTrigger} />
         </div>
       )}
 

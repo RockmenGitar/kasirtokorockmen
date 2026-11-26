@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { dbService } from '../../lib/db';
-import type { Transaction } from '../../lib/db';
+import type { Transaction, UserProfile } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 
 // Import modular sections
@@ -11,9 +11,11 @@ interface InvoicesSectionProps {
   storeId: number;
   refreshTrigger: number;
   setActiveTab: (tab: string) => void;
+  currentUser: UserProfile;
+  triggerRefresh?: () => void;
 }
 
-export default function InvoicesSection({ storeId, refreshTrigger, setActiveTab }: InvoicesSectionProps) {
+export default function InvoicesSection({ storeId, refreshTrigger, setActiveTab, currentUser, triggerRefresh }: InvoicesSectionProps) {
   const [transactions] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeStatusTab, setActiveStatusTab] = useState('All');
@@ -49,6 +51,8 @@ export default function InvoicesSection({ storeId, refreshTrigger, setActiveTab 
         transaction={currentTransaction}
         onClose={() => setSelectedTxId(null)}
         storeId={storeId}
+        currentUser={currentUser}
+        onRefresh={triggerRefresh}
       />
 
     </div>

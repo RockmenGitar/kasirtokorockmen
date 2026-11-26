@@ -12,7 +12,7 @@ interface OrderSuccessModalProps {
 }
 
 export default function OrderSuccessModal({ isOpen, onClose, transaction, storeId }: OrderSuccessModalProps) {
-  const [storeName, setStoreName] = useState('Kasir-Nya Store');
+  const [storeName, setStoreName] = useState('KasirToko');
 
   useEffect(() => {
     const fetchStoreName = async () => {
@@ -113,7 +113,7 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
         <div class="status">${transaction.status === 'Success' ? 'LUNAS' : transaction.status.toUpperCase()}</div>
         <div class="footer" style="margin-top:8px">${formatDate(transaction.created_at)}</div>
         <div class="footer" style="margin-top:4px">Terima kasih atas kunjungan Anda!</div>
-        <div class="footer" style="margin-top:2px">Powered by Kasir-Nya POS</div>
+        <div class="footer" style="margin-top:2px">Powered by KasirToko</div>
       </div>
       </body></html>
     `);
@@ -191,7 +191,7 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-2">Scan QRIS Invoice</span>
             <div className="h-32 w-32 bg-white border border-slate-150 rounded-2xl mx-auto flex items-center justify-center p-2 shadow-inner">
               <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://kasirnya-pos.co/invoice/ORD-9911"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://kasirtoko.id/invoice/ORD-9911"
                 alt="QRIS Mockup"
                 className="h-full w-full object-contain"
               />

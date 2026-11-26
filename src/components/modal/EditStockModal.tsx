@@ -20,7 +20,7 @@ export default function EditStockModal({
 }: EditStockModalProps) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('Coffee');
+  const [category, setCategory] = useState('Makanan');
   const [desc, setDesc] = useState('');
   const [qty, setQty] = useState('');
   const [imgUrl, setImgUrl] = useState('');
@@ -116,10 +116,10 @@ export default function EditStockModal({
             onChange={(e) => setCategory(e.target.value)}
             className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-855 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-655"
           >
-            <option value="Coffee">☕ Coffee</option>
-            <option value="Non-Coffee">🌸 Non-Coffee</option>
-            <option value="Food">🥗 Food</option>
-            <option value="Pastries">🥐 Pastries</option>
+            <option value="Makanan">🍽️ Makanan</option>
+            <option value="Minuman">🥤 Minuman</option>
+            <option value="Snack">🍟 Snack</option>
+            <option value="Sembako">🛒 Sembako</option>
           </select>
         </div>
 

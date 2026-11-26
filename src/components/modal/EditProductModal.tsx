@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, type FormEvent, type ChangeEvent } from 'react';
 import { dbService } from '../../lib/db';
-import type { Product, Category } from '../../lib/db';
+import type { Product, Category, ProductVariant } from '../../lib/db';
 import { Link, Upload, X, Image as ImageIcon, ImagePlus, AlertCircle, Loader2 } from 'lucide-react';
 import Modal from '../ui/Modal';
+import VariantEditor from './VariantEditor';
 
 interface EditProductModalProps {
   isOpen: boolean;
@@ -29,6 +30,13 @@ export default function EditProductModal({
   const [desc, setDesc] = useState('');
   const [qty, setQty] = useState('');
   const [imgUrl, setImgUrl] = useState('');
+  const [unit, setUnit] = useState('pcs');
+  const [sku, setSku] = useState('');
+  const [barcode, setBarcode] = useState('');
+  const [cost, setCost] = useState('');
+  const [minStock, setMinStock] = useState('5');
+  const [active, setActive] = useState(true);
+  const [variants, setVariants] = useState<ProductVariant[]>([]);
 
   // Image handling
   const [imageMode, setImageMode] = useState<ImageInputMode>('url');
@@ -49,9 +57,16 @@ export default function EditProductModal({
       setDesc(product.description);
       setQty(product.stock_quantity.toString());
       setImgUrl(product.image_url);
-      setImagePreview(product.image_url);
+      setImagePreview(product.image_url || null);
+      setUnit(product.unit || 'pcs');
+      setSku(product.sku || '');
+      setBarcode(product.barcode || '');
+      setCost(product.cost ? new Intl.NumberFormat('id-ID').format(product.cost) : '');
+      setMinStock(String(product.min_stock ?? 5));
+      setActive(product.active !== false);
+      setVariants(product.variants || []);
       // Auto-detect if existing image is a URL or base64
-      if (product.image_url.startsWith('data:')) {
+      if (product.image_url && product.image_url.startsWith('data:')) {
         setImageMode('upload');
       } else {
         setImageMode('url');
@@ -134,7 +149,14 @@ export default function EditProductModal({
         image_url: imgUrl,
         category,
         stock_status: status,
-        stock_quantity: qtyNum
+        stock_quantity: qtyNum,
+        unit: unit.trim() || 'pcs',
+        sku: sku.trim() || undefined,
+        barcode: barcode.trim() || undefined,
+        cost: parseFloat(cost.replace(/\./g, '')) || 0,
+        min_stock: parseInt(minStock) || 5,
+        active,
+        variants,
       }, storeId);
 
       onSuccess(updated);
@@ -215,7 +237,7 @@ export default function EditProductModal({
               {imageMode === 'url' ? (
                 <input 
                   type="text"
-                  placeholder="https://images.unsplash.com/photo-..."
+                  placeholder="https://contoh.com/gambar-produk.jpg"
                   value={imgUrl.startsWith('data:') ? '' : imgUrl}
                   onChange={(e) => handleUrlChange(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-300"
@@ -311,6 +333,49 @@ export default function EditProductModal({
             )}
           </select>
         </div>
+
+        {/* SKU / BARCODE / UNIT */}
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">SKU</label>
+            <input type="text" value={sku} onChange={e => setSku(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Barcode</label>
+            <input type="text" value={barcode} onChange={e => setBarcode(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Satuan</label>
+            <input type="text" value={unit} onChange={e => setUnit(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+        </div>
+
+        {/* COST / MIN STOCK */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Harga Modal (Rp)</label>
+            <input type="text" value={cost}
+              onChange={e => { const d = e.target.value.replace(/\D/g, ''); setCost(d ? new Intl.NumberFormat('id-ID').format(parseInt(d)) : ''); }}
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Stok Minimum</label>
+            <input type="number" value={minStock} onChange={e => setMinStock(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          </div>
+        </div>
+
+        {/* VARIANTS */}
+        <VariantEditor variants={variants} onChange={setVariants} />
+
+        {/* ACTIVE */}
+        <label className="flex items-center gap-2.5 cursor-pointer">
+          <input type="checkbox" checked={active} onChange={e => setActive(e.target.checked)} className="h-4 w-4 rounded accent-indigo-600" />
+          <span className="text-xs font-semibold text-slate-600">Produk aktif (tampil di kasir)</span>
+        </label>
 
         {/* DESCRIPTION */}
         <div>

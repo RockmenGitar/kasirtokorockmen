@@ -55,5 +55,26 @@ export const transactionService = {
     bustCache(`transactions_${storeId}`);
 
     return newTransaction;
+  },
+
+  async updateTransaction(id: string, updates: Partial<Omit<Transaction, 'id' | 'store_id'>>, storeId: number): Promise<void> {
+    if (supabase) {
+      const { error } = await supabase
+        .from('transactions').update(updates).eq('id', id).eq('store_id', storeId);
+      if (error) throw new Error(error.message);
+      bustCache(`transactions_${storeId}`);
+      return;
+    }
+    const transactions: Transaction[] = JSON.parse(localStorage.getItem('kasirnya_transactions') || '[]');
+    const idx = transactions.findIndex(t => t.id === id && t.store_id === storeId);
+    if (idx !== -1) {
+      transactions[idx] = { ...transactions[idx], ...updates };
+      localStorage.setItem('kasirnya_transactions', JSON.stringify(transactions));
+    }
+    bustCache(`transactions_${storeId}`);
+  },
+
+  async setStatus(id: string, status: string, storeId: number, extra?: Partial<Transaction>): Promise<void> {
+    return this.updateTransaction(id, { status, ...extra }, storeId);
   }
 };

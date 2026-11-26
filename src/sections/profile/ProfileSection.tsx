@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Camera, Store, Mail, ShieldCheck, ImagePlus, Loader2, Trash2 } from 'lucide-react';
+import { Camera, Store, Mail, ShieldCheck, ImagePlus, Loader2, Trash2, Pencil, Check, X } from 'lucide-react';
 import { authService, type UserProfile, type Store as StoreInfo } from '../../lib/db';
 
 interface ProfileSectionProps {
   currentUser: UserProfile;
   avatarUrl: string;
   onAvatarChange: (url: string) => void;
+  onStoreNameChange?: (name: string) => void;
 }
 
 function resizeImage(file: File, size = 300): Promise<string> {
@@ -31,10 +32,40 @@ function resizeImage(file: File, size = 300): Promise<string> {
 }
 
 // ── Shared outlet info card ────────────────────────────────────────────────
-function OutletInfoCard({ storeInfo, storeLoading }: {
+function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, onUpdated }: {
   storeInfo: StoreInfo | null;
   storeLoading: boolean;
+  editable?: boolean;
+  storeId?: number;
+  onUpdated?: (newName: string) => void;
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => { setName(storeInfo?.name ?? ''); }, [storeInfo]);
+
+  const startEdit = () => { setName(storeInfo?.name ?? ''); setError(null); setIsEditing(true); };
+  const cancelEdit = () => { setIsEditing(false); setError(null); };
+
+  const handleSave = async () => {
+    if (!storeId) return;
+    if (!name.trim()) { setError('Nama toko tidak boleh kosong.'); return; }
+    setSaving(true);
+    setError(null);
+    try {
+      await authService.updateStoreName(storeId, name.trim());
+      if (storeInfo) storeInfo.name = name.trim();
+      onUpdated?.(name.trim());
+      setIsEditing(false);
+    } catch (err: any) {
+      setError(err.message || 'Gagal menyimpan nama toko.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-5">
@@ -46,12 +77,58 @@ function OutletInfoCard({ storeInfo, storeLoading }: {
 
       {storeLoading ? (
         <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />
+      ) : isEditing ? (
+        <div className="space-y-3">
+          <div>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Nama Toko</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              autoFocus
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') cancelEdit(); }}
+              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            />
+          </div>
+          {error && (
+            <div className="text-rose-600 text-xs font-semibold bg-rose-50 border border-rose-100 px-3.5 py-2.5 rounded-xl">{error}</div>
+          )}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold text-[10px] px-3.5 py-2 rounded-xl cursor-pointer transition-all shadow-sm"
+            >
+              {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+              <span>{saving ? 'Menyimpan...' : 'Simpan'}</span>
+            </button>
+            <button
+              onClick={cancelEdit}
+              disabled={saving}
+              className="flex items-center gap-1.5 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 text-slate-500 font-bold text-[10px] px-3.5 py-2 rounded-xl cursor-pointer transition-all"
+            >
+              <X className="h-3.5 w-3.5" />
+              <span>Batal</span>
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="flex items-center justify-between py-2">
           <span className="text-xs font-semibold text-slate-500">Nama Toko</span>
-          <span className="font-bold text-slate-800 text-sm">
-            {storeInfo?.name ?? <span className="text-slate-400 font-normal italic text-xs">—</span>}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-800 text-sm">
+              {storeInfo?.name ?? <span className="text-slate-400 font-normal italic text-xs">—</span>}
+            </span>
+            {editable && (
+              <button
+                onClick={startEdit}
+                title="Ganti nama toko"
+                className="h-7 w-7 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -113,7 +190,7 @@ function CashierProfile({ currentUser }: ProfileSectionProps) {
 }
 
 // ── Admin Profile ──────────────────────────────────────────────────────────
-function AdminProfile({ currentUser, avatarUrl, onAvatarChange }: ProfileSectionProps) {
+function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChange }: ProfileSectionProps) {
   const [storeInfo, setStoreInfo]       = useState<StoreInfo | null>(null);
   const [storeLoading, setStoreLoading] = useState(true);
   const [saving, setSaving]             = useState(false);
@@ -277,7 +354,13 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange }: ProfileSection
         </div>
       </div>
 
-      <OutletInfoCard storeInfo={storeInfo} storeLoading={storeLoading} />
+      <OutletInfoCard
+        storeInfo={storeInfo}
+        storeLoading={storeLoading}
+        editable
+        storeId={currentUser.store_id}
+        onUpdated={onStoreNameChange}
+      />
     </div>
   );
 }

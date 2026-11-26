@@ -1,11 +1,11 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.shigoto.kasirnya',
-  appName: 'Kasirnya',
+  appId: 'com.shigoto.kasirtoko',
+  appName: 'KasirToko',
   webDir: 'dist',
   server: {
-    url: 'https://kasir-nya.vercel.app',
+    url: 'https://kasir-toko.vercel.app',
     cleartext: false,
   },
 };
