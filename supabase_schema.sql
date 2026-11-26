@@ -13,7 +13,7 @@
 -- TIDAK ada self-registration.
 -- =====================================================================
 
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
 
 -- ── 1. stores ────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.stores (
@@ -116,7 +116,7 @@ SECURITY DEFINER
 AS $$
 BEGIN
   INSERT INTO public.profiles (id, email, role, store_id)
-  VALUES (NEW.id, NEW.email, 'admin', 1);
+  VALUES (NEW.id, NEW.email, 'admin', NULL);
   RETURN NEW;
 END;
 $$;
@@ -137,7 +137,7 @@ CREATE OR REPLACE FUNCTION public.create_admin(p_email text, p_store_id bigint)
 RETURNS uuid
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path TO 'public'
+SET search_path TO 'public', 'extensions'
 AS $$
 DECLARE
   new_user_id uuid;
@@ -154,7 +154,7 @@ BEGIN
     '00000000-0000-0000-0000-000000000000',
     new_user_id, 'authenticated', 'authenticated',
     lower(trim(p_email)),
-    crypt('admin123', gen_salt('bf')),
+    extensions.crypt('admin123', extensions.gen_salt('bf')),
     now(),
     '{"provider":"email","providers":["email"]}'::jsonb,
     '{}'::jsonb,
