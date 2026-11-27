@@ -338,8 +338,12 @@ export default function CartDrawer({
               <input
                 type="text"
                 inputMode="numeric"
-                value={paidAmount ? new Intl.NumberFormat('id-ID').format(paidAmount) : ''}
-                onChange={(e) => setPaidAmount(Number(e.target.value.replace(/\D/g, '')) || 0)}
+                autoComplete="off"
+                value={Number.isFinite(paidAmount) && paidAmount > 0 ? new Intl.NumberFormat('id-ID').format(Math.floor(paidAmount)) : ''}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '').slice(0, 15);
+                  setPaidAmount(digits ? parseInt(digits, 10) : 0);
+                }}
                 placeholder="Rp 0"
                 className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-indigo-500"
               />
