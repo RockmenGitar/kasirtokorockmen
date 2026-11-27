@@ -3,6 +3,7 @@ import { Download, LayoutGrid, Package, CreditCard, ListOrdered, CalendarDays } 
 import { dbService, authService } from '../../lib/db';
 import type { Transaction, Product } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { useI18n } from '../../lib/i18n';
 import KPIOverview from './KPIOverview';
 import RevenueChart from './RevenueChart';
 import CategoryDonut from './CategoryDonut';
@@ -278,6 +279,7 @@ function buildTopProducts(txs: Transaction[], products: Product[]): TopProductRo
 interface Props { storeId: number; refreshTrigger: number; }
 
 export default function SalesSection({ storeId, refreshTrigger }: Props) {
+  const { t } = useI18n();
   const [transactions] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
   const [products]     = useStoreData<Product[]>(dbService.getProducts, storeId, refreshTrigger, []);
   const [timeRange,    setTimeRange]    = useState<TimeRange>('7D');
@@ -315,11 +317,11 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
   };
 
   const rangeLabel =
-    timeRange === 'Today'  ? 'Hari Ini' :
-    timeRange === '7D'     ? '7 Hari Terakhir' :
-    timeRange === '30D'    ? '30 Hari Terakhir' :
+    timeRange === 'Today'  ? t('sales.today') :
+    timeRange === '7D'     ? t('sales.last7') :
+    timeRange === '30D'    ? t('sales.last30') :
     (customFrom && customTo) ? `${fmtDisplayDate(customFrom)} – ${fmtDisplayDate(customTo)}` :
-    'Pilih Tanggal';
+    t('sales.pickDate');
 
   const handleDownloadExcel = async () => {
     if (filteredTx.length === 0) return;
@@ -348,9 +350,9 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
       {/* Header + Time Range Filter */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Sales Performance</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('sales.title')}</h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">
-            Menampilkan data <span className="text-slate-600 font-semibold">{rangeLabel}</span>
+            {t('sales.showing')} <span className="text-slate-600 font-semibold">{rangeLabel}</span>
           </p>
         </div>
 
@@ -362,7 +364,7 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 border border-emerald-600 rounded-xl hover:from-emerald-600 hover:to-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm shadow-emerald-200"
             >
               <Download className="h-3.5 w-3.5" />
-              {isExporting ? 'Membuat Laporan...' : 'Unduh Excel'}
+              {isExporting ? t('sales.building') : t('sales.downloadExcel')}
             </button>
 
             {/* Time Range Filter */}
@@ -377,7 +379,7 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
                       : 'hover:text-slate-700'
                   }`}
                 >
-                  {r === 'Today' ? 'Hari Ini' : r === 'Custom' ? 'Kustom' : r}
+                  {r === 'Today' ? t('sales.today') : r === 'Custom' ? t('sales.custom') : r}
                 </button>
               ))}
             </div>
@@ -388,7 +390,7 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
             <DateRangePicker
               from={customFrom}
               to={customTo}
-              onChange={(f, t) => { setCustomFrom(f); setCustomTo(t); }}
+              onChange={(f, to) => { setCustomFrom(f); setCustomTo(to); }}
             />
           )}
         </div>
@@ -396,11 +398,11 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
 
       <div className="flex bg-white border border-slate-100 p-1 rounded-2xl text-xs font-bold text-slate-500 shadow-sm overflow-x-auto">
         {([
-          { id: 'summary', label: 'Ringkasan', icon: LayoutGrid },
-          { id: 'products', label: 'Produk', icon: Package },
-          { id: 'operations', label: 'Operasional', icon: CreditCard },
-          { id: 'transactions', label: 'Transaksi', icon: ListOrdered },
-          { id: 'monthly', label: 'Rekap Bulanan', icon: CalendarDays },
+          { id: 'summary', label: t('sales.summary'), icon: LayoutGrid },
+          { id: 'products', label: t('sales.products'), icon: Package },
+          { id: 'operations', label: t('sales.operations'), icon: CreditCard },
+          { id: 'transactions', label: t('sales.transactions'), icon: ListOrdered },
+          { id: 'monthly', label: t('sales.monthly'), icon: CalendarDays },
         ] as const).map(t => {
           const Icon = t.icon;
           const isActive = activeSubTab === t.id;

@@ -239,6 +239,20 @@ const dict: Record<string, { id: string; en: string }> = {
   'rpt.cogs': { id: 'HPP', en: 'COGS' },
   'rpt.operatingExpense': { id: 'Pengeluaran Operasional', en: 'Operating Expenses' },
   'rpt.vsPrev': { id: 'vs bulan lalu', en: 'vs last month' },
+  'sales.title': { id: 'Laporan Penjualan', en: 'Sales Performance' },
+  'sales.showing': { id: 'Menampilkan data', en: 'Showing data for' },
+  'sales.downloadExcel': { id: 'Unduh Excel', en: 'Download Excel' },
+  'sales.building': { id: 'Membuat Laporan...', en: 'Building report...' },
+  'sales.today': { id: 'Hari Ini', en: 'Today' },
+  'sales.custom': { id: 'Kustom', en: 'Custom' },
+  'sales.pickDate': { id: 'Pilih Tanggal', en: 'Pick a date' },
+  'sales.last7': { id: '7 Hari Terakhir', en: 'Last 7 Days' },
+  'sales.last30': { id: '30 Hari Terakhir', en: 'Last 30 Days' },
+  'sales.summary': { id: 'Ringkasan', en: 'Summary' },
+  'sales.products': { id: 'Produk', en: 'Products' },
+  'sales.operations': { id: 'Operasional', en: 'Operations' },
+  'sales.transactions': { id: 'Transaksi', en: 'Transactions' },
+  'sales.monthly': { id: 'Rekap Bulanan', en: 'Monthly Recap' },
 
   // ── Pengeluaran ──
   'exp.title': { id: 'Pengeluaran', en: 'Expenses' },
@@ -361,6 +375,21 @@ const dict: Record<string, { id: string; en: string }> = {
   'login.subtitle': { id: 'Pusat Kendali POS', en: 'POS Command Center' },
   'login.emailPlaceholder': { id: 'contoh: manager@toko.com', en: 'e.g. manager@store.com' },
   'login.passwordPlaceholder': { id: 'Kata sandi', en: 'Password' },
+
+  // ── Profil ──
+  'prof.cashierTitle': { id: 'Profil Kasir', en: 'Cashier Profile' },
+  'prof.cashierSubtitle': { id: 'Informasi akun kasir kamu.', en: 'Your cashier account information.' },
+  'prof.cashierName': { id: 'Nama Kasir', en: 'Cashier Name' },
+  'prof.adminTitle': { id: 'Profil Toko', en: 'Store Profile' },
+  'prof.adminSubtitle': { id: 'Kelola identitas outlet dan akun admin kamu.', en: 'Manage your outlet identity and admin account.' },
+  'prof.adminName': { id: 'Nama Admin', en: 'Admin Name' },
+  'prof.outletInfo': { id: 'Informasi Outlet', en: 'Outlet Information' },
+  'prof.storeName': { id: 'Nama Toko', en: 'Store Name' },
+  'prof.renameHint': { id: 'Ganti nama toko', en: 'Rename store' },
+  'prof.deletePhoto': { id: 'Hapus Foto', en: 'Delete Photo' },
+  'prof.changePhoto': { id: 'Ganti Foto', en: 'Change Photo' },
+  'prof.role': { id: 'Peran', en: 'Role' },
+  'prof.email': { id: 'Email', en: 'Email' },
 };
 
 interface I18nContextValue {

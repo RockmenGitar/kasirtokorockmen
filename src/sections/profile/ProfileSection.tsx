@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Camera, Store, Mail, ShieldCheck, ImagePlus, Loader2, Trash2, Pencil, Check, X } from 'lucide-react';
 import { authService, type UserProfile, type Store as StoreInfo } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface ProfileSectionProps {
   currentUser: UserProfile;
@@ -39,6 +40,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
   storeId?: number;
   onUpdated?: (newName: string) => void;
 }) {
+  const { t } = useI18n();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -72,7 +74,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
         <div className="h-7 w-7 bg-indigo-50 border border-indigo-100/60 rounded-lg flex items-center justify-center">
           <Store className="h-3.5 w-3.5 text-indigo-500" />
         </div>
-        <h4 className="font-bold text-slate-800 text-sm leading-none">Informasi Outlet</h4>
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('prof.outletInfo')}</h4>
       </div>
 
       {storeLoading ? (
@@ -80,7 +82,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
       ) : isEditing ? (
         <div className="space-y-3">
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Nama Toko</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('prof.storeName')}</label>
             <input
               type="text"
               value={name}
@@ -100,7 +102,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
               className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold text-[10px] px-3.5 py-2 rounded-xl cursor-pointer transition-all shadow-sm"
             >
               {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
-              <span>{saving ? 'Menyimpan...' : 'Simpan'}</span>
+              <span>{saving ? t('common.saving') : t('common.save')}</span>
             </button>
             <button
               onClick={cancelEdit}
@@ -108,13 +110,13 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
               className="flex items-center gap-1.5 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 text-slate-500 font-bold text-[10px] px-3.5 py-2 rounded-xl cursor-pointer transition-all"
             >
               <X className="h-3.5 w-3.5" />
-              <span>Batal</span>
+              <span>{t('common.cancel')}</span>
             </button>
           </div>
         </div>
       ) : (
         <div className="flex items-center justify-between py-2">
-          <span className="text-xs font-semibold text-slate-500">Nama Toko</span>
+          <span className="text-xs font-semibold text-slate-500">{t('prof.storeName')}</span>
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-800 text-sm">
               {storeInfo?.name ?? <span className="text-slate-400 font-normal italic text-xs">—</span>}
@@ -122,7 +124,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
             {editable && (
               <button
                 onClick={startEdit}
-                title="Ganti nama toko"
+                title={t('prof.renameHint')}
                 className="h-7 w-7 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"
               >
                 <Pencil className="h-3.5 w-3.5" />
@@ -137,6 +139,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
 
 // ── Cashier Profile ────────────────────────────────────────────────────────
 function CashierProfile({ currentUser }: ProfileSectionProps) {
+  const { t } = useI18n();
   const [storeInfo, setStoreInfo]       = useState<StoreInfo | null>(null);
   const [storeLoading, setStoreLoading] = useState(true);
 
@@ -152,8 +155,8 @@ function CashierProfile({ currentUser }: ProfileSectionProps) {
   return (
     <div className="max-w-xl space-y-6 animate-fadeIn pb-12">
       <div>
-        <h2 className="font-extrabold text-slate-800 text-xl leading-none">Profil Kasir</h2>
-        <p className="text-slate-400 text-xs mt-1.5 font-medium">Informasi akun kasir kamu.</p>
+        <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('prof.cashierTitle')}</h2>
+        <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('prof.cashierSubtitle')}</p>
       </div>
 
       <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
@@ -169,15 +172,15 @@ function CashierProfile({ currentUser }: ProfileSectionProps) {
 
           <div className="space-y-3.5">
             <div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Nama Kasir</span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">{t('prof.cashierName')}</span>
               <span className="font-bold text-slate-800 text-base leading-tight">{currentUser.name || '—'}</span>
             </div>
 
             <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5">
               <ShieldCheck className="h-4 w-4 text-indigo-500 shrink-0" />
               <div>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Role</span>
-                <span className="font-bold text-indigo-600 text-xs uppercase tracking-wide font-mono">Kasir</span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t('prof.role')}</span>
+                <span className="font-bold text-indigo-600 text-xs uppercase tracking-wide font-mono">{t('role.cashier')}</span>
               </div>
             </div>
           </div>
@@ -191,6 +194,7 @@ function CashierProfile({ currentUser }: ProfileSectionProps) {
 
 // ── Admin Profile ──────────────────────────────────────────────────────────
 function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChange }: ProfileSectionProps) {
+  const { t } = useI18n();
   const [storeInfo, setStoreInfo]       = useState<StoreInfo | null>(null);
   const [storeLoading, setStoreLoading] = useState(true);
   const [saving, setSaving]             = useState(false);
@@ -264,8 +268,8 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChang
   return (
     <div className="max-w-xl space-y-6 animate-fadeIn pb-12">
       <div>
-        <h2 className="font-extrabold text-slate-800 text-xl leading-none">Store Profile</h2>
-        <p className="text-slate-400 text-xs mt-1.5 font-medium">Kelola identitas outlet dan akun admin kamu.</p>
+        <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('prof.adminTitle')}</h2>
+        <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('prof.adminSubtitle')}</p>
       </div>
 
       <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
@@ -308,7 +312,7 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChang
                   className="flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 disabled:opacity-50 text-rose-600 font-bold text-[10px] px-3.5 py-2 rounded-xl cursor-pointer transition-all shadow-sm border border-rose-100"
                 >
                   {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-                  <span>Hapus Foto</span>
+                  <span>{t('prof.deletePhoto')}</span>
                 </button>
               )}
               <button
@@ -317,7 +321,7 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChang
                 className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white font-bold text-[10px] px-3.5 py-2 rounded-xl cursor-pointer transition-all shadow-sm"
               >
                 {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
-                <span>{saving ? 'Menyimpan...' : 'Ganti Foto'}</span>
+                <span>{saving ? t('common.saving') : t('prof.changePhoto')}</span>
               </button>
             </div>
           </div>
@@ -331,14 +335,14 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChang
 
           <div className="space-y-3.5">
             <div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Nama Admin</span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">{t('prof.adminName')}</span>
               <span className="font-bold text-slate-800 text-base leading-tight">{displayName}</span>
             </div>
 
             <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5">
               <Mail className="h-4 w-4 text-slate-400 shrink-0" />
               <div>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Email</span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t('prof.email')}</span>
                 <span className="font-semibold text-slate-700 text-xs">{currentUser.email}</span>
               </div>
             </div>
@@ -346,8 +350,8 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChang
             <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5">
               <ShieldCheck className="h-4 w-4 text-indigo-500 shrink-0" />
               <div>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Role</span>
-                <span className="font-bold text-indigo-600 text-xs uppercase tracking-wide font-mono">{currentUser.role}</span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t('prof.role')}</span>
+                <span className="font-bold text-indigo-600 text-xs uppercase tracking-wide font-mono">{currentUser.role === 'admin' ? t('role.owner') : t('role.cashier')}</span>
               </div>
             </div>
           </div>
