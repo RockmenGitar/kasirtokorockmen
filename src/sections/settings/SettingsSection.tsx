@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Save, Loader2, Receipt, CreditCard, Bell, Clock, Check, RefreshCw, Copy } from 'lucide-react';
 import { dbService, DEFAULT_STORE_SETTINGS } from '../../lib/db';
 import type { StoreSettings, Store } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface SettingsSectionProps {
   storeId: number;
@@ -13,6 +14,7 @@ const TIMEZONES = ['Asia/Jakarta', 'Asia/Makassar', 'Asia/Jayapura', 'Asia/Singa
 const ALL_PAYMENT_METHODS = ['Cash', 'QRIS', 'Transfer', 'Debit', 'E-Wallet'];
 
 export default function SettingsSection({ storeId, refreshTrigger, triggerRefresh }: SettingsSectionProps) {
+  const { t } = useI18n();
   const [settings, setSettings] = useState<StoreSettings>({ ...DEFAULT_STORE_SETTINGS, store_id: storeId });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -75,33 +77,30 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
     <div className="space-y-6 animate-fadeIn pb-12 max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Pengaturan</h2>
-          <p className="text-slate-400 text-xs mt-1.5 font-medium">Konfigurasi toko, pajak, struk, dan pembayaran.</p>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('set.title')}</h2>
+          <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('set.subtitle')}</p>
         </div>
         <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer disabled:opacity-50">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : success ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
-          {saving ? 'Menyimpan...' : success ? 'Tersimpan' : 'Simpan'}
+          {saving ? t('common.saving') : success ? t('common.saved') : t('common.save')}
         </button>
       </div>
 
       {/* Sinkron produk antar-outlet */}
       {outlets.length >= 2 && (
-        <Card icon={Copy} title="Sinkron Produk Antar-Outlet">
+        <Card icon={Copy} title={t('set.syncTitle')}>
           <p className="text-[11px] text-slate-400 font-medium mb-3 leading-relaxed">
-            Salin katalog produk (<span className="font-bold text-slate-600">nama, varian, harga, kategori, SKU</span>)
-            dari outlet sumber ke outlet tujuan. Stok, transaksi, pelanggan, pengeluaran, dan nama outlet
-            <span className="font-bold text-rose-500"> tidak</span> ikut tersinkron.
-            Produk yang belum ada dibuat baru dengan stok 0.
+            {t('set.syncDesc')}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Outlet Sumber</label>
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.sourceOutlet')}</label>
               <select value={syncSource} onChange={e => setSyncSource(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
                 {outlets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Outlet Tujuan</label>
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.targetOutlet')}</label>
               <select value={syncTarget} onChange={e => setSyncTarget(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
                 {outlets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
@@ -109,54 +108,54 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
           </div>
           <button onClick={doSyncProducts} disabled={syncing} className="flex items-center gap-1.5 mt-4 px-4 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer disabled:opacity-50">
             {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-            Sinkron Produk
+            {t('set.syncBtn')}
           </button>
           {syncMsg && <p className="text-[11px] font-semibold text-indigo-600 mt-2">{syncMsg}</p>}
         </Card>
       )}
 
       {/* Pajak & biaya */}
-      <Card icon={Receipt} title="Pajak & Biaya Layanan">
+      <Card icon={Receipt} title={t('set.taxTitle')}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Tarif Pajak (%)</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.taxRate')}</label>
             <input type="number" value={settings.tax_rate} onChange={e => set('tax_rate', Number(e.target.value) || 0)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Biaya Layanan (%)</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.serviceRate')}</label>
             <input type="number" value={settings.service_charge_rate} onChange={e => set('service_charge_rate', Number(e.target.value) || 0)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
         <label className="flex items-center gap-2.5 mt-4 cursor-pointer">
           <input type="checkbox" checked={settings.tax_included} onChange={e => set('tax_included', e.target.checked)} className="h-4 w-4 rounded accent-indigo-600" />
-          <span className="text-xs font-semibold text-slate-600">Harga produk sudah termasuk pajak</span>
+          <span className="text-xs font-semibold text-slate-600">{t('set.taxIncluded')}</span>
         </label>
         <div className="mt-4">
-          <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Pembulatan ke (Rp)</label>
+          <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.roundingTo')}</label>
           <input type="number" value={settings.rounding} onChange={e => set('rounding', Number(e.target.value) || 0)} placeholder="0 = tanpa pembulatan" className="w-full sm:w-48 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
         </div>
       </Card>
 
       {/* Struk & penomoran */}
-      <Card icon={Receipt} title="Struk & Penomoran">
+      <Card icon={Receipt} title={t('set.receiptTitle')}>
         <div className="space-y-4">
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Format Nomor Transaksi (prefix)</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.orderPrefix')}</label>
             <input value={settings.order_prefix || ''} onChange={e => set('order_prefix', e.target.value)} placeholder="ORD" className="w-full sm:w-48 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Header Struk</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.receiptHeader')}</label>
             <input value={settings.receipt_header || ''} onChange={e => set('receipt_header', e.target.value)} placeholder="Nama/alamat toko" className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Footer Struk</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.receiptFooter')}</label>
             <input value={settings.receipt_footer || ''} onChange={e => set('receipt_footer', e.target.value)} placeholder="Terima kasih..." className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
       </Card>
 
       {/* Pembayaran */}
-      <Card icon={CreditCard} title="Metode Pembayaran">
+      <Card icon={CreditCard} title={t('set.paymentTitle')}>
         <div className="flex flex-wrap gap-2">
           {ALL_PAYMENT_METHODS.map(m => {
             const active = settings.payment_methods.includes(m);
@@ -167,25 +166,25 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
             );
           })}
         </div>
-        <p className="text-[10px] text-slate-400 font-medium mt-2">Metode aktif akan muncul di halaman kasir.</p>
+        <p className="text-[10px] text-slate-400 font-medium mt-2">{t('set.paymentHint')}</p>
       </Card>
 
       {/* Zona waktu & notifikasi */}
-      <Card icon={Clock} title="Zona Waktu & Notifikasi">
+      <Card icon={Clock} title={t('set.tzTitle')}>
         <div className="space-y-4">
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Zona Waktu Toko</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.tz')}</label>
             <select value={settings.timezone} onChange={e => set('timezone', e.target.value)} className="w-full sm:w-64 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
               {TIMEZONES.map(tz => <option key={tz} value={tz}>{tz}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Batas Stok Minimum Default</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.lowStockThreshold')}</label>
             <input type="number" value={settings.low_stock_threshold} onChange={e => set('low_stock_threshold', Number(e.target.value) || 0)} className="w-full sm:w-48 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <label className="flex items-center gap-2.5 cursor-pointer">
             <input type="checkbox" checked={settings.notification_stock} onChange={e => set('notification_stock', e.target.checked)} className="h-4 w-4 rounded accent-indigo-600" />
-            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5"><Bell className="h-3.5 w-3.5 text-slate-400" /> Tampilkan notifikasi stok menipis</span>
+            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5"><Bell className="h-3.5 w-3.5 text-slate-400" /> {t('set.notifStock')}</span>
           </label>
         </div>
       </Card>

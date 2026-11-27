@@ -3,6 +3,7 @@ import { Users, ShieldCheck, Plus, Pencil, Trash2, X, Check, Loader2, AlertCircl
 import { dbService, PERMISSION_OPTIONS, DEFAULT_CASHIER_PERMISSIONS } from '../../lib/db';
 import type { Cashier, UserProfile, Store } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { useI18n } from '../../lib/i18n';
 
 interface StaffSectionProps {
   storeId: number;
@@ -22,6 +23,7 @@ type StaffForm = {
 const EMPTY_FORM: StaffForm = { name: '', email: '', password: '', permissions: [...DEFAULT_CASHIER_PERMISSIONS], store_ids: [] };
 
 export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, allStores = [] }: StaffSectionProps) {
+  const { t } = useI18n();
   const [cashiers] = useStoreData<Cashier[]>(dbService.getCashiers, storeId, refreshTrigger, []);
   const [owners, setOwners] = useState<UserProfile[]>([]);
   const [tab, setTab] = useState<'staff' | 'outlet'>('staff');
@@ -203,8 +205,8 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Outlet &amp; Tim</h2>
-          <p className="text-slate-400 text-xs mt-1.5 font-medium">Kelola outlet, akun owner/kasir, dan hak akses tiap staff.</p>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('staff.title')}</h2>
+          <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('staff.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           {tab === 'outlet' ? (
@@ -212,7 +214,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
               onClick={() => { setEditingOutlet(null); setOutletModalOpen(true); }}
               className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] px-3.5 py-2.5 rounded-xl cursor-pointer transition-all shadow-sm"
             >
-              <Plus className="h-3.5 w-3.5" /> Tambah Outlet
+              <Plus className="h-3.5 w-3.5" /> {t('staff.addOutlet')}
             </button>
           ) : (
             <>
@@ -220,13 +222,13 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                 onClick={openAddOwner}
                 className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-[11px] px-3.5 py-2.5 rounded-xl cursor-pointer transition-all shadow-sm"
               >
-                <Crown className="h-3.5 w-3.5" /> Tambah Owner
+                <Crown className="h-3.5 w-3.5" /> {t('staff.addOwner')}
               </button>
               <button
                 onClick={openAddStaff}
                 className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] px-3.5 py-2.5 rounded-xl cursor-pointer transition-all shadow-sm"
               >
-                <Plus className="h-3.5 w-3.5" /> Tambah Staff
+                <Plus className="h-3.5 w-3.5" /> {t('staff.addStaff')}
               </button>
             </>
           )}
@@ -235,14 +237,14 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
 
       {/* Tab switcher */}
       <div className="flex gap-1.5 bg-slate-50 border border-slate-100 p-0.5 rounded-2xl w-fit">
-        <button onClick={() => setTab('staff')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'staff' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>Tim & Akses</button>
-        <button onClick={() => setTab('outlet')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'outlet' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>Outlet</button>
+        <button onClick={() => setTab('staff')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'staff' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>{t('staff.tabTeam')}</button>
+        <button onClick={() => setTab('outlet')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'outlet' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>{t('staff.tabOutlet')}</button>
       </div>
 
       {tab === 'outlet' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {outlets.length === 0 ? (
-            <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-3xl p-10 text-center text-slate-400 text-xs font-semibold">Belum ada outlet.</div>
+            <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-3xl p-10 text-center text-slate-400 text-xs font-semibold">{t('staff.noOutlet')}</div>
           ) : outlets.map(s => (
             <div key={s.id} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between min-h-32">
               <div className="flex items-start gap-3">
@@ -253,7 +255,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-slate-50 pt-3 mt-3">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{s.id === storeId ? 'Outlet Aktif' : 'Outlet'}</span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{s.id === storeId ? t('staff.outletActive') : t('staff.tabOutlet')}</span>
                 <div className="flex items-center gap-1">
                   <button onClick={() => { setEditingOutlet(s); setOutletModalOpen(true); }} className="h-7 w-7 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 text-slate-300 inline-flex items-center justify-center cursor-pointer"><Pencil className="h-3.5 w-3.5" /></button>
                   <button onClick={() => deleteOutlet(s)} className="h-7 w-7 rounded-lg hover:bg-rose-50 hover:text-rose-600 text-slate-300 inline-flex items-center justify-center cursor-pointer"><Trash2 className="h-3.5 w-3.5" /></button>
@@ -268,7 +270,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
       {tab === 'staff' && <>
         <div>
         <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-          <Crown className="h-3.5 w-3.5 text-amber-500" /> Owner / Admin
+          <Crown className="h-3.5 w-3.5 text-amber-500" /> {t('staff.ownerSection')}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {owners.length === 0 ? (
@@ -292,7 +294,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                   </div>
                 </div>
                 <div className="flex items-center justify-between border-t border-slate-50 pt-3.5">
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Akses Penuh</span>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{t('staff.fullAccess')}</span>
                   <div className="flex items-center gap-1">
                     <button onClick={() => openEditOwner(owner)} title="Edit owner" className="h-7 w-7 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 text-slate-300 flex items-center justify-center cursor-pointer transition-colors">
                       <Pencil className="h-3.5 w-3.5" />
@@ -311,7 +313,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
       {/* Cashier list */}
       <div>
         <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> Kasir
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> {t('staff.cashierSection')}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {cashiers.length === 0 ? (
@@ -319,9 +321,9 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
               <div className="h-12 w-12 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-400 mx-auto shadow-sm">
                 <Users className="h-5.5 w-5.5" />
               </div>
-              <h4 className="font-bold text-slate-800 text-sm leading-none">Belum Ada Akun Kasir</h4>
+              <h4 className="font-bold text-slate-800 text-sm leading-none">{t('staff.noCashier')}</h4>
               <p className="text-slate-400 text-xs max-w-sm mx-auto leading-relaxed">
-                Klik "Tambah Staff" untuk membuat akun kasir baru dan mengatur hak aksesnya.
+                {t('staff.noCashierHint')}
               </p>
             </div>
           ) : (
@@ -359,7 +361,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                 <div className="flex items-center justify-between border-t border-slate-50 pt-3.5">
                   <div className="flex items-center gap-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
                     <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                    <span>Aktif</span>
+                    <span>{t('staff.active')}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <button onClick={() => openEditStaff(cashier)} title="Edit staff & akses" className="h-7 w-7 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 text-slate-300 flex items-center justify-center cursor-pointer transition-colors">
@@ -379,9 +381,9 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
 
       {/* Staff Modal */}
       {isStaffModalOpen && (
-        <ModalShell onClose={() => setStaffModalOpen(false)} title={editingStaff ? 'Edit Staff' : 'Tambah Staff Baru'} subtitle="Akun kasir + atur hak akses menu.">
+        <ModalShell onClose={() => setStaffModalOpen(false)} title={editingStaff ? t('common.edit') : t('staff.addStaff')} subtitle="Akun kasir + atur hak akses menu.">
           <div className="space-y-4">
-            <Field label="Nama Staff">
+            <Field label={t('staff.staffName')}>
               <input
                 type="text"
                 value={form.name}
@@ -395,7 +397,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
-                placeholder="e.g. budi@toko.com"
+                placeholder="email@contoh.com"
                 className={INPUT_CLASS}
               />
             </Field>
@@ -410,7 +412,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
             </Field>
 
             <div>
-              <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-2">Outlet yang Bisa Diakses</label>
+              <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-2">{t('staff.accessOutlets')}</label>
               <div className="flex flex-wrap gap-2">
                 {outlets.map(s => {
                   const active = form.store_ids.includes(s.id);
@@ -427,11 +429,11 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                   );
                 })}
               </div>
-              <p className="text-[9px] text-slate-400 font-medium mt-1.5">Kasir dapat berpindah outlet di antara outlet yang dipilih.</p>
+              <p className="text-[9px] text-slate-400 font-medium mt-1.5">{t('staff.accessHint')}</p>
             </div>
 
             <div>
-              <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-2">Hak Akses Menu</label>
+              <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-2">{t('staff.menuAccess')}</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {PERMISSION_OPTIONS.map(opt => {
                   const active = form.permissions.includes(opt.key);
@@ -462,10 +464,10 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
             {error && <ErrorBox message={error} />}
 
             <div className="flex items-center justify-end gap-2 pt-1">
-              <button onClick={() => setStaffModalOpen(false)} disabled={saving} className={BTN_SECONDARY}>Batal</button>
+              <button onClick={() => setStaffModalOpen(false)} disabled={saving} className={BTN_SECONDARY}>{t('common.cancel')}</button>
               <button onClick={submitStaff} disabled={saving} className={BTN_PRIMARY}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                {saving ? 'Menyimpan...' : 'Simpan'}
+                {saving ? t('common.saving') : t('common.save')}
               </button>
             </div>
           </div>
@@ -474,14 +476,14 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
 
       {/* Owner Modal */}
       {isOwnerModalOpen && (
-        <ModalShell onClose={() => setOwnerModalOpen(false)} title={editingOwner ? 'Edit Owner' : 'Tambah Owner Baru'} subtitle="Akun owner memiliki akses penuh ke semua menu.">
+        <ModalShell onClose={() => setOwnerModalOpen(false)} title={editingOwner ? t('common.edit') : t('staff.addOwner')} subtitle="Akun owner memiliki akses penuh ke semua menu.">
           <div className="space-y-4">
-            <Field label="Nama Owner">
+            <Field label={t('staff.ownerName')}>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
-                placeholder="e.g. Andi Wijaya"
+                placeholder="Nama lengkap"
                 className={INPUT_CLASS}
               />
             </Field>
@@ -490,7 +492,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
-                placeholder="e.g. andi@toko.com"
+                placeholder="email@contoh.com"
                 className={INPUT_CLASS}
               />
             </Field>
@@ -507,17 +509,17 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
             <div className="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3.5 py-3">
               <Crown className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
               <p className="text-[10px] font-semibold text-amber-700 leading-snug">
-                Akun owner otomatis mendapat akses ke seluruh menu: Dashboard, POS, Invoices, Katalog, Sales, dan Staff.
+                Akun owner otomatis mendapat akses ke seluruh menu.
               </p>
             </div>
 
             {error && <ErrorBox message={error} />}
 
             <div className="flex items-center justify-end gap-2 pt-1">
-              <button onClick={() => setOwnerModalOpen(false)} disabled={saving} className={BTN_SECONDARY}>Batal</button>
+              <button onClick={() => setOwnerModalOpen(false)} disabled={saving} className={BTN_SECONDARY}>{t('common.cancel')}</button>
               <button onClick={submitOwner} disabled={saving} className={BTN_PRIMARY}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                {saving ? 'Menyimpan...' : 'Simpan'}
+                {saving ? t('common.saving') : t('common.save')}
               </button>
             </div>
           </div>
@@ -541,6 +543,7 @@ function OutletModal({ outlet, onClose, onSave }: {
   onClose: () => void;
   onSave: (payload: { name: string; address?: string; phone?: string }) => Promise<void>;
 }) {
+  const { t } = useI18n();
   const [name, setName] = useState(outlet?.name || '');
   const [address, setAddress] = useState(outlet?.address || '');
   const [phone, setPhone] = useState(outlet?.phone || '');
@@ -559,23 +562,23 @@ function OutletModal({ outlet, onClose, onSave }: {
   };
 
   return (
-    <ModalShell onClose={onClose} title={outlet ? 'Edit Outlet' : 'Tambah Outlet'} subtitle="Data outlet untuk multi-cabang.">
+    <ModalShell onClose={onClose} title={outlet ? t('common.edit') : t('staff.addOutlet')} subtitle="Data outlet untuk multi-cabang.">
       <div className="space-y-4">
-        <Field label="Nama Outlet">
+        <Field label={t('staff.outletName')}>
           <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Mis. Cabang Bandung" className={INPUT_CLASS} />
         </Field>
-        <Field label="Alamat (opsional)">
+        <Field label={t('staff.address')}>
           <input type="text" value={address} onChange={e => setAddress(e.target.value)} className={INPUT_CLASS} />
         </Field>
-        <Field label="Telepon (opsional)">
+        <Field label={t('staff.phone')}>
           <input type="text" value={phone} onChange={e => setPhone(e.target.value)} className={INPUT_CLASS} />
         </Field>
         {error && <ErrorBox message={error} />}
         <div className="flex items-center justify-end gap-2 pt-1">
-          <button onClick={onClose} disabled={saving} className={BTN_SECONDARY}>Batal</button>
+          <button onClick={onClose} disabled={saving} className={BTN_SECONDARY}>{t('common.cancel')}</button>
           <button onClick={submit} disabled={saving} className={BTN_PRIMARY}>
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Building2 className="h-4 w-4" />}
-            {saving ? 'Menyimpan...' : 'Simpan'}
+            {saving ? t('common.saving') : t('common.save')}
           </button>
         </div>
       </div>

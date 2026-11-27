@@ -4,6 +4,7 @@ import { dbService, EXPENSE_CATEGORIES } from '../../lib/db';
 import type { Expense, UserProfile } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { toDateStr } from '../../api/localStore';
+import { useI18n } from '../../lib/i18n';
 
 interface ExpensesSectionProps {
   storeId: number;
@@ -15,6 +16,7 @@ interface ExpensesSectionProps {
 const fmt = (n: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n || 0);
 
 export default function ExpensesSection({ storeId, refreshTrigger, triggerRefresh, currentUser }: ExpensesSectionProps) {
+  const { t } = useI18n();
   const [expenses] = useStoreData<Expense[]>(dbService.getExpenses, storeId, refreshTrigger, []);
   const [editing, setEditing] = useState<Expense | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -58,15 +60,15 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Pengeluaran</h2>
-          <p className="text-slate-400 text-xs mt-1.5 font-medium">Catat biaya operasional toko.</p>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('exp.title')}</h2>
+          <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('exp.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <button onClick={exportCSV} className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-[11px] font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 cursor-pointer">
-            <Download className="h-3.5 w-3.5" /> Ekspor CSV
+            <Download className="h-3.5 w-3.5" /> {t('rpt.exportCsv')}
           </button>
           <button onClick={openAdd} className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
-            <Plus className="h-3.5 w-3.5" /> Tambah
+            <Plus className="h-3.5 w-3.5" /> {t('common.add')}
           </button>
         </div>
       </div>
@@ -75,11 +77,11 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-white border border-slate-100 rounded-2xl p-4 shadow-sm flex flex-wrap items-end gap-3">
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Dari</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.from')}</label>
             <input type="date" value={from} onChange={e => setFrom(e.target.value)} className="bg-slate-50 border border-slate-150 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Sampai</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.to')}</label>
             <input type="date" value={to} onChange={e => setTo(e.target.value)} className="bg-slate-50 border border-slate-150 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
           </div>
           {(from || to) && <button onClick={() => { setFrom(''); setTo(''); }} className="text-[11px] font-bold text-slate-400 hover:text-rose-500 pb-2">Reset</button>}
@@ -87,7 +89,7 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
         <div className="bg-indigo-600 rounded-2xl p-4 shadow-sm text-white flex items-center gap-3">
           <Wallet className="h-8 w-8 opacity-80" />
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider opacity-80">Total Pengeluaran</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider opacity-80">{t('exp.total')}</p>
             <p className="text-xl font-extrabold leading-tight">{fmt(total)}</p>
           </div>
         </div>
@@ -109,16 +111,16 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
           <table className="w-full text-sm">
             <thead>
               <tr className="text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-50">
-                <th className="text-left font-bold px-4 py-3">Tanggal</th>
-                <th className="text-left font-bold px-4 py-3">Kategori</th>
-                <th className="text-left font-bold px-4 py-3">Keterangan</th>
-                <th className="text-right font-bold px-4 py-3">Nominal</th>
-                <th className="text-right font-bold px-4 py-3">Aksi</th>
+                <th className="text-left font-bold px-4 py-3">{t('exp.date')}</th>
+                <th className="text-left font-bold px-4 py-3">{t('exp.category')}</th>
+                <th className="text-left font-bold px-4 py-3">{t('exp.description')}</th>
+                <th className="text-right font-bold px-4 py-3">{t('exp.amount')}</th>
+                <th className="text-right font-bold px-4 py-3">{t('common.action')}</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={5} className="px-4 py-10 text-center text-slate-400 text-xs font-semibold">Belum ada pengeluaran.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-10 text-center text-slate-400 text-xs font-semibold">{t('common.noData')}</td></tr>
               ) : filtered.map(e => (
                 <tr key={e.id} className="border-b border-slate-50 hover:bg-slate-50/50">
                   <td className="px-4 py-3 text-slate-500 text-xs whitespace-nowrap">{e.date}</td>
@@ -152,6 +154,7 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
 function ExpenseModal({ expense, storeId, userName, onClose, onDone }: {
   expense: Expense | null; storeId: number; userName: string; onClose: () => void; onDone: () => void;
 }) {
+  const { t } = useI18n();
   const [date, setDate] = useState(expense?.date || toDateStr(new Date()));
   const [category, setCategory] = useState(expense?.category || EXPENSE_CATEGORIES[0]);
   const [amount, setAmount] = useState(expense ? String(expense.amount) : '');
@@ -181,36 +184,36 @@ function ExpenseModal({ expense, storeId, userName, onClose, onDone }: {
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-extrabold text-slate-800 text-base">{expense ? 'Edit Pengeluaran' : 'Tambah Pengeluaran'}</h3>
+          <h3 className="font-extrabold text-slate-800 text-base">{expense ? t('exp.editTitle') : t('exp.addTitle')}</h3>
           <button onClick={onClose} className="h-8 w-8 rounded-lg hover:bg-slate-100 text-slate-400 flex items-center justify-center cursor-pointer"><X className="h-4 w-4" /></button>
         </div>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Tanggal</label>
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.date')}</label>
               <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
             </div>
             <div>
-              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Kategori</label>
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.category')}</label>
               <select value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800">
                 {EXPENSE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Nominal (Rp)</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.amount')} (Rp)</label>
             <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Keterangan</label>
-            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="Mis. bayar listrik" className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.description')}</label>
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder={t('exp.descPlaceholder')} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
         </div>
         {error && <p className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-3.5 py-2.5 mt-3">{error}</p>}
         <div className="flex justify-end gap-2 mt-5">
-          <button onClick={onClose} disabled={saving} className="px-4 py-2.5 rounded-xl text-[11px] font-bold text-slate-500 border border-slate-200 hover:bg-slate-50 cursor-pointer">Batal</button>
+          <button onClick={onClose} disabled={saving} className="px-4 py-2.5 rounded-xl text-[11px] font-bold text-slate-500 border border-slate-200 hover:bg-slate-50 cursor-pointer">{t('common.cancel')}</button>
           <button onClick={submit} disabled={saving} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
-            {saving && <Loader2 className="h-4 w-4 animate-spin" />} Simpan
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />} {t('common.save')}
           </button>
         </div>
       </div>

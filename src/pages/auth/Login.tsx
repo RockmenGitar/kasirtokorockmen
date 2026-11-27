@@ -3,12 +3,14 @@ import { Mail, Lock, AlertCircle, Sparkles } from 'lucide-react';
 import KasirIcon from '../../components/ui/KasirIcon';
 import { authService, type UserProfile } from '../../lib/db';
 import ForgotPassword from './ForgotPassword';
+import { useI18n } from '../../lib/i18n';
 
 interface LoginProps {
   onLoginSuccess: (user: UserProfile) => void;
 }
 
 export default function Login({ onLoginSuccess }: LoginProps) {
+  const { t } = useI18n();
   const [showForgot, setShowForgot] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,7 +65,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
               <div>
                 <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">
-                  Alamat Email
+                  {t('auth.email')}
                 </label>
                 <div className="relative">
                   <input
@@ -80,7 +82,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
               <div>
                 <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">
-                  Kata Sandi
+                  {t('auth.password')}
                 </label>
                 <div className="relative">
                   <input
@@ -102,7 +104,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
               >
                 {loading
                   ? <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  : <><Sparkles className="h-4 w-4" /><span>Masuk</span></>
+                  : <><Sparkles className="h-4 w-4" /><span>{t('auth.login')}</span></>
                 }
               </button>
             </form>
@@ -113,20 +115,20 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                 onClick={() => setShowForgot(true)}
                 className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
               >
-                Lupa kata sandi?
+                {t('auth.forgot')}
               </button>
             </div>
 
             <div className="mt-6 pt-5 border-t border-slate-100 text-center">
               <p className="text-[11px] text-slate-500 font-semibold">
-                Belum punya akun?{' '}
+                {t('auth.noAccount')}{' '}
                 <a
                   href="https://wa.me/6281384437767"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:text-indigo-700 font-bold transition-colors"
                 >
-                  Hubungi kami
+                  {t('auth.contact')}
                 </a>
               </p>
             </div>
