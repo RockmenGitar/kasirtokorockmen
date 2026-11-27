@@ -31,6 +31,7 @@ interface ProductGridProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onAddToCart: (product: Product) => void;
+  onScanCode?: (code: string) => void;
   categories?: Category[];
 }
 
@@ -41,6 +42,7 @@ export default function ProductGrid({
   searchQuery,
   setSearchQuery,
   onAddToCart,
+  onScanCode,
   categories = []
 }: ProductGridProps) {
   const { t } = useI18n();
@@ -75,6 +77,16 @@ export default function ProductGrid({
             placeholder={t('pos.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && onScanCode) {
+                const code = searchQuery.trim();
+                if (code) {
+                  e.preventDefault();
+                  onScanCode(code);
+                  setSearchQuery('');
+                }
+              }
+            }}
             className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-650 shadow-xs transition-all"
           />
         </div>

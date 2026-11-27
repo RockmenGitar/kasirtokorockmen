@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { dbService, DEFAULT_STORE_SETTINGS } from '../../lib/db';
 import type { Product, Transaction, Category, UserProfile, Customer, StoreSettings, Promo } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
@@ -8,6 +8,9 @@ import { useI18n } from '../../lib/i18n';
 import ProductGrid from './ProductGrid';
 import CartDrawer, { type CartItem } from './CartDrawer';
 import OrderSuccessModal from '../../components/modal/OrderSuccessModal';
+import { useBarcodeScanner } from '../../lib/barcode/useBarcodeScanner';
+import { findByBarcode } from '../../lib/barcode/lookup';
+import { beepSuccess, beepError } from '../../lib/barcode/beep';
 
 interface POSSectionProps {
   storeId: number;
@@ -44,6 +47,15 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
 
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
+
+  const [scanFeedback, setScanFeedback] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const feedbackTimer = useRef<number | null>(null);
+
+  const showScanFeedback = (type: 'ok' | 'err', text: string) => {
+    setScanFeedback({ type, text });
+    if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
+    feedbackTimer.current = window.setTimeout(() => setScanFeedback(null), 2200);
+  };
 
   useEffect(() => {
     dbService.getActivePromos(storeId).then(setActivePromos).catch(() => {});
@@ -90,6 +102,49 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
       return [...prev, { product, quantity: 1 }];
     });
   };
+
+  // Tambah ke keranjang dari hasil scan barcode (bisa produk atau varian)
+  const handleBarcodeScan = useCallback((code: string) => {
+    const match = findByBarcode(products, code);
+    if (!match) {
+      beepError();
+      showScanFeedback('err', `Barcode "${code}" tidak ditemukan`);
+      return;
+    }
+    const { product, variant } = match;
+    // Produk ber-varian: jika varian terpilih dipakai, gunakan harga varian & stok varian
+    const effPrice = variant ? variant.price : product.price;
+    const effStock = variant ? variant.stock_quantity : product.stock_quantity;
+
+    setCart(prev => {
+      const key = variant ? `${product.id}::${variant.id}` : product.id;
+      const exists = prev.find(i => (i.variant ? `${i.product.id}::${i.variant.id}` : i.product.id) === key);
+      if (exists) {
+        if (exists.quantity >= effStock) {
+          beepError();
+          showScanFeedback('err', `Stok ${product.name} tidak cukup`);
+          return prev;
+        }
+        return prev.map(i => ((i.variant ? `${i.product.id}::${i.variant.id}` : i.product.id) === key)
+          ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      if (effStock <= 0) {
+        beepError();
+        showScanFeedback('err', `Stok ${product.name} habis`);
+        return prev;
+      }
+      const item: CartItem = {
+        product: { ...product, price: effPrice, stock_quantity: effStock },
+        quantity: 1,
+        ...(variant ? { variant } : {}),
+      };
+      return [...prev, item];
+    });
+    beepSuccess();
+    showScanFeedback('ok', `${product.name}${variant ? ` (${variant.name})` : ''} ditambahkan`);
+  }, [products]);
+
+  useBarcodeScanner({ onScan: handleBarcodeScan });
 
   const handleUpdateCartQty = (productId: string, quantity: number) => {
     if (quantity <= 0) { handleRemoveFromCart(productId); return; }
@@ -223,6 +278,16 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
   return (
     <div className="flex flex-col lg:flex-row gap-8 animate-fadeIn">
 
+      {/* Scan feedback toast */}
+      {scanFeedback && (
+        <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-[60] px-5 py-3 rounded-2xl shadow-lg text-sm font-bold flex items-center gap-2 animate-fadeIn ${
+          scanFeedback.type === 'ok' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
+        }`}>
+          <span>{scanFeedback.type === 'ok' ? '✓' : '✕'}</span>
+          <span>{scanFeedback.text}</span>
+        </div>
+      )}
+
       {/* Product Grid Area */}
       <div className="flex-1 space-y-6 py-8">
         <div className="flex justify-between items-center shrink-0">
@@ -230,6 +295,10 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
             <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('pos.title')}</h2>
             <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('pos.subtitle')}</p>
           </div>
+          <span className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1.5 rounded-full text-[10px] font-bold">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            {t('pos.scannerActive')}
+          </span>
         </div>
 
         <ProductGrid
@@ -239,6 +308,7 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onAddToCart={handleAddToCart}
+          onScanCode={handleBarcodeScan}
           categories={categories}
         />
       </div>

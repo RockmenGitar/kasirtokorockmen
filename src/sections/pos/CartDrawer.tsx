@@ -27,6 +27,7 @@ export interface CartItem {
   quantity: number;
   note?: string;
   discount?: number; // nominal per item
+  variant?: import('../../api/types').ProductVariant;
 }
 
 interface CartDrawerProps {
