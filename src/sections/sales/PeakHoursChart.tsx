@@ -1,5 +1,6 @@
 import { Clock } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   transactions: Transaction[];
@@ -9,6 +10,7 @@ const fmtIDR = (n: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 
 export default function PeakHoursChart({ transactions }: Props) {
+  const { t } = useI18n();
   const buckets = Array.from({ length: 24 }, () => ({ revenue: 0, count: 0 }));
 
   transactions.forEach(tx => {
@@ -29,8 +31,8 @@ export default function PeakHoursChart({ transactions }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col h-full min-h-[340px]">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Jam Ramai</h4>
-          <p className="text-[10px] text-slate-400 font-medium mt-1">Pendapatan per jam (00:00 – 23:00)</p>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.peakHours')}</h4>
+          <p className="text-[10px] text-slate-400 font-medium mt-1">{t('sales.peakHoursDesc')}</p>
         </div>
         <div className="h-8 w-8 bg-amber-50 rounded-xl flex items-center justify-center">
           <Clock className="h-4 w-4 text-amber-500" />
@@ -42,7 +44,7 @@ export default function PeakHoursChart({ transactions }: Props) {
           <div className="h-20 w-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
             <Clock className="h-8 w-8 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada data</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noData')}</p>
         </div>
       ) : (
         <>
@@ -80,7 +82,7 @@ export default function PeakHoursChart({ transactions }: Props) {
 
           {peakHour.hour >= 0 && (
             <div className="mt-4 pt-3 border-t border-slate-50 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Jam Tersibuk</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('sales.busiestHour')}</span>
               <div className="flex items-center gap-2">
                 <span className="bg-amber-50 border border-amber-100 text-amber-700 px-2 py-0.5 rounded-md text-[10px] font-extrabold font-mono">
                   {String(peakHour.hour).padStart(2, '0')}:00

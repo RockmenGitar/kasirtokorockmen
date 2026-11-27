@@ -1,5 +1,6 @@
 import { AlertTriangle, PackageX } from 'lucide-react';
 import type { Product } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   products: Product[];
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function LowStockAlert({ products, threshold = 5 }: Props) {
+  const { t } = useI18n();
   const lowStock = products
     .filter(p => p.stock_quantity <= threshold)
     .sort((a, b) => a.stock_quantity - b.stock_quantity);
@@ -15,7 +17,7 @@ export default function LowStockAlert({ products, threshold = 5 }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Stok Tipis</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.lowStock')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Produk dengan stok ≤ {threshold} unit</p>
         </div>
         <div className="h-8 w-8 bg-rose-50 rounded-xl flex items-center justify-center">
@@ -29,7 +31,7 @@ export default function LowStockAlert({ products, threshold = 5 }: Props) {
             <PackageX className="h-5 w-5 text-emerald-500" />
           </div>
           <p className="text-xs font-bold text-slate-600">Semua stok aman</p>
-          <p className="text-[10px] text-slate-400 font-medium mt-1">Tidak ada produk dengan stok kritis</p>
+          <p className="text-[10px] text-slate-400 font-medium mt-1">{t('sales.lowStockOk')}</p>
         </div>
       ) : (
         <div className="space-y-2 max-h-[280px] overflow-y-auto -mx-2 px-2">

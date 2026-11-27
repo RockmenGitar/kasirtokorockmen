@@ -1,5 +1,6 @@
 import { Trophy, Package } from 'lucide-react';
 import type { TopProductRow } from './SalesSection';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   data: TopProductRow[];
@@ -15,6 +16,7 @@ const RANK_STYLES = [
 ];
 
 export default function TopProductsTable({ data }: Props) {
+  const { t } = useI18n();
   const maxSold = data.length > 0 ? data[0].sold : 1; // data is pre-sorted desc
 
   return (
@@ -26,7 +28,7 @@ export default function TopProductsTable({ data }: Props) {
           <Trophy className="h-3.5 w-3.5 text-amber-500" />
         </div>
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Produk Terlaris</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.topProducts')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">Berdasarkan jumlah unit terjual</p>
         </div>
       </div>
@@ -36,7 +38,7 @@ export default function TopProductsTable({ data }: Props) {
           <div className="h-12 w-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mb-3">
             <Package className="h-5 w-5 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada data penjualan</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noDataSales')}</p>
           <p className="text-[10px] text-slate-300 font-medium mt-1">
             Data produk terlaris akan muncul setelah ada transaksi
           </p>
@@ -47,9 +49,9 @@ export default function TopProductsTable({ data }: Props) {
             <thead>
               <tr className="bg-slate-50/60 text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">
                 <th className="px-6 py-3">#</th>
-                <th className="px-4 py-3">Produk</th>
-                <th className="px-4 py-3">Kategori</th>
-                <th className="px-4 py-3">Terjual</th>
+                <th className="px-4 py-3">{t('common.product')}</th>
+                <th className="px-4 py-3">{t('common.category')}</th>
+                <th className="px-4 py-3">{t('sales.sold')}</th>
                 <th className="px-4 py-3">Omset</th>
                 <th className="px-6 py-3">Volume</th>
               </tr>

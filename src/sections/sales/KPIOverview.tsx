@@ -1,5 +1,6 @@
 import { Wallet, ShoppingBag, BarChart3, Package } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   transactions: Transaction[];
@@ -9,6 +10,7 @@ const fmtIDR = (n: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 
 export default function KPIOverview({ transactions }: Props) {
+  const { t } = useI18n();
   const totalRevenue = transactions.reduce((s, tx) => s + Number(tx.total_amount), 0);
   const totalOrders  = transactions.length;
   const avgOrder     = totalOrders > 0 ? totalRevenue / totalOrders : 0;
@@ -16,33 +18,33 @@ export default function KPIOverview({ transactions }: Props) {
 
   const metrics = [
     {
-      title: 'Total Pendapatan',
+      title: t('sales.totalRevenue'),
       value: fmtIDR(Math.round(totalRevenue)),
-      sub: `${totalOrders} transaksi`,
+      sub: `${totalOrders} ${t('sales.txCount')}`,
       icon: Wallet,
       gradient: 'from-indigo-500 to-violet-600',
       light: 'bg-indigo-50 text-indigo-600',
     },
     {
-      title: 'Jumlah Pesanan',
+      title: t('sales.orderCount'),
       value: totalOrders.toLocaleString('id-ID'),
-      sub: totalOrders === 0 ? 'Belum ada transaksi' : 'total transaksi',
+      sub: totalOrders === 0 ? t('sales.noTxShort') : t('sales.txCount'),
       icon: ShoppingBag,
       gradient: 'from-emerald-500 to-teal-600',
       light: 'bg-emerald-50 text-emerald-600',
     },
     {
-      title: 'Rata-rata Pesanan',
+      title: t('sales.avgOrder'),
       value: fmtIDR(Math.round(avgOrder)),
-      sub: 'per transaksi',
+      sub: t('sales.perTx'),
       icon: BarChart3,
       gradient: 'from-amber-500 to-orange-500',
       light: 'bg-amber-50 text-amber-600',
     },
     {
-      title: 'Total Item Terjual',
+      title: t('sales.totalItems'),
       value: totalItems.toLocaleString('id-ID'),
-      sub: 'unit produk',
+      sub: t('sales.unitProduct'),
       icon: Package,
       gradient: 'from-rose-500 to-pink-600',
       light: 'bg-rose-50 text-rose-600',

@@ -1,6 +1,8 @@
 import { CreditCard, Banknote, QrCode } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
 import { fmtIDR } from '../../lib/format';
+import { useI18n } from '../../lib/i18n';
+import { paymentKey } from '../../lib/labels';
 
 interface Props {
   transactions: Transaction[];
@@ -12,6 +14,7 @@ const METHODS = [
 ] as const;
 
 export default function PaymentMethodCard({ transactions }: Props) {
+  const { t } = useI18n();
   const totalRevenue = transactions.reduce((s, t) => s + Number(t.total_amount), 0);
 
   const stats = METHODS.map(m => {
@@ -40,7 +43,7 @@ export default function PaymentMethodCard({ transactions }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col h-full min-h-[340px]">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Per Metode Bayar</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.byPayment')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Distribusi Tunai vs QRIS</p>
         </div>
         <div className="h-8 w-8 bg-indigo-50 rounded-xl flex items-center justify-center">
@@ -53,7 +56,7 @@ export default function PaymentMethodCard({ transactions }: Props) {
           <div className="h-28 w-28 rounded-full bg-slate-100 flex items-center justify-center mb-4">
             <CreditCard className="h-8 w-8 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada transaksi</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noTxShort')}</p>
         </div>
       ) : (
         <div className="flex-1 flex flex-col justify-between">
@@ -93,7 +96,7 @@ export default function PaymentMethodCard({ transactions }: Props) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-700">{s.label}</span>
+                      <span className="text-xs font-bold text-slate-700">{t(paymentKey(s.id))}</span>
                       <span className="text-[10px] font-extrabold text-slate-800">{s.pct.toFixed(1)}%</span>
                     </div>
                     <div className="flex items-center justify-between mt-0.5">

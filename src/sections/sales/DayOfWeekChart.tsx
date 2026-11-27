@@ -1,5 +1,6 @@
 import { CalendarDays } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   transactions: Transaction[];
@@ -11,6 +12,7 @@ const fmtIDR = (n: number) =>
 const DAYS = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
 export default function DayOfWeekChart({ transactions }: Props) {
+  const { t } = useI18n();
   const buckets = Array.from({ length: 7 }, () => ({ revenue: 0, count: 0 }));
 
   transactions.forEach(tx => {
@@ -31,8 +33,8 @@ export default function DayOfWeekChart({ transactions }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col h-full min-h-[340px]">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Per Hari</h4>
-          <p className="text-[10px] text-slate-400 font-medium mt-1">Pendapatan berdasarkan hari</p>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.byDay')}</h4>
+          <p className="text-[10px] text-slate-400 font-medium mt-1">{t('sales.byDayDesc')}</p>
         </div>
         <div className="h-8 w-8 bg-emerald-50 rounded-xl flex items-center justify-center">
           <CalendarDays className="h-4 w-4 text-emerald-500" />
@@ -44,7 +46,7 @@ export default function DayOfWeekChart({ transactions }: Props) {
           <div className="h-20 w-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
             <CalendarDays className="h-8 w-8 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada data</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noData')}</p>
         </div>
       ) : (
         <>
@@ -75,7 +77,7 @@ export default function DayOfWeekChart({ transactions }: Props) {
 
           {peakDay.day >= 0 && (
             <div className="mt-4 pt-3 border-t border-slate-50 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hari Tersibuk</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('sales.busiestDay')}</span>
               <div className="flex items-center gap-2">
                 <span className="bg-emerald-50 border border-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md text-[10px] font-extrabold">
                   {DAYS[peakDay.day]}

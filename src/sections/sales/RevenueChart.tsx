@@ -1,5 +1,6 @@
 import { BarChart2 } from 'lucide-react';
 import type { ChartPoint } from './SalesSection';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   data: ChartPoint[];
@@ -16,6 +17,7 @@ const fmtIDR = (n: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 
 export default function RevenueChart({ data, timeRange }: Props) {
+  const { t } = useI18n();
   const maxAmount = Math.max(...data.map(d => d.amount), 1);
   const totalAmount = data.reduce((s, d) => s + d.amount, 0);
   const hasData = totalAmount > 0;
@@ -36,9 +38,9 @@ export default function RevenueChart({ data, timeRange }: Props) {
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Pendapatan</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.revenue')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">
-            Total: <span className="font-bold text-slate-600">{fmtIDR(totalAmount)}</span>
+            {t('common.total')}: <span className="font-bold text-slate-600">{fmtIDR(totalAmount)}</span>
           </p>
         </div>
         <div className="h-8 w-8 bg-indigo-50 rounded-xl flex items-center justify-center">
@@ -51,8 +53,8 @@ export default function RevenueChart({ data, timeRange }: Props) {
           <div className="h-12 w-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mb-3">
             <BarChart2 className="h-5 w-5 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada transaksi</p>
-          <p className="text-[10px] text-slate-300 font-medium mt-1">Data akan muncul setelah ada penjualan</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noTxShort')}</p>
+          <p className="text-[10px] text-slate-300 font-medium mt-1">{t('sales.chartNoData')}</p>
         </div>
       ) : (
         <div className="flex-1 flex flex-col">

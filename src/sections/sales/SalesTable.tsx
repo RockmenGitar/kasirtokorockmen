@@ -1,5 +1,6 @@
 import { ClipboardList, Receipt } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   transactions: Transaction[];
@@ -23,6 +24,7 @@ const METHOD_STYLES: Record<string, string> = {
 };
 
 export default function SalesTable({ transactions }: Props) {
+  const { t } = useI18n();
   return (
     <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
 
@@ -32,7 +34,7 @@ export default function SalesTable({ transactions }: Props) {
           <ClipboardList className="h-3.5 w-3.5 text-indigo-500" />
         </div>
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Daftar Penjualan</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.salesList')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">
             {transactions.length} transaksi dalam periode ini
           </p>
@@ -44,7 +46,7 @@ export default function SalesTable({ transactions }: Props) {
           <div className="h-12 w-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mb-3">
             <Receipt className="h-5 w-5 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada transaksi</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noTxShort')}</p>
           <p className="text-[10px] text-slate-300 font-medium mt-1">
             Data akan muncul setelah ada penjualan pada periode ini
           </p>
@@ -54,15 +56,15 @@ export default function SalesTable({ transactions }: Props) {
           <table className="w-full text-left min-w-[900px]">
             <thead>
               <tr className="bg-slate-50/60 text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">
-                <th className="px-6 py-3">No. Order</th>
-                <th className="px-4 py-3">Waktu</th>
-                <th className="px-4 py-3">Customer</th>
-                <th className="px-4 py-3">Kasir</th>
-                <th className="px-4 py-3">Metode</th>
-                <th className="px-4 py-3">Item</th>
-                <th className="px-4 py-3">Kategori</th>
-                <th className="px-4 py-3">PPN (11%)</th>
-                <th className="px-6 py-3">Total</th>
+                <th className="px-6 py-3">{t('inv.receiptNo')}</th>
+                <th className="px-4 py-3">{t('common.time')}</th>
+                <th className="px-4 py-3">{t('inv.customer')}</th>
+                <th className="px-4 py-3">{t('shift.cashier')}</th>
+                <th className="px-4 py-3">{t('sales.method')}</th>
+                <th className="px-4 py-3">{t('sales.item')}</th>
+                <th className="px-4 py-3">{t('common.category')}</th>
+                <th className="px-4 py-3">{t('pos.tax')} (11%)</th>
+                <th className="px-6 py-3">{t('common.total')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">

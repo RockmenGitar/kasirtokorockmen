@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   currentPeriod: Transaction[];
@@ -16,6 +17,7 @@ function calcGrowth(current: number, previous: number): number | null {
 }
 
 export default function PeriodComparison({ currentPeriod, previousPeriod, rangeLabel }: Props) {
+  const { t } = useI18n();
   const curRevenue = currentPeriod.reduce((s, t) => s + Number(t.total_amount), 0);
   const prevRevenue = previousPeriod.reduce((s, t) => s + Number(t.total_amount), 0);
   const curOrders = currentPeriod.length;
@@ -24,18 +26,18 @@ export default function PeriodComparison({ currentPeriod, previousPeriod, rangeL
   const prevAvg = prevOrders > 0 ? prevRevenue / prevOrders : 0;
 
   const metrics = [
-    { label: 'Pendapatan', current: fmtIDR(Math.round(curRevenue)), growth: calcGrowth(curRevenue, prevRevenue) },
-    { label: 'Pesanan', current: curOrders.toLocaleString('id-ID'), growth: calcGrowth(curOrders, prevOrders) },
-    { label: 'Rata-rata Pesanan', current: fmtIDR(Math.round(curAvg)), growth: calcGrowth(curAvg, prevAvg) },
+    { label: t('sales.revenue'), current: fmtIDR(Math.round(curRevenue)), growth: calcGrowth(curRevenue, prevRevenue) },
+    { label: t('sales.orders'), current: curOrders.toLocaleString('id-ID'), growth: calcGrowth(curOrders, prevOrders) },
+    { label: t('sales.avgOrder'), current: fmtIDR(Math.round(curAvg)), growth: calcGrowth(curAvg, prevAvg) },
   ];
 
   return (
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex items-start justify-between mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Perbandingan Periode</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.periodCompare')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">
-            {rangeLabel} vs periode sebelumnya
+            {rangeLabel} {t('sales.vsPrevPeriod')}
           </p>
         </div>
         <div className="h-8 w-8 bg-indigo-50 rounded-xl flex items-center justify-center">
@@ -64,7 +66,7 @@ export default function PeriodComparison({ currentPeriod, previousPeriod, rangeL
                 <Icon className="h-3 w-3" />
                 <span>
                   {isFlat
-                    ? 'Tidak ada perubahan'
+                    ? t('sales.noChange')
                     : `${m.growth! > 0 ? '+' : ''}${m.growth!.toFixed(1)}%`}
                 </span>
               </div>

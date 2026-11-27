@@ -1,5 +1,6 @@
 import { PieChart } from 'lucide-react';
 import type { CategoryPoint } from './SalesSection';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   data: CategoryPoint[];
@@ -10,6 +11,7 @@ const fmtIDR = (n: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 
 export default function CategoryDonut({ data, totalOrders }: Props) {
+  const { t } = useI18n();
   const hasData = data.length > 0 && data.some(d => d.amount > 0);
 
   // Build conic-gradient string from real percentages
@@ -35,7 +37,7 @@ export default function CategoryDonut({ data, totalOrders }: Props) {
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Per Kategori</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.byCategory')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Distribusi penjualan</p>
         </div>
         <div className="h-8 w-8 bg-violet-50 rounded-xl flex items-center justify-center">
@@ -48,7 +50,7 @@ export default function CategoryDonut({ data, totalOrders }: Props) {
           <div className="h-28 w-28 rounded-full bg-slate-100 flex items-center justify-center mb-4">
             <PieChart className="h-8 w-8 text-slate-300" />
           </div>
-          <p className="text-xs font-bold text-slate-400">Belum ada data</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noData')}</p>
           <p className="text-[10px] text-slate-300 font-medium mt-1">Mulai jual produk untuk melihat distribusi</p>
         </div>
       ) : (

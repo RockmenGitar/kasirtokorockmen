@@ -1,5 +1,6 @@
 import { UserCheck, Crown } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface Props {
   transactions: Transaction[];
@@ -16,6 +17,7 @@ const fmtIDR = (n: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 
 export default function CashierPerformanceTable({ transactions }: Props) {
+  const { t } = useI18n();
   const map = new Map<string, { count: number; revenue: number }>();
 
   transactions.forEach(tx => {
@@ -42,7 +44,7 @@ export default function CashierPerformanceTable({ transactions }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">Performa Kasir</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.cashierPerf')}</h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Ranking kasir berdasarkan pendapatan</p>
         </div>
         <div className="h-8 w-8 bg-violet-50 rounded-xl flex items-center justify-center">
@@ -52,7 +54,7 @@ export default function CashierPerformanceTable({ transactions }: Props) {
 
       {rows.length === 0 ? (
         <div className="py-10 text-center">
-          <p className="text-xs font-bold text-slate-400">Belum ada transaksi</p>
+          <p className="text-xs font-bold text-slate-400">{t('sales.noTxShort')}</p>
         </div>
       ) : (
         <div className="overflow-x-auto -mx-2">
@@ -60,10 +62,10 @@ export default function CashierPerformanceTable({ transactions }: Props) {
             <thead>
               <tr className="text-left text-[9px] font-bold text-slate-400 uppercase tracking-wider">
                 <th className="px-2 py-2">#</th>
-                <th className="px-2 py-2">Nama Kasir</th>
-                <th className="px-2 py-2 text-right">Transaksi</th>
+                <th className="px-2 py-2">{t('sales.cashierName')}</th>
+                <th className="px-2 py-2 text-right">{t('rpt.transactions')}</th>
                 <th className="px-2 py-2 text-right">Rata-rata</th>
-                <th className="px-2 py-2 text-right">Total Pendapatan</th>
+                <th className="px-2 py-2 text-right">{t('sales.totalRevenue')}</th>
                 <th className="px-2 py-2 w-24">Kontribusi</th>
               </tr>
             </thead>
