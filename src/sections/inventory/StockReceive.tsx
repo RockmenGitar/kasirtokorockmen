@@ -341,7 +341,7 @@ export default function StockReceive({ storeId, products, currentUser, store, on
       {variantPicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setVariantPicker(null)} />
-          <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
             <h3 className="font-extrabold text-slate-800 text-base">{t('recv.pickVariant')}</h3>
             <p className="text-[11px] text-slate-400 mt-0.5">{variantPicker.name}</p>
             <div className="flex flex-wrap gap-2 mt-4">

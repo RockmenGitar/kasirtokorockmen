@@ -113,7 +113,7 @@ function ProductCard({ product, onEditClick, onDeleteClick, categories }: {
 export default function CatalogGrid({ products, onEditClick, onDeleteClick, categories = [] }: CatalogGridProps) {
   if (products.length === 0) {
     return (
-      <div className="bg-white border border-slate-100 rounded-3xl p-16 text-center">
+      <div className="bg-white border border-slate-100 rounded-2xl p-16 text-center">
         <div className="mx-auto h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
           <ImageOff className="h-7 w-7 text-slate-300" />
         </div>

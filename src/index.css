@@ -5,6 +5,32 @@
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
 
+  /* ── Aksen utama: hijau tua (nuansa kasir/uang) ──
+     Memetakan ulang skala indigo & violet ke hijau agar seluruh UI
+     (tombol, tautan, badge, gradien) memakai identitas yang konsisten
+     tanpa mengubah ratusan kelas satu per satu. */
+  --color-indigo-50:  oklch(97.4% .017 165);
+  --color-indigo-100: oklch(94.5% .034 166);
+  --color-indigo-200: oklch(89.5% .062 166);
+  --color-indigo-300: oklch(82.5% .093 166);
+  --color-indigo-400: oklch(74.5% .121 165);
+  --color-indigo-500: oklch(66.5% .132 164);
+  --color-indigo-600: oklch(53.0% .118 164);
+  --color-indigo-700: oklch(45.0% .103 165);
+  --color-indigo-800: oklch(38.5% .087 166);
+  --color-indigo-900: oklch(32.5% .073 167);
+
+  --color-violet-50:  oklch(96.5% .021 172);
+  --color-violet-100: oklch(93.0% .040 172);
+  --color-violet-200: oklch(87.0% .068 172);
+  --color-violet-300: oklch(79.5% .095 171);
+  --color-violet-400: oklch(71.0% .118 170);
+  --color-violet-500: oklch(60.0% .124 169);
+  --color-violet-600: oklch(49.5% .108 168);
+  --color-violet-700: oklch(42.0% .094 168);
+  --color-violet-800: oklch(36.0% .080 168);
+  --color-violet-900: oklch(30.5% .066 169);
+
   /* ── Custom Color Scale Extensions ── */
   /* Indigo intermediate shades */
   --color-indigo-155: oklch(90.5% .053 254.6);

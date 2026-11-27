@@ -96,7 +96,7 @@ export default function HelpSection({ role }: HelpSectionProps) {
           return (
             <div
               key={idx}
-              className="bg-white border border-slate-100 rounded-3xl p-5 shadow-xs flex gap-4 group hover:border-indigo-100 hover:shadow-md hover:shadow-slate-100/50 transition-all duration-300"
+              className="bg-white border border-slate-100 rounded-2xl p-5 shadow-xs flex gap-4 group hover:border-indigo-100 hover:shadow-md hover:shadow-slate-100/50 transition-all duration-300"
             >
               <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105">
                 <Icon className="h-4 w-4" />
@@ -111,7 +111,7 @@ export default function HelpSection({ role }: HelpSectionProps) {
       </div>
 
       {/* FAQ */}
-      <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-5">
+      <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-5">
         <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-2">
           <BookOpen className="h-4 w-4 text-indigo-600" />
           <span>Pertanyaan yang Sering Ditanyakan</span>

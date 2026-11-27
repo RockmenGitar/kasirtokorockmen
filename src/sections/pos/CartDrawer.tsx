@@ -113,7 +113,7 @@ export default function CartDrawer({
 
   const shell = isMobileSheet
     ? 'fixed inset-x-0 bottom-0 z-50 w-full max-h-[88vh] rounded-t-3xl border-t border-slate-100 bg-white p-5 shadow-2xl flex flex-col'
-    : 'w-full lg:w-96 bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col h-[calc(100vh-4rem)] sticky top-16 self-start';
+    : 'w-full lg:w-96 bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col h-[calc(100vh-4rem)] sticky top-16 self-start';
 
   return (
     <>

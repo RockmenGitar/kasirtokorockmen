@@ -54,7 +54,7 @@ export default function ResetPassword({ onSuccess }: ResetPasswordProps) {
       <div className="absolute top-1/4 left-1/4 h-[420px] w-[420px] bg-indigo-200/40 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 h-[360px] w-[360px] bg-violet-200/30 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="w-full max-w-md bg-white border border-slate-100 rounded-3xl p-8 shadow-xl shadow-slate-200/50 relative z-10">
+      <div className="w-full max-w-md bg-white border border-slate-100 rounded-2xl p-8 shadow-xl shadow-slate-200/50 relative z-10">
 
         <div className="text-center mb-8">
           <div className="h-14 w-14 bg-gradient-to-tr from-indigo-500 to-indigo-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-200">

@@ -31,7 +31,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
   };
 
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4 text-left animate-fadeIn">
+    <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4 text-left animate-fadeIn">
       
       <div className="flex items-center justify-between">
         <h4 className="font-extrabold text-slate-800 text-sm leading-none flex items-center gap-2">

@@ -260,7 +260,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {outlets.length === 0 ? (
-            <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-3xl p-10 text-center text-slate-400 text-xs font-semibold">{t('staff.noOutlet')}</div>
+            <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-2xl p-10 text-center text-slate-400 text-xs font-semibold">{t('staff.noOutlet')}</div>
           ) : outlets.map(s => (
             <div key={s.id} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between min-h-32">
               <div className="flex items-start gap-3">
@@ -336,7 +336,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {cashiers.length === 0 ? (
-            <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-3xl p-10 text-center space-y-3">
+            <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-2xl p-10 text-center space-y-3">
               <div className="h-12 w-12 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-400 mx-auto shadow-sm">
                 <Users className="h-5.5 w-5.5" />
               </div>
@@ -632,7 +632,7 @@ function ModalShell({ onClose, title, subtitle, children }: { onClose: () => voi
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-2.5">
             <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center">

@@ -80,7 +80,7 @@ export default function BarcodeScannerModal({ isOpen, onClose, onDetected }: Bar
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-5">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-5">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-extrabold text-slate-800 text-base flex items-center gap-2">
             <Camera className="h-4 w-4 text-indigo-600" /> Scan Barcode

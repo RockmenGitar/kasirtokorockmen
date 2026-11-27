@@ -22,7 +22,7 @@ export default function SignOutModal({ isOpen, onCancel, onConfirm, currentUser,
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 animate-fadeIn">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onCancel} />
 
-      <div className="relative bg-white rounded-3xl w-full max-w-sm shadow-2xl border border-slate-100 overflow-hidden z-10 animate-scaleUp">
+      <div className="relative bg-white rounded-2xl w-full max-w-sm shadow-2xl border border-slate-100 overflow-hidden z-10 animate-scaleUp">
         {/* Top accent bar */}
         <div className="h-1 w-full bg-gradient-to-r from-rose-400 to-pink-500" />
 

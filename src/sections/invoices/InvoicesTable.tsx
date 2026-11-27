@@ -99,7 +99,7 @@ export default function InvoicesTable({
       </div>
 
       {/* Datatable Wrapper */}
-      <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[650px]">
             <thead>

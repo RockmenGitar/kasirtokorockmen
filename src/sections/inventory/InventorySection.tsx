@@ -258,7 +258,7 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
         <h3 className="font-extrabold text-slate-800 text-base">{t('invt.adjustTitle')}</h3>
         <p className="text-[11px] text-slate-400 font-medium mt-0.5">{product.name} · {t('invt.currentStock')} {fmt(product.stock_quantity)}</p>
 

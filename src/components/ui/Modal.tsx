@@ -32,7 +32,7 @@ export default function Modal({
       <div className="absolute inset-0" onClick={onClose} />
       
       {/* Modal Dialog Content Container */}
-      <div className={`bg-white rounded-3xl w-full shadow-2xl p-6 relative border border-slate-50 z-10 animate-scaleUp ${maxWidthClasses[maxWidth]}`}>
+      <div className={`bg-white rounded-2xl w-full shadow-2xl p-6 relative border border-slate-50 z-10 animate-scaleUp ${maxWidthClasses[maxWidth]}`}>
         {/* Close Button */}
         <button 
           onClick={onClose}

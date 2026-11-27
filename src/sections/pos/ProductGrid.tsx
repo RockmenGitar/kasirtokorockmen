@@ -121,7 +121,7 @@ export default function ProductGrid({
       {/* Grid of Product Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 flex-1 content-start">
         {filteredProducts.length === 0 ? (
-          <div className="col-span-full py-16 text-center text-slate-400 bg-white border border-slate-100 rounded-3xl">
+          <div className="col-span-full py-16 text-center text-slate-400 bg-white border border-slate-100 rounded-2xl">
             <span className="font-bold text-xs">{t('pos.noProducts')}</span>
             <p className="text-[10px] text-slate-400 mt-1">{t('common.search')} · {t('common.category')}</p>
           </div>
@@ -132,7 +132,7 @@ export default function ProductGrid({
               <div 
                 key={p.id}
                 onClick={() => !isOutOfStock && onAddToCart(p)}
-                className={`bg-white border border-slate-100 rounded-3xl overflow-hidden p-3.5 shadow-xs flex flex-col justify-between transition-all duration-300 ${
+                className={`bg-white border border-slate-100 rounded-2xl overflow-hidden p-3.5 shadow-xs flex flex-col justify-between transition-all duration-300 ${
                   isOutOfStock 
                     ? 'opacity-60 cursor-not-allowed' 
                     : 'cursor-pointer hover:border-indigo-100 hover:shadow-md hover:shadow-slate-100/50 hover:scale-[1.01]'

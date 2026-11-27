@@ -78,7 +78,7 @@ export default function RefundModal({ transaction, storeId, currentUser, onClose
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2.5">
             <div className="h-9 w-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><Undo2 className="h-4.5 w-4.5" /></div>

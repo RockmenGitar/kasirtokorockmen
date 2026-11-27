@@ -13,7 +13,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={`bg-white border border-slate-100 rounded-3xl p-6 shadow-sm transition-all duration-300 ${
+      className={`bg-white border border-slate-100 rounded-2xl p-6 shadow-sm transition-all duration-300 ${
         hoverable 
           ? 'hover:border-indigo-100 hover:shadow-md hover:shadow-slate-100/50 hover:scale-[1.005]' 
           : ''

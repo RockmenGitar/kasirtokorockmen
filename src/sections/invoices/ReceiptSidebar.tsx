@@ -36,7 +36,7 @@ export default function ReceiptSidebar({ transaction, onClose, storeId, currentU
 
   if (!transaction) {
     return (
-      <div className="w-full lg:w-80 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col justify-center items-center text-slate-400 text-center sticky top-16 h-[calc(100vh-4rem)] self-start">
+      <div className="w-full lg:w-80 bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col justify-center items-center text-slate-400 text-center sticky top-16 h-[calc(100vh-4rem)] self-start">
         <div className="h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
           <Receipt className="h-7 w-7 text-slate-200" />
         </div>
@@ -80,7 +80,7 @@ export default function ReceiptSidebar({ transaction, onClose, storeId, currentU
   };
 
   return (
-    <div className="w-full lg:w-80 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col relative sticky top-16 h-[calc(100vh-4rem)] self-start">
+    <div className="w-full lg:w-80 bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col relative sticky top-16 h-[calc(100vh-4rem)] self-start">
 
       {/* Close button */}
       <button 
