@@ -53,6 +53,9 @@ interface CartDrawerProps {
   setPaidAmount: (v: number) => void;
   onCheckout: () => void;
   onHold: () => void;
+  /** Tampil sebagai bottom-sheet overlay (mode HP). */
+  isMobileSheet?: boolean;
+  onCloseSheet?: () => void;
   totals: {
     subtotal: number;
     itemDiscount: number;
@@ -91,6 +94,8 @@ export default function CartDrawer({
   setPaidAmount,
   onCheckout,
   onHold,
+  isMobileSheet = false,
+  onCloseSheet,
   totals,
 }: CartDrawerProps) {
   const { t } = useI18n();
@@ -105,15 +110,37 @@ export default function CartDrawer({
   const paymentMethods = settings.payment_methods?.length ? settings.payment_methods : ['Cash', 'QRIS', 'Transfer'];
   const isCash = paymentMethod === 'Cash';
 
+  const shell = isMobileSheet
+    ? 'fixed inset-x-0 bottom-0 z-50 w-full max-h-[88vh] rounded-t-3xl border-t border-slate-100 bg-white p-5 shadow-2xl flex flex-col'
+    : 'w-full lg:w-96 bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col h-[calc(100vh-4rem)] sticky top-16 self-start';
+
   return (
-    <div className="w-full lg:w-96 bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col h-[calc(100vh-4rem)] sticky top-16 self-start">
+    <>
+    {isMobileSheet && (
+      <div className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseSheet} />
+    )}
+    <div className={shell}>
+
+      {/* HANDLE (mobile sheet) */}
+      {isMobileSheet && (
+        <div className="flex justify-center pb-2 shrink-0">
+          <span className="h-1.5 w-12 rounded-full bg-slate-200" />
+        </div>
+      )}
 
       {/* HEADER */}
       <div className="flex justify-between items-center pb-3 border-b border-slate-50 shrink-0">
         <h3 className="font-bold text-slate-800 text-sm">{t('pos.cart')}</h3>
-        <span className="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md uppercase">
-          {cart.reduce((sum, item) => sum + item.quantity, 0)} {t('pos.items')}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md uppercase">
+            {cart.reduce((sum, item) => sum + item.quantity, 0)} {t('pos.items')}
+          </span>
+          {isMobileSheet && (
+            <button onClick={onCloseSheet} className="h-7 w-7 rounded-lg hover:bg-slate-100 text-slate-400 flex items-center justify-center cursor-pointer">
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* SCROLLABLE ITEMS */}
@@ -350,6 +377,7 @@ export default function CartDrawer({
 
       </div>
     </div>
+    </>
   );
 }
 

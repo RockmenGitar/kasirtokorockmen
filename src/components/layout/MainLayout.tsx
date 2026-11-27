@@ -1,6 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Capacitor } from '@capacitor/core';
-import { ScreenOrientation } from '@capacitor/screen-orientation';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -36,6 +34,7 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
     return granted[0] ?? 'profile';
   });
 
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(
     () => localStorage.getItem('kasirnya_sidebar_collapsed') === '1'
   );
@@ -90,14 +89,6 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
 
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const triggerRefresh = () => setRefreshTrigger(prev => prev + 1);
-
-  useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return;
-    ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => {});
-    return () => {
-      ScreenOrientation.unlock().catch(() => {});
-    };
-  }, []);
 
   const [avatarUrl, setAvatarUrl] = useState<string>(
     () => localStorage.getItem(`kasirnya_avatar_${currentUser.store_id}`) ?? ''
@@ -160,18 +151,21 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
         onSwitchStore={switchStore}
         collapsed={sidebarCollapsed}
         onToggleCollapsed={toggleSidebar}
+        mobileOpen={mobileNavOpen}
+        onCloseMobile={() => setMobileNavOpen(false)}
       />
 
-      <main className={`flex-1 ${sidebarCollapsed ? 'pl-[5.5rem]' : 'pl-64'} flex flex-col min-h-screen transition-[padding] duration-300 ease-out`}>
+      <main className={`flex-1 pl-0 ${sidebarCollapsed ? 'lg:pl-[5.5rem]' : 'lg:pl-64'} flex flex-col min-h-screen transition-[padding] duration-300 ease-out`}>
 
         <Navbar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           currentUser={currentUser}
           avatarUrl={avatarUrl}
+          onOpenMobileNav={() => setMobileNavOpen(true)}
         />
 
-        <div className={`${activeTab === 'pos' || activeTab === 'invoices' ? 'px-8' : 'p-8'} flex-1 overflow-x-hidden flex flex-col justify-between`}>
+        <div className={`${activeTab === 'pos' || activeTab === 'invoices' ? 'px-3 sm:px-8' : 'p-3 sm:p-8'} flex-1 overflow-x-hidden flex flex-col justify-between`}>
 
           <div className="flex-1">
             {tabKeys.map(tab => {

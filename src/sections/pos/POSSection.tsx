@@ -51,6 +51,7 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
   const [scanFeedback, setScanFeedback] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
   const feedbackTimer = useRef<number | null>(null);
 
@@ -325,31 +326,81 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
         />
       </div>
 
-      <CartDrawer
-        cart={cart}
-        onUpdateQty={handleUpdateCartQty}
-        onRemove={handleRemoveFromCart}
-        onUpdateNote={handleUpdateCartNote}
-        onUpdateItemDiscount={handleUpdateItemDiscount}
-        selectedCustomerName={customerName}
-        setSelectedCustomerName={setCustomerName}
-        customers={customers}
-        setSelectedCustomerId={setCustomerId}
-        paymentMethod={paymentMethod}
-        setPaymentMethod={setPaymentMethod}
-        settings={settings}
-        activePromos={activePromos}
-        selectedPromoId={selectedPromoId}
-        setSelectedPromoId={setSelectedPromoId}
-        promoDiscount={promoDiscount}
-        transactionDiscount={transactionDiscount}
-        setTransactionDiscount={setTransactionDiscount}
-        paidAmount={paidAmount}
-        setPaidAmount={setPaidAmount}
-        onCheckout={handleCheckoutSubmit}
-        onHold={handleHold}
-        totals={totals}
-      />
+      {/* Desktop cart panel */}
+      <div className="hidden lg:flex">
+        <CartDrawer
+          cart={cart}
+          onUpdateQty={handleUpdateCartQty}
+          onRemove={handleRemoveFromCart}
+          onUpdateNote={handleUpdateCartNote}
+          onUpdateItemDiscount={handleUpdateItemDiscount}
+          selectedCustomerName={customerName}
+          setSelectedCustomerName={setCustomerName}
+          customers={customers}
+          setSelectedCustomerId={setCustomerId}
+          paymentMethod={paymentMethod}
+          setPaymentMethod={setPaymentMethod}
+          settings={settings}
+          activePromos={activePromos}
+          selectedPromoId={selectedPromoId}
+          setSelectedPromoId={setSelectedPromoId}
+          promoDiscount={promoDiscount}
+          transactionDiscount={transactionDiscount}
+          setTransactionDiscount={setTransactionDiscount}
+          paidAmount={paidAmount}
+          setPaidAmount={setPaidAmount}
+          onCheckout={handleCheckoutSubmit}
+          onHold={handleHold}
+          totals={totals}
+        />
+      </div>
+
+      {/* Mobile floating cart bar */}
+      <button
+        onClick={() => setIsMobileCartOpen(true)}
+        className="lg:hidden fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-4 rounded-2xl shadow-2xl shadow-indigo-600/30 cursor-pointer"
+      >
+        <span className="flex items-center gap-2 text-sm">
+          <span className="h-6 min-w-6 px-1.5 rounded-lg bg-white/20 flex items-center justify-center text-xs font-extrabold">
+            {cart.reduce((s, i) => s + i.quantity, 0)}
+          </span>
+          <span>{t('pos.cart')}</span>
+        </span>
+        <span className="text-base font-extrabold">Rp {new Intl.NumberFormat('id-ID').format(totals.grandTotal)}</span>
+      </button>
+
+      {/* Mobile cart sheet */}
+      {isMobileCartOpen && (
+        <div className="lg:hidden">
+          <CartDrawer
+            isMobileSheet
+            onCloseSheet={() => setIsMobileCartOpen(false)}
+            cart={cart}
+            onUpdateQty={handleUpdateCartQty}
+            onRemove={handleRemoveFromCart}
+            onUpdateNote={handleUpdateCartNote}
+            onUpdateItemDiscount={handleUpdateItemDiscount}
+            selectedCustomerName={customerName}
+            setSelectedCustomerName={setCustomerName}
+            customers={customers}
+            setSelectedCustomerId={setCustomerId}
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+            settings={settings}
+            activePromos={activePromos}
+            selectedPromoId={selectedPromoId}
+            setSelectedPromoId={setSelectedPromoId}
+            promoDiscount={promoDiscount}
+            transactionDiscount={transactionDiscount}
+            setTransactionDiscount={setTransactionDiscount}
+            paidAmount={paidAmount}
+            setPaidAmount={setPaidAmount}
+            onCheckout={() => { setIsMobileCartOpen(false); handleCheckoutSubmit(); }}
+            onHold={handleHold}
+            totals={totals}
+          />
+        </div>
+      )}
 
       <OrderSuccessModal
         isOpen={isSuccessOpen}

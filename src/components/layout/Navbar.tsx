@@ -1,14 +1,16 @@
 import { type UserProfile } from '../../lib/db';
 import { useI18n, type Lang } from '../../lib/i18n';
+import { Menu } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   currentUser: UserProfile;
   avatarUrl?: string;
+  onOpenMobileNav?: () => void;
 }
 
-export default function Navbar({ activeTab, setActiveTab, currentUser, avatarUrl = '' }: NavbarProps) {
+export default function Navbar({ activeTab, setActiveTab, currentUser, avatarUrl = '', onOpenMobileNav }: NavbarProps) {
   const { t, lang, setLang } = useI18n();
 
   const isCashier = currentUser.role === 'cashier';
@@ -34,9 +36,15 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, avatarUrl
   ];
 
   return (
-    <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10 shrink-0 shadow-sm">
+    <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 px-3 sm:px-8 flex items-center justify-between sticky top-0 z-10 shrink-0 shadow-sm">
 
       <div className="flex items-center gap-2">
+        <button
+          onClick={onOpenMobileNav}
+          className="lg:hidden h-9 w-9 rounded-lg hover:bg-slate-100 text-slate-600 flex items-center justify-center cursor-pointer"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
         <span className="text-sm font-bold text-slate-700 tracking-wide">
           {TAB_KEYS[activeTab] ? t(TAB_KEYS[activeTab]) : activeTab}
         </span>

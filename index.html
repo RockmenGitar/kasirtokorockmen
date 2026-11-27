@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script>
       (function () {
         var ua = navigator.userAgent || '';
         var isAndroidWebView = /; wv\)/.test(ua);
         var isCapacitor = /Capacitor/i.test(ua) || (typeof window !== 'undefined' && !!window.Capacitor);
+        // Tandai lingkungan native, tapi JANGAN kunci lebar viewport.
+        // Kasir perlu tampilan portrait yang responsif di HP.
         if (isAndroidWebView || isCapacitor) {
-          var vp = document.querySelector('meta[name=viewport]');
-          if (vp) vp.setAttribute('content', 'width=1280, user-scalable=no, viewport-fit=cover');
           document.documentElement.setAttribute('data-native', 'true');
         }
       })();

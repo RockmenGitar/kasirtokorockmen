@@ -36,6 +36,8 @@ interface SidebarProps {
   onSwitchStore?: (id: number) => void;
   collapsed: boolean;
   onToggleCollapsed: () => void;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export default function Sidebar({
@@ -49,7 +51,9 @@ export default function Sidebar({
   activeStoreId,
   onSwitchStore,
   collapsed,
-  onToggleCollapsed
+  onToggleCollapsed,
+  mobileOpen = false,
+  onCloseMobile
 }: SidebarProps) {
   const { t } = useI18n();
   const [showSignOut, setShowSignOut] = useState(false);
@@ -92,7 +96,12 @@ export default function Sidebar({
   const labelState = collapsed ? 'opacity-0 max-w-0' : 'opacity-100 max-w-[200px]';
 
   return (
-    <aside className={`${collapsed ? 'w-[5.5rem]' : 'w-64'} bg-white border-r border-slate-100/80 flex flex-col h-screen fixed left-0 top-0 z-20 transition-[width] duration-300 ease-out`}>
+    <>
+    {/* Overlay for mobile */}
+    {mobileOpen && (
+      <div className="lg:hidden fixed inset-0 z-20 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseMobile} />
+    )}
+    <aside className={`${collapsed ? 'lg:w-[5.5rem]' : 'lg:w-64'} w-64 bg-white border-r border-slate-100/80 flex flex-col h-screen fixed left-0 top-0 z-30 transition-transform lg:transition-[width] duration-300 ease-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
 
       <button
         onClick={onToggleCollapsed}
@@ -156,7 +165,7 @@ export default function Sidebar({
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => { setActiveTab(item.id); onCloseMobile?.(); }}
               title={collapsed ? item.name : undefined}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200 group ${isActive
                 ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-300/30'
@@ -173,7 +182,7 @@ export default function Sidebar({
 
       <div className="p-4 border-t border-slate-50 space-y-1">
         <button
-          onClick={() => setActiveTab('help')}
+          onClick={() => { setActiveTab('help'); onCloseMobile?.(); }}
           title={collapsed ? t('menu.help') : undefined}
           className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-colors cursor-pointer"
         >
@@ -203,5 +212,6 @@ export default function Sidebar({
         />
       )}
     </aside>
+    </>
   );
 }
