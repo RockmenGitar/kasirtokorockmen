@@ -232,6 +232,13 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
     setSelectedPromoId('');
   };
 
+  // Dipanggil saat popup pembayaran ditutup: barulah keranjang dikosongkan.
+  const handleCloseSuccess = () => {
+    setIsSuccessOpen(false);
+    setLastTransaction(null);
+    resetCart();
+  };
+
   const handleHold = () => {
     if (cart.length === 0) return;
     try {
@@ -330,7 +337,8 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
 
     setLastTransaction({ ...newTx, items: items as Transaction['items'] });
     setIsSuccessOpen(true);
-    resetCart();
+    // Keranjang dikosongkan saat popup ditutup (lihat handleCloseSuccess),
+    // agar kasir masih bisa melihat isi keranjang selama popup terbuka.
     triggerRefresh();
   };
 
@@ -459,7 +467,7 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
 
       <OrderSuccessModal
         isOpen={isSuccessOpen}
-        onClose={() => setIsSuccessOpen(false)}
+        onClose={handleCloseSuccess}
         transaction={lastTransaction}
         storeId={storeId}
       />
