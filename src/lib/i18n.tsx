@@ -188,6 +188,7 @@ const dict: Record<string, { id: string; en: string }> = {
   'cat.image': { id: 'Gambar Produk', en: 'Product Image' },
   'cat.activeProduct': { id: 'Produk aktif (tampil di kasir)', en: 'Active product (shown in cashier)' },
   'cat.initialStock': { id: 'Stok Awal', en: 'Initial Stock' },
+  'cat.stockHint': { id: 'Ubah stok dilakukan lewat menu Inventori.', en: 'Stock changes are done from the Inventory menu.' },
 
   // ── Inventori ──
   'invt.title': { id: 'Inventori', en: 'Inventory' },

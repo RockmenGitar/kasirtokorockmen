@@ -53,16 +53,6 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
     });
   }, [products, searchQuery, activeCategory]);
 
-  const handleStockChange = (productId: string, newStock: number) => {
-    if (newStock < 0) return;
-    const stockStatus = newStock === 0 ? 'Out of Stock' : newStock <= 5 ? 'Low Stock' : 'In Stock';
-    // Optimistic — langsung update UI, tulis ke DB di background
-    setProducts(prev => prev.map(p =>
-      p.id === productId ? { ...p, stock_quantity: newStock, stock_status: stockStatus } : p
-    ));
-    dbService.updateProductStock(productId, newStock, storeId);
-  };
-
   const handleEditClick = (product: Product) => {
     setSelectedProduct(product);
     setIsEditOpen(true);
@@ -97,6 +87,9 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
           </h2>
           <p className="text-slate-400 text-xs mt-2 font-medium ml-11.5">
             {t('cat.subtitle')}
+          </p>
+          <p className="text-[11px] text-indigo-500 font-semibold mt-1 ml-11.5">
+            ℹ {t('cat.stockHint')}
           </p>
         </div>
 
@@ -206,7 +199,6 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
       {viewMode === 'grid' ? (
         <CatalogGrid
           products={filteredProducts}
-          onStockChange={handleStockChange}
           onEditClick={handleEditClick}
           onDeleteClick={handleDeleteClick}
           categories={categories}
@@ -218,7 +210,6 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
           setSearchQuery={setSearchQuery}
           activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
-          onStockChange={handleStockChange}
           onEditClick={handleEditClick}
           onDeleteClick={handleDeleteClick}
           categories={categories}

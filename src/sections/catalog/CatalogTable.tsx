@@ -1,4 +1,4 @@
-import { Plus, Minus, Edit3, Trash2, ImageOff } from 'lucide-react';
+import { Edit3, Trash2, ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
 import { stockStatusKey } from '../../lib/labels';
@@ -10,7 +10,6 @@ interface CatalogTableProps {
   setSearchQuery: (query: string) => void;
   activeCategory: string;
   setActiveCategory: (cat: string) => void;
-  onStockChange: (productId: string, newStock: number) => void;
   onEditClick: (product: Product) => void;
   onDeleteClick: (productId: string) => void;
   categories?: Category[];
@@ -37,7 +36,6 @@ function TableImage({ src, alt }: { src: string; alt: string }) {
 
 export default function CatalogTable({
   products,
-  onStockChange,
   onEditClick,
   onDeleteClick,
   categories = []
@@ -102,24 +100,11 @@ export default function CatalogTable({
                     Rp {new Intl.NumberFormat('id-ID').format(p.price)}
                   </td>
 
-                  {/* Stock Counter controls */}
+                  {/* Stock quantity (read-only; edit via Inventori) */}
                   <td className="px-6 py-4">
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => onStockChange(p.id, p.stock_quantity - 1)}
-                        className="h-7 w-7 rounded-lg border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer active:scale-90 transition-all"
-                      >
-                        <Minus className="h-3 w-3" />
-                      </button>
-                      <span className="text-xs font-extrabold text-slate-800 w-7 text-center tabular-nums">
-                        {p.stock_quantity}
-                      </span>
-                      <button
-                        onClick={() => onStockChange(p.id, p.stock_quantity + 1)}
-                        className="h-7 w-7 rounded-lg border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer active:scale-90 transition-all"
-                      >
-                        <Plus className="h-3 w-3" />
-                      </button>
+                    <div className="flex items-center justify-center gap-1.5">
+                      <span className="text-xs font-extrabold text-slate-800 tabular-nums">{p.stock_quantity}</span>
+                      <span className="text-[10px] text-slate-400 font-medium">{p.unit || 'pcs'}</span>
                     </div>
                   </td>
 

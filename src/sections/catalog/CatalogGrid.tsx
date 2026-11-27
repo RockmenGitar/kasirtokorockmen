@@ -1,4 +1,4 @@
-import { Edit3, Trash2, Plus, Minus, ImageOff } from 'lucide-react';
+import { Edit3, Trash2, ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
 import { stockStatusKey } from '../../lib/labels';
@@ -6,7 +6,6 @@ import { useI18n } from '../../lib/i18n';
 
 interface CatalogGridProps {
   products: Product[];
-  onStockChange: (productId: string, newStock: number) => void;
   onEditClick: (product: Product) => void;
   onDeleteClick: (productId: string) => void;
   categories?: Category[];
@@ -21,9 +20,8 @@ const statusColors: Record<string, { bg: string; text: string; dot: string }> = 
   'Out of Stock': { bg: 'bg-rose-50', text: 'text-rose-700', dot: 'bg-rose-500' },
 };
 
-function ProductCard({ product, onStockChange, onEditClick, onDeleteClick, categories }: {
+function ProductCard({ product, onEditClick, onDeleteClick, categories }: {
   product: Product;
-  onStockChange: (productId: string, newStock: number) => void;
   onEditClick: (product: Product) => void;
   onDeleteClick: (productId: string) => void;
   categories: Category[];
@@ -101,23 +99,10 @@ function ProductCard({ product, onStockChange, onEditClick, onDeleteClick, categ
             {t(stockStatusKey(displayStatus))}
           </span>
 
-          {/* Stock counter */}
+          {/* Stock info */}
           <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => onStockChange(product.id, product.stock_quantity - 1)}
-              className="h-7 w-7 rounded-lg border border-slate-150 hover:border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer active:scale-90 transition-all"
-            >
-              <Minus className="h-3 w-3" />
-            </button>
-            <span className="text-xs font-extrabold text-slate-800 w-7 text-center tabular-nums">
-              {product.stock_quantity}
-            </span>
-            <button
-              onClick={() => onStockChange(product.id, product.stock_quantity + 1)}
-              className="h-7 w-7 rounded-lg border border-slate-150 hover:border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer active:scale-90 transition-all"
-            >
-              <Plus className="h-3 w-3" />
-            </button>
+            <span className="text-xs font-extrabold text-slate-800 tabular-nums">{product.stock_quantity}</span>
+            <span className="text-[10px] text-slate-400 font-medium">{product.unit || 'pcs'}</span>
           </div>
         </div>
       </div>
@@ -125,7 +110,7 @@ function ProductCard({ product, onStockChange, onEditClick, onDeleteClick, categ
   );
 }
 
-export default function CatalogGrid({ products, onStockChange, onEditClick, onDeleteClick, categories = [] }: CatalogGridProps) {
+export default function CatalogGrid({ products, onEditClick, onDeleteClick, categories = [] }: CatalogGridProps) {
   if (products.length === 0) {
     return (
       <div className="bg-white border border-slate-100 rounded-3xl p-16 text-center">
@@ -144,7 +129,6 @@ export default function CatalogGrid({ products, onStockChange, onEditClick, onDe
         <ProductCard
           key={product.id}
           product={product}
-          onStockChange={onStockChange}
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
           categories={categories}
