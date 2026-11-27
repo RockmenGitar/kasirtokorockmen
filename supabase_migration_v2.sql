@@ -61,7 +61,7 @@ ALTER TABLE public.stores ADD COLUMN IF NOT EXISTS tax_id  TEXT;
 
 -- ── 3. stock_movements (buku besar stok) ─────────────────────────────
 CREATE TABLE IF NOT EXISTS public.stock_movements (
-    id           TEXT PRIMARY KEY,
+    id           TEXT PRIMARY KEY DEFAULT (gen_random_uuid())::text,
     created_at   TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     product_id   TEXT NOT NULL,
     product_name TEXT NOT NULL,
@@ -80,7 +80,7 @@ CREATE INDEX IF NOT EXISTS idx_stock_movements_product ON public.stock_movements
 
 -- ── 4. expenses (pengeluaran) ─────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.expenses (
-    id             TEXT PRIMARY KEY,
+    id             TEXT PRIMARY KEY DEFAULT (gen_random_uuid())::text,
     created_at     TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     date           DATE NOT NULL,
     category       TEXT NOT NULL,
@@ -95,7 +95,7 @@ CREATE INDEX IF NOT EXISTS idx_expenses_date  ON public.expenses(date);
 
 -- ── 5. customers (pelanggan) ──────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.customers (
-    id         TEXT PRIMARY KEY,
+    id         TEXT PRIMARY KEY DEFAULT (gen_random_uuid())::text,
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     name       TEXT NOT NULL,
     phone      TEXT,
@@ -109,7 +109,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_store ON public.customers(store_id);
 
 -- ── 6. promos ─────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.promos (
-    id           TEXT PRIMARY KEY,
+    id           TEXT PRIMARY KEY DEFAULT (gen_random_uuid())::text,
     created_at   TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     name         TEXT NOT NULL,
     code         TEXT,
@@ -125,7 +125,7 @@ CREATE INDEX IF NOT EXISTS idx_promos_store ON public.promos(store_id);
 
 -- ── 7. shifts (shift kasir / kas drawer) ──────────────────────────────
 CREATE TABLE IF NOT EXISTS public.shifts (
-    id                  TEXT PRIMARY KEY,
+    id                  TEXT PRIMARY KEY DEFAULT (gen_random_uuid())::text,
     created_at          TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     opened_at           TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     closed_at           TIMESTAMPTZ,
@@ -145,7 +145,7 @@ CREATE INDEX IF NOT EXISTS idx_shifts_store ON public.shifts(store_id);
 
 -- ── 8. refunds ────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.refunds (
-    id             TEXT PRIMARY KEY,
+    id             TEXT PRIMARY KEY DEFAULT (gen_random_uuid())::text,
     created_at     TIMESTAMPTZ DEFAULT timezone('utc'::text, now()),
     transaction_id TEXT NOT NULL,
     order_id       TEXT NOT NULL,

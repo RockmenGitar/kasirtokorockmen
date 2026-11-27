@@ -3,6 +3,7 @@ import { Package, Plus, LayoutGrid, List, Search, TrendingUp, AlertTriangle, XCi
 import { dbService } from '../../lib/db';
 import type { Product, Category } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { useI18n } from '../../lib/i18n';
 
 // Import modular sections
 import CatalogGrid from './CatalogGrid';
@@ -18,6 +19,7 @@ interface CatalogSectionProps {
 }
 
 export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh }: CatalogSectionProps) {
+  const { t } = useI18n();
   const [products, setProducts] = useStoreData<Product[]>(dbService.getProducts, storeId, refreshTrigger, []);
   const [categories] = useStoreData<Category[]>(dbService.getCategories, storeId, refreshTrigger, []);
   const [searchQuery, setSearchQuery] = useState('');
@@ -75,10 +77,10 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
   };
 
   const statCards = [
-    { label: 'Total Products', value: stats.totalProducts, icon: ShoppingBag, color: 'from-indigo-500 to-violet-600', bgLight: 'bg-indigo-50', textColor: 'text-indigo-600' },
-    { label: 'In Stock', value: stats.inStock, icon: TrendingUp, color: 'from-emerald-500 to-teal-600', bgLight: 'bg-emerald-50', textColor: 'text-emerald-600' },
-    { label: 'Low Stock', value: stats.lowStock, icon: AlertTriangle, color: 'from-amber-500 to-orange-600', bgLight: 'bg-amber-50', textColor: 'text-amber-600' },
-    { label: 'Out of Stock', value: stats.outOfStock, icon: XCircle, color: 'from-rose-500 to-pink-600', bgLight: 'bg-rose-50', textColor: 'text-rose-600' },
+    { label: t('cat.totalProducts'), value: stats.totalProducts, icon: ShoppingBag, color: 'from-indigo-500 to-violet-600', bgLight: 'bg-indigo-50', textColor: 'text-indigo-600' },
+    { label: t('status.instock'), value: stats.inStock, icon: TrendingUp, color: 'from-emerald-500 to-teal-600', bgLight: 'bg-emerald-50', textColor: 'text-emerald-600' },
+    { label: t('status.lowstock'), value: stats.lowStock, icon: AlertTriangle, color: 'from-amber-500 to-orange-600', bgLight: 'bg-amber-50', textColor: 'text-amber-600' },
+    { label: t('status.outstock'), value: stats.outOfStock, icon: XCircle, color: 'from-rose-500 to-pink-600', bgLight: 'bg-rose-50', textColor: 'text-rose-600' },
   ];
 
   return (
@@ -91,10 +93,10 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
             <div className="h-9 w-9 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200/50">
               <Package className="h-4.5 w-4.5 text-white" />
             </div>
-            <span>Product Catalog</span>
+            <span>{t('cat.title')}</span>
           </h2>
           <p className="text-slate-400 text-xs mt-2 font-medium ml-11.5">
-            Kelola produk dan kategori — tambah, edit, atau hapus item.
+            {t('cat.subtitle')}
           </p>
         </div>
 
@@ -103,7 +105,7 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
           className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-extrabold text-xs px-5 py-3 rounded-xl cursor-pointer shadow-lg shadow-indigo-200/50 flex items-center gap-2 self-start transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-indigo-200/60 active:scale-[0.98]"
         >
           <Plus className="h-4 w-4" />
-          <span>Add Product</span>
+          <span>{t('cat.addProduct')}</span>
         </button>
       </div>
 
@@ -142,7 +144,7 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder={t('cat.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-sm transition-all"

@@ -6,25 +6,25 @@ const guides = [
   {
     icon: ShoppingCart,
     title: 'Proses Transaksi',
-    desc: 'Buka halaman POS Cashier, pilih produk yang dipesan, masukkan nama pelanggan, pilih metode pembayaran, lalu klik Checkout. Struk otomatis tercatat di Invoices.',
+    desc: 'Buka menu Kasir, pilih produk yang dipesan, masukkan nama pelanggan, pilih cara pembayaran, lalu klik Bayar & Selesaikan. Struk otomatis tersimpan di menu Penjualan.',
     roles: ['admin', 'cashier'] as Role[]
   },
   {
     icon: ReceiptText,
     title: 'Lihat Riwayat Struk',
-    desc: 'Semua transaksi yang sudah diproses tersimpan di halaman Invoices. Klik salah satu transaksi untuk melihat detail struk lengkap beserta item dan metode pembayaran.',
+    desc: 'Semua penjualan yang sudah diproses tersimpan di menu Penjualan. Klik salah satu transaksi untuk melihat struk lengkap beserta barang dan cara pembayarannya.',
     roles: ['admin', 'cashier'] as Role[]
   },
   {
     icon: Package,
     title: 'Kelola Produk',
-    desc: 'Di halaman Catalog, klik tombol Tambah Produk untuk menambah item baru. Klik ikon edit pada produk untuk mengubah harga, stok, atau foto. Produk yang habis otomatis ditandai Out of Stock.',
+    desc: 'Di menu Produk, klik tombol Tambah untuk menambah barang baru. Klik ikon pensil untuk mengubah harga, stok, atau foto. Barang yang habis otomatis ditandai Stok Habis.',
     roles: ['admin'] as Role[]
   },
   {
     icon: BarChart3,
     title: 'Lihat Laporan Penjualan',
-    desc: 'Halaman Sales Performance menampilkan grafik revenue, total transaksi, dan produk terlaris. Gunakan filter tanggal untuk melihat periode tertentu, atau unduh laporan lewat tombol Export CSV.',
+    desc: 'Menu Laporan menampilkan grafik penjualan, total transaksi, dan barang terlaris. Gunakan filter tanggal untuk periode tertentu, atau unduh lewat tombol ekspor.',
     roles: ['admin'] as Role[]
   },
   {
@@ -38,17 +38,17 @@ const guides = [
 const faqs = [
   {
     q: 'Stok produk berkurang otomatis setelah transaksi?',
-    a: 'Ya. Setiap kali transaksi berhasil diproses di POS, stok setiap item yang terjual akan otomatis berkurang. Jika stok mencapai 5 atau kurang, status berubah menjadi Low Stock.',
+    a: 'Ya. Setiap kali penjualan diproses di Kasir, stok barang yang terjual otomatis berkurang. Jika stok tinggal sedikit, statusnya berubah menjadi Stok Menipis.',
     roles: ['admin', 'cashier'] as Role[]
   },
   {
     q: 'Di mana melihat riwayat semua transaksi?',
-    a: 'Semua transaksi tersimpan di halaman Invoices. Klik salah satu transaksi untuk melihat detail struk lengkap beserta item yang dibeli dan metode pembayaran.',
+    a: 'Semua penjualan tersimpan di menu Penjualan. Klik salah satu untuk melihat struk lengkap beserta barang dan cara pembayarannya.',
     roles: ['admin', 'cashier'] as Role[]
   },
   {
     q: 'Halaman apa saja yang bisa diakses kasir?',
-    a: 'Kasir hanya bisa mengakses POS Cashier dan Invoices. Halaman lain seperti Dashboard, Catalog, Sales, Staff, dan Profile hanya tersedia untuk Admin.',
+    a: 'Akses kasir bisa diatur dari menu Outlet & Tim. Pemilik (owner) otomatis bisa mengakses semua menu.',
     roles: ['cashier'] as Role[]
   },
   {
@@ -58,7 +58,7 @@ const faqs = [
   },
   {
     q: 'Kasir bisa akses halaman admin?',
-    a: 'Tidak. Akun kasir hanya bisa mengakses POS Cashier dan Invoices. Semua halaman manajemen hanya bisa diakses oleh Admin.',
+    a: 'Tidak. Akses tiap kasir diatur oleh pemilik dari menu Outlet & Tim.',
     roles: ['admin'] as Role[]
   },
   {

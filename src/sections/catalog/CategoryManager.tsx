@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Check, Tag, AlertCircle } from 'lucide-react';
 import type { Category } from '../../lib/db';
 import { dbService } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 interface CategoryManagerProps {
   categories: Category[];
@@ -10,6 +11,7 @@ interface CategoryManagerProps {
 }
 
 export default function CategoryManager({ categories, storeId, onRefresh }: CategoryManagerProps) {
+  const { t } = useI18n();
   const [localCats, setLocalCats] = useState<Category[]>(categories);
   useEffect(() => { setLocalCats(categories); }, [categories]);
 
@@ -85,8 +87,8 @@ export default function CategoryManager({ categories, storeId, onRefresh }: Cate
             <Tag className="h-4 w-4 text-violet-600" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-sm leading-tight">Kelola Kategori</h3>
-            <p className="text-[9px] text-slate-400 font-medium mt-0.5">{localCats.length} kategori aktif</p>
+            <h3 className="font-bold text-slate-800 text-sm leading-tight">{t('cat.manageCategory')}</h3>
+            <p className="text-[9px] text-slate-400 font-medium mt-0.5">{localCats.length} {t('cat.activeCategories')}</p>
           </div>
         </div>
         {!isAdding && (
@@ -95,7 +97,7 @@ export default function CategoryManager({ categories, storeId, onRefresh }: Cate
             className="flex items-center gap-1.5 bg-violet-50 hover:bg-violet-100 text-violet-600 font-bold text-[10px] px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
           >
             <Plus className="h-3 w-3" />
-            Tambah
+            {t('common.add')}
           </button>
         )}
       </div>

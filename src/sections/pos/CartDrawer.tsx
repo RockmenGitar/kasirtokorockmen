@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Minus, Plus, Trash2, ArrowRight, User, MessageSquare, ImageOff, Percent, Pause, Banknote } from 'lucide-react';
 import type { Product, Customer, StoreSettings, Promo } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 function CartItemImage({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
@@ -91,6 +92,7 @@ export default function CartDrawer({
   onHold,
   totals,
 }: CartDrawerProps) {
+  const { t } = useI18n();
   const [openNotes, setOpenNotes] = useState<Record<string, boolean>>({});
   const [openItemDiscount, setOpenItemDiscount] = useState<Record<string, boolean>>({});
   const [showDiscount, setShowDiscount] = useState(false);
@@ -107,9 +109,9 @@ export default function CartDrawer({
 
       {/* HEADER */}
       <div className="flex justify-between items-center pb-3 border-b border-slate-50 shrink-0">
-        <h3 className="font-bold text-slate-800 text-sm">Keranjang</h3>
+        <h3 className="font-bold text-slate-800 text-sm">{t('pos.cart')}</h3>
         <span className="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md uppercase">
-          {cart.reduce((sum, item) => sum + item.quantity, 0)} Barang
+          {cart.reduce((sum, item) => sum + item.quantity, 0)} {t('pos.items')}
         </span>
       </div>
 
@@ -117,8 +119,8 @@ export default function CartDrawer({
       <div className="flex-1 overflow-y-auto divide-y divide-slate-50 py-1 pr-1 mt-1 min-h-0">
         {cart.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-slate-400 py-16">
-            <span className="text-[10px] font-bold">Keranjang kosong</span>
-            <p className="text-[9px] mt-1 text-center">Pilih produk untuk mulai transaksi.</p>
+            <span className="text-[10px] font-bold">{t('pos.emptyCart')}</span>
+            <p className="text-[9px] mt-1 text-center">{t('pos.emptyCartHint')}</p>
           </div>
         ) : (
           cart.map((item) => (
@@ -178,7 +180,7 @@ export default function CartDrawer({
                   type="number"
                   value={item.discount || ''}
                   onChange={(e) => onUpdateItemDiscount(item.product.id, Math.max(0, Number(e.target.value) || 0))}
-                  placeholder="Diskon item (Rp)..."
+                  placeholder={t('pos.itemDiscount')}
                   className="w-full mt-1.5 bg-rose-50/60 border border-rose-100 rounded-lg px-3 py-1.5 text-[10px] font-medium text-rose-800 placeholder:text-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-300"
                 />
               )}
@@ -202,7 +204,7 @@ export default function CartDrawer({
 
         {/* Customer (opsional) */}
         <div className="space-y-1">
-          <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Pelanggan (opsional)</label>
+          <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">{t('pos.customerOptional')}</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
             <input
@@ -215,7 +217,7 @@ export default function CartDrawer({
                 const match = customers.find(c => c.name.toLowerCase() === val.toLowerCase());
                 setSelectedCustomerId(match?.id || '');
               }}
-              placeholder="Ketik nama pelanggan..."
+              placeholder={t('pos.customerPlaceholder')}
               className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:font-medium"
             />
             <datalist id="customer-list">
@@ -226,7 +228,7 @@ export default function CartDrawer({
 
         {/* Payment method */}
         <div className="space-y-1.5">
-          <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Metode Bayar</label>
+          <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">{t('pos.paymentMethod')}</label>
           <div className="grid grid-cols-3 gap-1.5">
             {paymentMethods.map((m) => (
               <button
@@ -248,13 +250,13 @@ export default function CartDrawer({
         {/* Promo */}
         {activePromos.length > 0 && (
           <div className="space-y-1">
-            <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Promo</label>
+            <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">{t('pos.promo')}</label>
             <select
               value={selectedPromoId}
               onChange={(e) => setSelectedPromoId(e.target.value)}
               className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 cursor-pointer focus:outline-none focus:border-indigo-500"
             >
-              <option value="">Tidak ada promo</option>
+              <option value="">{t('pos.noPromo')}</option>
               {activePromos.map(p => (
                 <option key={p.id} value={p.id}>
                   {p.name} ({p.type === 'percentage' ? `${p.value}%` : `Rp ${fmt(p.value)}`})
@@ -276,22 +278,22 @@ export default function CartDrawer({
                 type="number"
                 value={transactionDiscount || ''}
                 onChange={(e) => setTransactionDiscount(Number(e.target.value) || 0)}
-                placeholder="Diskon transaksi (Rp)"
+                placeholder={t('pos.txDiscount')}
                 className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-indigo-500"
               />
             </div>
-            <button onClick={() => { setShowDiscount(false); setTransactionDiscount(0); }} className="text-[10px] font-bold text-slate-400 hover:text-rose-500 px-2">Batal</button>
+            <button onClick={() => { setShowDiscount(false); setTransactionDiscount(0); }} className="text-[10px] font-bold text-slate-400 hover:text-rose-500 px-2">{t('common.cancel')}</button>
           </div>
         ) : (
           <button onClick={() => setShowDiscount(true)} className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
-            <Percent className="h-3 w-3" /> Tambah diskon transaksi
+            <Percent className="h-3 w-3" /> {t('pos.addTxDiscount')}
           </button>
         )}
 
         {/* Cash input */}
         {isCash && (
           <div className="space-y-1">
-            <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Uang Diterima</label>
+            <label className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">{t('pos.cashReceived')}</label>
             <div className="relative">
               <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
               <input
@@ -307,19 +309,19 @@ export default function CartDrawer({
 
         {/* Price breakdown */}
         <div className="bg-slate-50/50 border border-slate-100 px-3 py-2.5 rounded-2xl space-y-1.5">
-          <Row label="Subtotal" value={totals.subtotal} />
-          {totals.itemDiscount > 0 && <Row label="Diskon item" value={-totals.itemDiscount} negative />}
-          {totals.transactionDiscount > 0 && <Row label="Diskon transaksi" value={-totals.transactionDiscount} negative />}
-          {settings.tax_rate > 0 && <Row label={`Pajak (${settings.tax_rate}%)`} value={totals.tax} />}
-          {totals.serviceCharge > 0 && <Row label="Biaya layanan" value={totals.serviceCharge} />}
-          {totals.rounding !== 0 && <Row label="Pembulatan" value={totals.rounding} />}
+          <Row label={t('pos.subtotal')} value={totals.subtotal} />
+          {totals.itemDiscount > 0 && <Row label={t('pos.itemDisc')} value={-totals.itemDiscount} negative />}
+          {totals.transactionDiscount > 0 && <Row label={t('pos.txDisc')} value={-totals.transactionDiscount} negative />}
+          {settings.tax_rate > 0 && <Row label={`${t('pos.tax')} (${settings.tax_rate}%)`} value={totals.tax} />}
+          {totals.serviceCharge > 0 && <Row label={t('pos.service')} value={totals.serviceCharge} />}
+          {totals.rounding !== 0 && <Row label={t('pos.rounding')} value={totals.rounding} />}
           <div className="flex justify-between text-xs font-extrabold text-slate-800 pt-1.5 border-t border-slate-100">
-            <span>Total</span>
+            <span>{t('common.total')}</span>
             <span>Rp {fmt(totals.grandTotal)}</span>
           </div>
           {isCash && paidAmount > 0 && (
             <div className="flex justify-between text-[11px] font-extrabold text-emerald-600">
-              <span>Kembalian</span>
+              <span>{t('pos.change')}</span>
               <span>Rp {fmt(Math.max(0, totals.change))}</span>
             </div>
           )}
@@ -331,7 +333,7 @@ export default function CartDrawer({
             onClick={onHold}
             disabled={cart.length === 0}
             className="flex items-center justify-center gap-1 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-40 text-slate-600 font-bold py-3 px-3 rounded-2xl text-xs cursor-pointer transition-all"
-            title="Simpan pesanan tertunda"
+            title={t('pos.hold')}
           >
             <Pause className="h-4 w-4" />
           </button>
@@ -340,7 +342,7 @@ export default function CartDrawer({
             disabled={cart.length === 0}
             className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md shadow-indigo-200 transition-all cursor-pointer hover:scale-[1.01]"
           >
-            <span>Bayar &amp; Selesaikan</span>
+            <span>{t('pos.pay')}</span>
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>

@@ -3,6 +3,8 @@ import { History } from 'lucide-react';
 import { dbService } from '../../lib/db';
 import type { Transaction } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { txStatusKey, paymentKey } from '../../lib/labels';
+import { useI18n } from '../../lib/i18n';
 
 interface RecentActivityProps {
   storeId: number;
@@ -10,6 +12,7 @@ interface RecentActivityProps {
 }
 
 export default function RecentActivity({ storeId, refreshTrigger }: RecentActivityProps) {
+  const { t } = useI18n();
   const [allTxs] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
 
   const txs = useMemo(() => [...allTxs].sort((a, b) => {
@@ -32,7 +35,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
       <div className="flex items-center justify-between">
         <h4 className="font-extrabold text-slate-800 text-sm leading-none flex items-center gap-2">
           <History className="h-4.5 w-4.5 text-indigo-650" />
-          <span>Recent Activity Log</span>
+          <span>{t('dash.recentActivity')}</span>
         </h4>
         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Live Feed</span>
       </div>
@@ -41,12 +44,12 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-left">
-              <th className="pb-3 pl-2">Invoice ID</th>
-              <th className="pb-3">Customer Name</th>
-              <th className="pb-3">Total Amount</th>
-              <th className="pb-3">Payment</th>
-              <th className="pb-3">Status</th>
-              <th className="pb-3 pr-2 text-right">Date Time</th>
+              <th className="pb-3 pl-2">{t('inv.receiptNo')}</th>
+              <th className="pb-3">{t('inv.customer')}</th>
+              <th className="pb-3">{t('common.total')}</th>
+              <th className="pb-3">{t('inv.payment')}</th>
+              <th className="pb-3">{t('inv.status')}</th>
+              <th className="pb-3 pr-2 text-right">{t('inv.time')}</th>
             </tr>
           </thead>
           
@@ -54,7 +57,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
             {txs.length === 0 ? (
               <tr>
                 <td colSpan={6} className="py-8 text-center text-slate-400 font-medium">
-                  No sales logged yet. Start ringing orders in the POS Cashier!
+                  {t('dash.noSales')}
                 </td>
               </tr>
             ) : (
@@ -65,7 +68,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
                   <td className="py-3 font-bold text-slate-800">{formatIDR(tx.total_amount)}</td>
                   <td className="py-3">
                     <span className="bg-slate-50 border border-slate-100/50 text-slate-500 px-2 py-0.5 rounded-lg text-[9px] uppercase tracking-wide font-mono">
-                      {tx.payment_method}
+                      {t(paymentKey(tx.payment_method))}
                     </span>
                   </td>
                   <td className="py-3">
@@ -74,7 +77,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
                         ? 'bg-emerald-50 text-emerald-600 border border-emerald-100/50'
                         : 'bg-amber-50 text-amber-600 border border-amber-100/50'
                     }`}>
-                      {tx.status}
+                      {t(txStatusKey(tx.status))}
                     </span>
                   </td>
                   <td className="py-3 pr-2 text-right font-mono text-slate-400 text-[10px]">

@@ -1,4 +1,5 @@
 import { type UserProfile } from '../../lib/db';
+import { useI18n, type Lang } from '../../lib/i18n';
 
 interface NavbarProps {
   activeTab: string;
@@ -8,25 +9,56 @@ interface NavbarProps {
 }
 
 export default function Navbar({ activeTab, setActiveTab, currentUser, avatarUrl = '' }: NavbarProps) {
+  const { t, lang, setLang } = useI18n();
 
   const isCashier = currentUser.role === 'cashier';
 
   const displayName = isCashier
-    ? (currentUser.name || 'Kasir')
+    ? (currentUser.name || t('role.cashier'))
     : currentUser.email.split('@')[0].split(/[-_.]/).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 
   const initials = displayName.charAt(0).toUpperCase();
 
-  const roleName = isCashier ? 'POS Cashier' : 'Store Administrator';
+  const roleName = isCashier ? t('role.cashier') : t('role.owner');
+
+  const TAB_KEYS: Record<string, string> = {
+    dashboard: 'menu.dashboard', pos: 'menu.pos', invoices: 'menu.invoices', catalog: 'menu.catalog',
+    inventory: 'menu.inventory', promos: 'menu.promos', customers: 'menu.customers', shifts: 'menu.shifts',
+    sales: 'menu.sales', expenses: 'menu.expenses', settings: 'menu.settings', staff: 'menu.staff',
+    profile: 'menu.profile', help: 'menu.help',
+  };
+
+  const LANG_OPTIONS: { id: Lang; label: string }[] = [
+    { id: 'id', label: 'ID' },
+    { id: 'en', label: 'EN' },
+  ];
 
   return (
     <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10 shrink-0 shadow-sm">
 
       <div className="flex items-center gap-2">
-        <span className="text-xs font-semibold text-slate-400 capitalize tracking-wide">{activeTab} View</span>
+        <span className="text-sm font-bold text-slate-700 tracking-wide">
+          {TAB_KEYS[activeTab] ? t(TAB_KEYS[activeTab]) : activeTab}
+        </span>
       </div>
 
       <div className="flex items-center gap-5">
+
+        {/* Language switcher */}
+        <div className="flex items-center gap-0.5 bg-slate-100 border border-slate-200/60 p-0.5 rounded-xl">
+          {LANG_OPTIONS.map(opt => (
+            <button
+              key={opt.id}
+              onClick={() => setLang(opt.id)}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold cursor-pointer transition-all ${
+                lang === opt.id ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
         <div
           onClick={() => setActiveTab('profile')}
           className="flex items-center gap-3 cursor-pointer group shrink-0"

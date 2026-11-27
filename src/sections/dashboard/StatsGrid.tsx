@@ -2,6 +2,7 @@ import { ShoppingBag, Banknote, UserCheck, TrendingUp } from 'lucide-react';
 import { dbService } from '../../lib/db';
 import type { Transaction, Cashier } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { useI18n } from '../../lib/i18n';
 
 interface StatsGridProps {
   storeId: number;
@@ -9,6 +10,7 @@ interface StatsGridProps {
 }
 
 export default function StatsGrid({ storeId, refreshTrigger }: StatsGridProps) {
+  const { t } = useI18n();
   const [txs] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
   const [cashiers] = useStoreData<Cashier[]>(dbService.getCashiers, storeId, refreshTrigger, []);
 
@@ -28,30 +30,30 @@ export default function StatsGrid({ storeId, refreshTrigger }: StatsGridProps) {
 
   const statCards = [
     {
-      title: "Total Pendapatan",
+      title: t('dash.totalRevenue'),
       value: formatIDR(totalIncome),
-      desc: "Total dari semua invoice tercatat",
+      desc: t('dash.totalRevenueDesc'),
       icon: Banknote,
       color: "text-emerald-600 bg-emerald-50 border-emerald-100/50"
     },
     {
-      title: "Total Transaksi",
+      title: t('dash.totalTx'),
       value: txs.length.toString(),
-      desc: "Jumlah order masuk",
+      desc: t('dash.totalTxDesc'),
       icon: ShoppingBag,
       color: "text-indigo-600 bg-indigo-50 border-indigo-100/50"
     },
     {
-      title: "Rata-rata per Order",
+      title: t('dash.avgOrder'),
       value: formatIDR(avgOrderValue),
-      desc: "Nilai rata-rata tiap transaksi",
+      desc: t('dash.avgOrderDesc'),
       icon: TrendingUp,
       color: "text-amber-600 bg-amber-50 border-amber-100/50"
     },
     {
-      title: "Kasir Aktif",
+      title: t('dash.activeCashiers'),
       value: cashiers.length.toString(),
-      desc: "Kasir terdaftar di outlet ini",
+      desc: t('dash.activeCashiersDesc'),
       icon: UserCheck,
       color: "text-sky-600 bg-sky-50 border-sky-100/50"
     }

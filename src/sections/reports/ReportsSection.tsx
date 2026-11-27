@@ -3,6 +3,7 @@ import { Download, TrendingUp, TrendingDown, Wallet, Receipt, Package, PiggyBank
 import { dbService } from '../../lib/db';
 import type { Transaction, Expense, Refund } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { useI18n } from '../../lib/i18n';
 
 interface ReportsSectionProps {
   storeId: number;
@@ -13,6 +14,7 @@ const fmt = (n: number) => new Intl.NumberFormat('id-ID', { style: 'currency', c
 const MONTH_NAMES = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
 export default function ReportsSection({ storeId, refreshTrigger }: ReportsSectionProps) {
+  const { t } = useI18n();
   const [transactions] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
   const [expenses] = useStoreData<Expense[]>(dbService.getExpenses, storeId, refreshTrigger, []);
   const [refunds] = useStoreData<Refund[]>(dbService.getRefunds, storeId, refreshTrigger, []);
@@ -118,8 +120,8 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Laporan &amp; Rekap Bulanan</h2>
-          <p className="text-slate-400 text-xs mt-1.5 font-medium">Ringkasan omzet, laba, dan perbandingan periode.</p>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('rpt.title')}</h2>
+          <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('rpt.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <select value={month} onChange={e => setMonth(Number(e.target.value))} className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 cursor-pointer">
@@ -129,29 +131,29 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
             {[now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1].map(y => <option key={y} value={y}>{y}</option>)}
           </select>
           <button onClick={exportMonthlyCSV} className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
-            <Download className="h-3.5 w-3.5" /> Ekspor CSV
+            <Download className="h-3.5 w-3.5" /> {t('rpt.exportCsv')}
           </button>
         </div>
       </div>
 
       {/* Metric cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard icon={Receipt} label="Penjualan Kotor" value={fmt(metrics.grossSales)} delta={delta(metrics.netSales, prevMetrics.netSales)} color="indigo" />
-        <MetricCard icon={Wallet} label="Penjualan Bersih" value={fmt(metrics.netSales)} delta={delta(metrics.netSales, prevMetrics.netSales)} color="blue" />
-        <MetricCard icon={PiggyBank} label="Laba Kotor" value={fmt(metrics.grossProfit)} delta={delta(metrics.grossProfit, prevMetrics.grossProfit)} color="emerald" />
-        <MetricCard icon={TrendingUp} label="Laba Bersih Operasional" value={fmt(metrics.netProfit)} delta={delta(metrics.netProfit, prevMetrics.netProfit)} color="violet" />
+        <MetricCard icon={Receipt} label={t('rpt.grossSales')} value={fmt(metrics.grossSales)} delta={delta(metrics.netSales, prevMetrics.netSales)} color="indigo" />
+        <MetricCard icon={Wallet} label={t('rpt.netSales')} value={fmt(metrics.netSales)} delta={delta(metrics.netSales, prevMetrics.netSales)} color="blue" />
+        <MetricCard icon={PiggyBank} label={t('rpt.grossProfit')} value={fmt(metrics.grossProfit)} delta={delta(metrics.grossProfit, prevMetrics.grossProfit)} color="emerald" />
+        <MetricCard icon={TrendingUp} label={t('rpt.netProfit')} value={fmt(metrics.netProfit)} delta={delta(metrics.netProfit, prevMetrics.netProfit)} color="violet" />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MiniStat icon={Undo2} label="Refund" value={fmt(metrics.totalRefund)} />
-        <MiniStat icon={Package} label="Barang Terjual" value={String(metrics.unitsSold)} />
-        <MiniStat icon={Receipt} label="Transaksi" value={String(metrics.txCount)} />
-        <MiniStat icon={Wallet} label="Pengeluaran" value={fmt(metrics.totalExpense)} />
+        <MiniStat icon={Undo2} label={t('rpt.refund')} value={fmt(metrics.totalRefund)} />
+        <MiniStat icon={Package} label={t('rpt.unitsSold')} value={String(metrics.unitsSold)} />
+        <MiniStat icon={Receipt} label={t('rpt.transactions')} value={String(metrics.txCount)} />
+        <MiniStat icon={Wallet} label={t('rpt.expenses')} value={fmt(metrics.totalExpense)} />
       </div>
 
       {/* Daily chart */}
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-        <h3 className="font-bold text-slate-800 text-sm mb-4">Penjualan Harian — {MONTH_NAMES[month]} {year}</h3>
+        <h3 className="font-bold text-slate-800 text-sm mb-4">{t('rpt.dailySales')} — {MONTH_NAMES[month]} {year}</h3>
         <div className="flex items-end gap-1 h-48">
           {daily.map((d, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
@@ -166,17 +168,17 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
 
       {/* P&L summary */}
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-        <h3 className="font-bold text-slate-800 text-sm mb-4">Ringkasan Laba Rugi</h3>
+        <h3 className="font-bold text-slate-800 text-sm mb-4">{t('rpt.pnl')}</h3>
         <div className="space-y-2.5">
-          <PnLRow label="Penjualan Kotor" value={metrics.grossSales} />
-          <PnLRow label="(−) Diskon" value={-metrics.totalDiscount} negative />
-          <PnLRow label="(−) Refund" value={-metrics.totalRefund} negative />
-          <PnLRow label="Penjualan Bersih" value={metrics.netSales} bold />
-          <PnLRow label="(−) HPP" value={-metrics.cogs} negative />
-          <PnLRow label="Laba Kotor" value={metrics.grossProfit} bold />
-          <PnLRow label="(−) Pengeluaran Operasional" value={-metrics.totalExpense} negative />
+          <PnLRow label={t('rpt.grossSales')} value={metrics.grossSales} />
+          <PnLRow label={`(−) ${t('rpt.discount')}`} value={-metrics.totalDiscount} negative />
+          <PnLRow label={`(−) ${t('rpt.refund')}`} value={-metrics.totalRefund} negative />
+          <PnLRow label={t('rpt.netSales')} value={metrics.netSales} bold />
+          <PnLRow label={`(−) ${t('rpt.cogs')}`} value={-metrics.cogs} negative />
+          <PnLRow label={t('rpt.grossProfit')} value={metrics.grossProfit} bold />
+          <PnLRow label={`(−) ${t('rpt.operatingExpense')}`} value={-metrics.totalExpense} negative />
           <div className="flex justify-between pt-2.5 border-t border-slate-100">
-            <span className="text-sm font-extrabold text-slate-800">Laba Bersih Operasional</span>
+            <span className="text-sm font-extrabold text-slate-800">{t('rpt.netProfit')}</span>
             <span className={`text-sm font-extrabold ${metrics.netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{fmt(metrics.netProfit)}</span>
           </div>
         </div>
@@ -186,6 +188,7 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
 }
 
 function MetricCard({ icon: Icon, label, value, delta, color }: { icon: any; label: string; value: string; delta: number; color: string }) {
+  const { t } = useI18n();
   const map: Record<string, string> = {
     indigo: 'bg-indigo-50 text-indigo-600',
     blue: 'bg-blue-50 text-blue-600',
@@ -200,7 +203,7 @@ function MetricCard({ icon: Icon, label, value, delta, color }: { icon: any; lab
       <p className="text-lg font-extrabold text-slate-800 leading-tight mt-0.5">{value}</p>
       <div className={`inline-flex items-center gap-1 text-[10px] font-bold mt-1.5 ${up ? 'text-emerald-600' : 'text-rose-600'}`}>
         {up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-        {Math.abs(delta).toFixed(1)}% vs bulan lalu
+        {Math.abs(delta).toFixed(1)}% {t('rpt.vsPrev')}
       </div>
     </div>
   );

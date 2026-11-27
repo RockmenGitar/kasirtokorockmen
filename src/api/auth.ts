@@ -3,6 +3,18 @@ import { fromCache, toCache, bustCache } from './cache';
 import { productService } from './products';
 import type { UserProfile, Store, Cashier } from './types';
 
+/**
+ * Call the `admin-users` Edge Function (runs with service_role) so account
+ * changes from the web panel persist to Supabase, not just localStorage.
+ */
+async function invokeAdmin(payload: Record<string, unknown>): Promise<any> {
+  if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
+  const { data, error } = await supabase.functions.invoke('admin-users', { body: payload });
+  if (error) throw new Error(error.message || 'Gagal memanggil server.');
+  if (data?.error) throw new Error(data.error);
+  return data;
+}
+
 export const authService = {
 
   async getOrCreateStore(storeCode: string): Promise<number> {
@@ -366,6 +378,11 @@ export const authService = {
   },
 
   async deleteStaff(id: string, storeId: number): Promise<void> {
+    if (supabase) {
+      await invokeAdmin({ action: 'delete-cashier', id });
+      bustCache(`cashiers_${storeId}`);
+      return;
+    }
     const cashiers: Cashier[] = JSON.parse(localStorage.getItem('kasirnya_cashiers') || '[]');
     localStorage.setItem('kasirnya_cashiers', JSON.stringify(cashiers.filter(c => c.id !== id)));
     bustCache(`cashiers_${storeId}`);
@@ -377,6 +394,14 @@ export const authService = {
     if (!input.name.trim()) throw new Error('Nama owner tidak boleh kosong.');
     if (!cleanEmail) throw new Error('Email tidak boleh kosong.');
     if (!input.password || input.password.length < 4) throw new Error('Kata sandi minimal 4 karakter.');
+
+    if (supabase) {
+      const res = await invokeAdmin({
+        action: 'create-owner', email: cleanEmail, password: input.password,
+        name: input.name.trim(), store_id: storeId,
+      });
+      return { id: res.id, email: cleanEmail, role: 'admin', store_id: storeId, name: input.name.trim() };
+    }
 
     const profiles: (UserProfile & { password?: string })[] = JSON.parse(localStorage.getItem('kasirnya_profiles') || '[]');
     if (profiles.some(p => p.email?.toLowerCase() === cleanEmail)) {
@@ -398,8 +423,19 @@ export const authService = {
   },
 
   async updateOwner(id: string, updates: { name?: string; email?: string; password?: string }): Promise<void> {
-    const profiles: (UserProfile & { password?: string })[] = JSON.parse(localStorage.getItem('kasirnya_profiles') || '[]');
     const cleanEmail = updates.email?.trim().toLowerCase();
+
+    if (supabase) {
+      await invokeAdmin({
+        action: 'update-owner', id,
+        ...(updates.name !== undefined ? { name: updates.name.trim() } : {}),
+        ...(cleanEmail ? { email: cleanEmail } : {}),
+        ...(updates.password ? { password: updates.password } : {}),
+      });
+      return;
+    }
+
+    const profiles: (UserProfile & { password?: string })[] = JSON.parse(localStorage.getItem('kasirnya_profiles') || '[]');
     if (cleanEmail && profiles.some(p => p.id !== id && p.email?.toLowerCase() === cleanEmail)) {
       throw new Error('Email ini sudah dipakai akun lain.');
     }
@@ -413,11 +449,28 @@ export const authService = {
   },
 
   async deleteOwner(id: string): Promise<void> {
+    if (supabase) {
+      await invokeAdmin({ action: 'delete-owner', id });
+      return;
+    }
     const profiles: (UserProfile & { password?: string })[] = JSON.parse(localStorage.getItem('kasirnya_profiles') || '[]');
     localStorage.setItem('kasirnya_profiles', JSON.stringify(profiles.filter(p => p.id !== id)));
   },
 
   async getOwners(storeId: number): Promise<UserProfile[]> {
+    if (supabase) {
+      const cacheKey = `owners_${storeId}`;
+      const cached = fromCache<UserProfile[]>(cacheKey);
+      if (cached) return cached;
+      const { data, error } = await supabase
+        .from('profiles').select('*').eq('store_id', storeId);
+      if (error) return [];
+      const result = (data as any[]).map(p => ({
+        id: p.id, email: p.email, role: p.role, store_id: Number(p.store_id), name: p.name ?? undefined,
+      })) as UserProfile[];
+      toCache(cacheKey, result);
+      return result;
+    }
     const profiles: (UserProfile & { password?: string })[] = JSON.parse(localStorage.getItem('kasirnya_profiles') || '[]');
     return profiles
       .filter(p => p.store_id === storeId)

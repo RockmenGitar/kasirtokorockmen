@@ -1,6 +1,8 @@
 import { Plus, Minus, Edit3, Trash2, ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
+import { stockStatusKey } from '../../lib/labels';
+import { useI18n } from '../../lib/i18n';
 
 interface CatalogTableProps {
   products: Product[];
@@ -40,6 +42,7 @@ export default function CatalogTable({
   onDeleteClick,
   categories = []
 }: CatalogTableProps) {
+  const { t } = useI18n();
 
   // Status badge colors
   const getStatusStyle = (product: Product) => {
@@ -126,7 +129,7 @@ export default function CatalogTable({
                       <span className={`h-1.5 w-1.5 rounded-full ${p.stock_quantity === 0 ? 'bg-rose-500' :
                           p.stock_status === 'Low Stock' ? 'bg-amber-500' : 'bg-emerald-500'
                         }`} />
-                      {p.stock_quantity === 0 ? 'Out of Stock' : p.stock_status}
+                      {t(stockStatusKey(p.stock_quantity === 0 ? 'Out of Stock' : p.stock_status))}
                     </span>
                   </td>
 

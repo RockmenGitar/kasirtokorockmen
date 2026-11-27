@@ -3,6 +3,8 @@ import { Boxes, AlertTriangle, XCircle, ArrowUpCircle, Settings2, Loader2, Searc
 import { dbService } from '../../lib/db';
 import type { Product, StockMovement, StoreSettings, UserProfile } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { movementKey } from '../../lib/labels';
+import { useI18n } from '../../lib/i18n';
 
 interface InventorySectionProps {
   storeId: number;
@@ -13,19 +15,8 @@ interface InventorySectionProps {
 
 const fmt = (n: number) => new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
 
-const MOVEMENT_LABELS: Record<StockMovement['type'], string> = {
-  in: 'Stok Masuk',
-  out: 'Stok Keluar',
-  adjustment: 'Penyesuaian',
-  opname: 'Stok Opname',
-  damage: 'Barang Rusak',
-  return: 'Retur',
-  transfer_in: 'Transfer Masuk',
-  transfer_out: 'Transfer Keluar',
-  sale: 'Penjualan',
-};
-
 export default function InventorySection({ storeId, refreshTrigger, triggerRefresh, currentUser }: InventorySectionProps) {
+  const { t } = useI18n();
   const [products] = useStoreData<Product[]>(dbService.getProducts, storeId, refreshTrigger, []);
   const [movements] = useStoreData<StockMovement[]>(dbService.getMovements, storeId, refreshTrigger, []);
 
@@ -55,21 +46,21 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Inventori</h2>
-          <p className="text-slate-400 text-xs mt-1.5 font-medium">Pantau stok, pergerakan, dan lakukan penyesuaian.</p>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('invt.title')}</h2>
+          <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('invt.subtitle')}</p>
         </div>
         <div className="flex gap-1.5 bg-slate-50 border border-slate-100 p-0.5 rounded-2xl">
-          <button onClick={() => setTab('stock')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'stock' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>Stok</button>
-          <button onClick={() => setTab('movements')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'movements' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>Pergerakan</button>
+          <button onClick={() => setTab('stock')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'stock' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>{t('invt.stockTab')}</button>
+          <button onClick={() => setTab('movements')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'movements' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>{t('invt.movementTab')}</button>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Boxes} label="Total Produk" value={String(stats.total)} color="indigo" />
-        <StatCard icon={ArrowUpCircle} label="Stok Aman" value={String(stats.inStock)} color="emerald" />
-        <StatCard icon={AlertTriangle} label="Stok Menipis" value={String(stats.low)} color="amber" />
-        <StatCard icon={XCircle} label="Stok Habis" value={String(stats.out)} color="rose" />
+        <StatCard icon={Boxes} label={t('invt.totalProducts')} value={String(stats.total)} color="indigo" />
+        <StatCard icon={ArrowUpCircle} label={t('invt.safeStock')} value={String(stats.inStock)} color="emerald" />
+        <StatCard icon={AlertTriangle} label={t('invt.lowStock')} value={String(stats.low)} color="amber" />
+        <StatCard icon={XCircle} label={t('invt.outStock')} value={String(stats.out)} color="rose" />
       </div>
 
       {tab === 'stock' ? (
@@ -80,7 +71,7 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari nama, SKU, atau barcode..."
+                placeholder={t('invt.searchPlaceholder')}
                 className="w-full bg-slate-50 border border-slate-150 rounded-xl pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
               />
             </div>
@@ -89,16 +80,16 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-50">
-                  <th className="text-left font-bold px-4 py-3">Produk</th>
-                  <th className="text-left font-bold px-4 py-3">SKU</th>
-                  <th className="text-right font-bold px-4 py-3">Stok</th>
-                  <th className="text-left font-bold px-4 py-3">Status</th>
-                  <th className="text-right font-bold px-4 py-3">Aksi</th>
+                  <th className="text-left font-bold px-4 py-3">{t('common.product')}</th>
+                  <th className="text-left font-bold px-4 py-3">{t('cat.code')}</th>
+                  <th className="text-right font-bold px-4 py-3">{t('common.stock')}</th>
+                  <th className="text-left font-bold px-4 py-3">{t('common.status')}</th>
+                  <th className="text-right font-bold px-4 py-3">{t('common.action')}</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.length === 0 ? (
-                  <tr><td colSpan={5} className="px-4 py-10 text-center text-slate-400 text-xs font-semibold">Belum ada produk.</td></tr>
+                  <tr><td colSpan={5} className="px-4 py-10 text-center text-slate-400 text-xs font-semibold">{t('common.noData')}</td></tr>
                 ) : filteredProducts.map(p => (
                   <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50/50">
                     <td className="px-4 py-3 font-semibold text-slate-700">{p.name}</td>
@@ -107,7 +98,7 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
                     <td className="px-4 py-3"><StockBadge qty={p.stock_quantity} threshold={threshold} /></td>
                     <td className="px-4 py-3 text-right">
                       <button onClick={() => setAdjustTarget(p)} className="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
-                        <Settings2 className="h-3.5 w-3.5" /> Sesuaikan
+                        <Settings2 className="h-3.5 w-3.5" /> {t('invt.adjust')}
                       </button>
                     </td>
                   </tr>
@@ -122,25 +113,25 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-50">
-                  <th className="text-left font-bold px-4 py-3">Waktu</th>
-                  <th className="text-left font-bold px-4 py-3">Produk</th>
-                  <th className="text-left font-bold px-4 py-3">Jenis</th>
-                  <th className="text-right font-bold px-4 py-3">Perubahan</th>
-                  <th className="text-right font-bold px-4 py-3">Sebelum → Sesudah</th>
-                  <th className="text-left font-bold px-4 py-3">Keterangan</th>
+                  <th className="text-left font-bold px-4 py-3">{t('invt.movementTime')}</th>
+                  <th className="text-left font-bold px-4 py-3">{t('invt.movementProduct')}</th>
+                  <th className="text-left font-bold px-4 py-3">{t('invt.movementType')}</th>
+                  <th className="text-right font-bold px-4 py-3">{t('invt.movementChange')}</th>
+                  <th className="text-right font-bold px-4 py-3">{t('invt.movementBeforeAfter')}</th>
+                  <th className="text-left font-bold px-4 py-3">{t('invt.movementNote')}</th>
                 </tr>
               </thead>
               <tbody>
                 {movements.length === 0 ? (
                   <tr><td colSpan={6} className="px-4 py-10 text-center text-slate-400 text-xs font-semibold">
                     <History className="h-6 w-6 mx-auto mb-2 text-slate-200" />
-                    Belum ada pergerakan stok.
+                    {t('invt.noMovement')}
                   </td></tr>
                 ) : movements.map(m => (
                   <tr key={m.id} className="border-b border-slate-50 hover:bg-slate-50/50">
                     <td className="px-4 py-3 text-slate-400 text-xs whitespace-nowrap">{new Date(m.created_at || '').toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}</td>
                     <td className="px-4 py-3 font-semibold text-slate-700">{m.product_name}</td>
-                    <td className="px-4 py-3"><span className="text-[10px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md">{MOVEMENT_LABELS[m.type] ?? m.type}</span></td>
+                    <td className="px-4 py-3"><span className="text-[10px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md">{t(movementKey(m.type))}</span></td>
                     <td className={`px-4 py-3 text-right font-extrabold ${m.quantity >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>{m.quantity >= 0 ? '+' : ''}{fmt(m.quantity)}</td>
                     <td className="px-4 py-3 text-right text-slate-500 text-xs">{fmt(m.stock_before)} → {fmt(m.stock_after)}</td>
                     <td className="px-4 py-3 text-slate-400 text-xs">{m.reason || m.reference || '—'}</td>
@@ -186,15 +177,17 @@ function StatCard({ icon: Icon, label, value, color }: { icon: any; label: strin
 }
 
 function StockBadge({ qty, threshold }: { qty: number; threshold: number }) {
-  if (qty <= 0) return <span className="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-md">Habis</span>;
-  if (qty <= threshold) return <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-md">Menipis</span>;
-  return <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md">Aman</span>;
+  const { t } = useI18n();
+  if (qty <= 0) return <span className="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-md">{t('invt.statusOut')}</span>;
+  if (qty <= threshold) return <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-md">{t('invt.statusLow')}</span>;
+  return <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md">{t('invt.statusOk')}</span>;
 }
 
 function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
   product: Product; userName: string; threshold: number;
   onClose: () => void; onDone: () => void;
 }) {
+  const { t } = useI18n();
   const [mode, setMode] = useState<StockMovement['type']>('in');
   const [qty, setQty] = useState('');
   const [reason, setReason] = useState('');
@@ -202,11 +195,11 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
   const [error, setError] = useState('');
 
   const modes: { id: StockMovement['type']; label: string }[] = [
-    { id: 'in', label: 'Masuk' },
-    { id: 'out', label: 'Keluar' },
-    { id: 'opname', label: 'Opname' },
-    { id: 'damage', label: 'Rusak' },
-    { id: 'return', label: 'Retur' },
+    { id: 'in', label: t('invt.in') },
+    { id: 'out', label: t('invt.out') },
+    { id: 'opname', label: t('invt.opname') },
+    { id: 'damage', label: t('invt.damage') },
+    { id: 'return', label: t('invt.return') },
   ];
 
   const submit = async () => {
@@ -221,7 +214,7 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
         const delta = (mode === 'in' || mode === 'return') ? n : -n;
         await dbService.recordMovement({
           product, type: mode, quantity: delta,
-          reason: reason || MOVEMENT_LABELS[mode], user_name: userName, threshold,
+          reason: reason || t(movementKey(mode)), user_name: userName, threshold,
         });
       }
       onDone();
@@ -236,8 +229,8 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
-        <h3 className="font-extrabold text-slate-800 text-base">Sesuaikan Stok</h3>
-        <p className="text-[11px] text-slate-400 font-medium mt-0.5">{product.name} · stok saat ini {fmt(product.stock_quantity)}</p>
+        <h3 className="font-extrabold text-slate-800 text-base">{t('invt.adjustTitle')}</h3>
+        <p className="text-[11px] text-slate-400 font-medium mt-0.5">{product.name} · {t('invt.currentStock')} {fmt(product.stock_quantity)}</p>
 
         <div className="flex flex-wrap gap-1.5 mt-4">
           {modes.map(m => (
@@ -247,13 +240,13 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
 
         <div className="mt-4 space-y-3">
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{mode === 'opname' ? 'Stok Aktual (hasil hitung)' : 'Jumlah'}</label>
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{mode === 'opname' ? t('invt.actualQty') : t('invt.qty')}</label>
             <input type="number" value={qty} onChange={e => setQty(e.target.value)} placeholder="0"
               className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
-            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Keterangan</label>
-            <input type="text" value={reason} onChange={e => setReason(e.target.value)} placeholder="Opsional..."
+            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('invt.movementNote')}</label>
+            <input type="text" value={reason} onChange={e => setReason(e.target.value)} placeholder={t('invt.notePlaceholder')}
               className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
@@ -261,9 +254,9 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
         {error && <p className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-3.5 py-2.5 mt-3">{error}</p>}
 
         <div className="flex justify-end gap-2 mt-5">
-          <button onClick={onClose} disabled={saving} className="px-4 py-2.5 rounded-xl text-[11px] font-bold text-slate-500 border border-slate-200 hover:bg-slate-50 cursor-pointer">Batal</button>
+          <button onClick={onClose} disabled={saving} className="px-4 py-2.5 rounded-xl text-[11px] font-bold text-slate-500 border border-slate-200 hover:bg-slate-50 cursor-pointer">{t('common.cancel')}</button>
           <button onClick={submit} disabled={saving} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
-            {saving && <Loader2 className="h-4 w-4 animate-spin" />} Simpan
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />} {t('common.save')}
           </button>
         </div>
       </div>

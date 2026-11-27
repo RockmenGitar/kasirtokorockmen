@@ -19,6 +19,7 @@ import {
   Clock
 } from 'lucide-react';
 import { authService, type UserProfile, type Store } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 import SignOutModal from '../modal/SignOutModal';
 import KasirIcon from '../ui/KasirIcon';
 import { ChevronDown, Store as StoreIcon } from 'lucide-react';
@@ -50,6 +51,7 @@ export default function Sidebar({
   collapsed,
   onToggleCollapsed
 }: SidebarProps) {
+  const { t } = useI18n();
   const [showSignOut, setShowSignOut] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [showOutletMenu, setShowOutletMenu] = useState(false);
@@ -61,27 +63,27 @@ export default function Sidebar({
   };
 
   const ALL_MENU = [
-    { id: 'dashboard', name: 'Ringkasan', icon: LayoutDashboard },
-    { id: 'pos', name: 'Kasir', icon: ShoppingCart },
-    { id: 'invoices', name: 'Penjualan', icon: ReceiptText },
-    { id: 'catalog', name: 'Produk', icon: Package },
-    { id: 'inventory', name: 'Inventori', icon: Boxes },
-    { id: 'promos', name: 'Promo', icon: Tag },
-    { id: 'customers', name: 'Pelanggan', icon: Users },
-    { id: 'shifts', name: 'Shift Kasir', icon: Clock },
-    { id: 'sales', name: 'Laporan', icon: BarChart3 },
-    { id: 'expenses', name: 'Pengeluaran', icon: Wallet },
-    { id: 'settings', name: 'Pengaturan', icon: Settings },
-    { id: 'staff', name: 'Outlet & Tim', icon: UserPlus },
+    { id: 'dashboard', name: t('menu.dashboard'), icon: LayoutDashboard },
+    { id: 'pos', name: t('menu.pos'), icon: ShoppingCart },
+    { id: 'invoices', name: t('menu.invoices'), icon: ReceiptText },
+    { id: 'catalog', name: t('menu.catalog'), icon: Package },
+    { id: 'inventory', name: t('menu.inventory'), icon: Boxes },
+    { id: 'promos', name: t('menu.promos'), icon: Tag },
+    { id: 'customers', name: t('menu.customers'), icon: Users },
+    { id: 'shifts', name: t('menu.shifts'), icon: Clock },
+    { id: 'sales', name: t('menu.sales'), icon: BarChart3 },
+    { id: 'expenses', name: t('menu.expenses'), icon: Wallet },
+    { id: 'settings', name: t('menu.settings'), icon: Settings },
+    { id: 'staff', name: t('menu.staff'), icon: UserPlus },
   ];
 
   const getMenuItems = () => {
     if (currentUser.role === 'cashier') {
       const granted = currentUser.permissions ?? ['pos', 'invoices'];
       const filtered = ALL_MENU.filter(item => granted.includes(item.id));
-      return [...filtered, { id: 'profile', name: 'Profil', icon: User }];
+      return [...filtered, { id: 'profile', name: t('menu.profile'), icon: User }];
     }
-    return [...ALL_MENU, { id: 'profile', name: 'Profil', icon: User }];
+    return [...ALL_MENU, { id: 'profile', name: t('menu.profile'), icon: User }];
   };
 
   const menuItems = getMenuItems();
@@ -107,7 +109,7 @@ export default function Sidebar({
           </div>
           <div className={`${labelTransition} ${labelState}`}>
             <h1 className="font-extrabold text-slate-800 text-base leading-tight tracking-tight">KasirToko</h1>
-            <span className="text-[10px] font-semibold text-slate-400 block tracking-wider uppercase mt-0.5">POS Command Center</span>
+            <span className="text-[10px] font-semibold text-slate-400 block tracking-wider uppercase mt-0.5">{t('menu.subtitle')}</span>
           </div>
         </div>
 
@@ -172,20 +174,20 @@ export default function Sidebar({
       <div className="p-4 border-t border-slate-50 space-y-1">
         <button
           onClick={() => setActiveTab('help')}
-          title={collapsed ? 'Help Center' : undefined}
+          title={collapsed ? t('menu.help') : undefined}
           className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-colors cursor-pointer"
         >
           <HelpCircle className="h-4 w-4 text-slate-400 shrink-0" />
-          <span className={`${labelTransition} ${labelState}`}>Help Center</span>
+          <span className={`${labelTransition} ${labelState}`}>{t('menu.help')}</span>
         </button>
 
         <button
           onClick={() => setShowSignOut(true)}
-          title={collapsed ? 'Sign Out' : undefined}
+          title={collapsed ? 'Keluar' : undefined}
           className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold text-rose-500 hover:bg-rose-50/50 cursor-pointer transition-colors"
         >
           <LogOut className="h-4 w-4 shrink-0" />
-          <span className={`${labelTransition} ${labelState}`}>Sign Out</span>
+          <span className={`${labelTransition} ${labelState}`}>Keluar</span>
         </button>
       </div>
 

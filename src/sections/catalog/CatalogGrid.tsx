@@ -1,6 +1,8 @@
 import { Edit3, Trash2, Plus, Minus, ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
+import { stockStatusKey } from '../../lib/labels';
+import { useI18n } from '../../lib/i18n';
 
 interface CatalogGridProps {
   products: Product[];
@@ -26,6 +28,7 @@ function ProductCard({ product, onStockChange, onEditClick, onDeleteClick, categ
   onDeleteClick: (productId: string) => void;
   categories: Category[];
 }) {
+  const { t } = useI18n();
   const [imgError, setImgError] = useState(false);
   const displayStatus = product.stock_quantity === 0 ? 'Out of Stock' : product.stock_status;
   const colors = statusColors[displayStatus] || statusColors['In Stock'];
@@ -95,7 +98,7 @@ function ProductCard({ product, onStockChange, onEditClick, onDeleteClick, categ
           {/* Status Badge */}
           <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider ${colors.bg} ${colors.text}`}>
             <span className={`h-1.5 w-1.5 rounded-full ${colors.dot}`} />
-            {displayStatus}
+            {t(stockStatusKey(displayStatus))}
           </span>
 
           {/* Stock counter */}

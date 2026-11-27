@@ -1,6 +1,7 @@
 import { Search, ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
 
 function ProductImage({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
@@ -42,7 +43,8 @@ export default function ProductGrid({
   onAddToCart,
   categories = []
 }: ProductGridProps) {
-  
+  const { t } = useI18n();
+
   // Build category list from DB or fallback to product data
   const categoryNames = categories.length > 0
     ? ['All', ...categories.map(c => c.name)]
@@ -70,7 +72,7 @@ export default function ProductGrid({
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-4.5 w-4.5" />
           <input
             type="text"
-            placeholder="Search menu items..."
+            placeholder={t('pos.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-650 shadow-xs transition-all"
@@ -102,8 +104,8 @@ export default function ProductGrid({
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 flex-1 content-start">
         {filteredProducts.length === 0 ? (
           <div className="col-span-full py-16 text-center text-slate-400 bg-white border border-slate-100 rounded-3xl">
-            <span className="font-bold text-xs">No menu products found</span>
-            <p className="text-[10px] text-slate-400 mt-1">Try modifying your query or category selection.</p>
+            <span className="font-bold text-xs">{t('pos.noProducts')}</span>
+            <p className="text-[10px] text-slate-400 mt-1">{t('common.search')} · {t('common.category')}</p>
           </div>
         ) : (
           filteredProducts.map((p) => {
@@ -131,7 +133,7 @@ export default function ProductGrid({
                           ? 'bg-amber-500 text-white'
                           : 'bg-indigo-650 text-white'
                     }`}>
-                      {isOutOfStock ? 'Sold Out' : `${p.stock_quantity} Left`}
+                      {isOutOfStock ? t('pos.soldOut') : `${t('pos.stockLeft')} ${p.stock_quantity}`}
                     </span>
                   </div>
 

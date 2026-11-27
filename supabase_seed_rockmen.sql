@@ -7,6 +7,9 @@
 -- Isi: 2 outlet, akun owner & kasir, kategori, produk gitar,
 --      dan stok per outlet. Aman dijalankan ulang (idempotent).
 --
+-- CATATAN: setelah setup, tambah/ubah/hapus owner & kasir bisa juga dari
+-- panel web (butuh Edge Function `admin-users`, lihat DEPLOY.md).
+--
 -- Akun yang dibuat (password default):
 --   owner@rockmen.com   → owner (Outlet 1)      / admin123
 --   dave@rockmen.com    → owner (Outlet 2)      / admin123

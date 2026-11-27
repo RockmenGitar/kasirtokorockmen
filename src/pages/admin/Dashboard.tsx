@@ -1,6 +1,7 @@
 import { LayoutDashboard } from 'lucide-react';
 import StatsGrid from '../../sections/dashboard/StatsGrid';
 import RecentActivity from '../../sections/dashboard/RecentActivity';
+import { useI18n } from '../../lib/i18n';
 
 interface DashboardProps {
   storeId: number;
@@ -8,6 +9,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ storeId, refreshTrigger }: DashboardProps) {
+  const { t } = useI18n();
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       
@@ -15,10 +17,10 @@ export default function Dashboard({ storeId, refreshTrigger }: DashboardProps) {
       <div>
         <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
           <LayoutDashboard className="h-5 w-5 text-indigo-650" />
-          <span>Ringkasan Bisnis</span>
+          <span>{t('dash.title')}</span>
         </h2>
         <p className="text-slate-400 text-xs mt-1.5 font-medium">
-          Selamat datang! Berikut ringkasan aktivitas outlet Anda hari ini.
+          {t('dash.subtitle')}
         </p>
       </div>
 

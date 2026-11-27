@@ -3,6 +3,7 @@ import { dbService, DEFAULT_STORE_SETTINGS } from '../../lib/db';
 import type { Product, Transaction, Category, UserProfile, Customer, StoreSettings, Promo } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { calcPosTotals } from '../../lib/posCalc';
+import { useI18n } from '../../lib/i18n';
 
 import ProductGrid from './ProductGrid';
 import CartDrawer, { type CartItem } from './CartDrawer';
@@ -16,6 +17,7 @@ interface POSSectionProps {
 }
 
 export default function POSSection({ storeId, refreshTrigger, triggerRefresh, currentUser }: POSSectionProps) {
+  const { t } = useI18n();
   const [products] = useStoreData<Product[]>(dbService.getProducts, storeId, refreshTrigger, []);
   const [categories] = useStoreData<Category[]>(dbService.getCategories, storeId, refreshTrigger, []);
   const [customers] = useStoreData<Customer[]>(dbService.getCustomers, storeId, refreshTrigger, []);
@@ -225,8 +227,8 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
       <div className="flex-1 space-y-6 py-8">
         <div className="flex justify-between items-center shrink-0">
           <div>
-            <h2 className="font-extrabold text-slate-800 text-xl leading-none">Kasir</h2>
-            <p className="text-slate-400 text-xs mt-1.5 font-medium">Cari nama, SKU, atau barcode lalu buat pesanan.</p>
+            <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('pos.title')}</h2>
+            <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('pos.subtitle')}</p>
           </div>
         </div>
 
