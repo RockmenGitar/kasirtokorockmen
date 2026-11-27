@@ -6,7 +6,8 @@ interface VariantEditorProps {
   onChange: (variants: ProductVariant[]) => void;
 }
 
-export default function VariantEditor({ variants, onChange }: VariantEditorProps) {
+export default function VariantEditor({ variants: rawVariants, onChange }: VariantEditorProps) {
+  const variants = Array.isArray(rawVariants) ? rawVariants : [];
   const add = () => onChange([
     ...variants,
     { id: `var-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, name: '', price: 0, stock_quantity: 0 },
@@ -30,8 +31,8 @@ export default function VariantEditor({ variants, onChange }: VariantEditorProps
         <p className="text-[10px] text-slate-300 font-medium py-1">Belum ada varian. Produk tunggal tanpa varian.</p>
       ) : (
         <div className="space-y-2">
-          {variants.map(v => (
-            <div key={v.id} className="bg-white border border-slate-150 rounded-lg p-2 space-y-1.5">
+          {variants.map((v, idx) => (
+            <div key={v.id || `var-${idx}`} className="bg-white border border-slate-150 rounded-lg p-2 space-y-1.5">
               <div className="grid grid-cols-12 gap-1.5 items-center">
                 <input
                   value={v.name}

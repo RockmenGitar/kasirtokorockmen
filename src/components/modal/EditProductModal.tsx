@@ -51,20 +51,27 @@ export default function EditProductModal({
   // Sync inputs with selected product and pre-format price as Rupiah with dots
   useEffect(() => {
     if (product) {
-      setName(product.name);
-      setPrice(new Intl.NumberFormat('id-ID').format(product.price));
-      setCategory(product.category);
-      setDesc(product.description);
-      setQty(product.stock_quantity.toString());
-      setImgUrl(product.image_url);
+      setName(product.name || '');
+      setPrice(new Intl.NumberFormat('id-ID').format(Number(product.price) || 0));
+      setCategory(product.category || '');
+      setDesc(product.description || '');
+      setQty(String(product.stock_quantity ?? 0));
+      setImgUrl(product.image_url || '');
       setImagePreview(product.image_url || null);
       setUnit(product.unit || 'pcs');
       setSku(product.sku || '');
       setBarcode(product.barcode || '');
-      setCost(product.cost ? new Intl.NumberFormat('id-ID').format(product.cost) : '');
+      setCost(product.cost ? new Intl.NumberFormat('id-ID').format(Number(product.cost)) : '');
       setMinStock(String(product.min_stock ?? 5));
       setActive(product.active !== false);
-      setVariants(product.variants || []);
+      // variants bisa datang sebagai array atau (dari DB) string JSON — normalkan.
+      const rawVariants: unknown = (product as any).variants;
+      const safeVariants: ProductVariant[] = Array.isArray(rawVariants)
+        ? rawVariants
+        : (typeof rawVariants === 'string'
+            ? (() => { try { const p = JSON.parse(rawVariants); return Array.isArray(p) ? p : []; } catch { return []; } })()
+            : []);
+      setVariants(safeVariants);
       // Auto-detect if existing image is a URL or base64
       if (product.image_url && product.image_url.startsWith('data:')) {
         setImageMode('upload');

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import ErrorBoundary from '../ui/ErrorBoundary';
 import { authService, dbService, type UserProfile, type Store } from '../../lib/db';
 
 import Dashboard from '../../pages/admin/Dashboard';
@@ -173,7 +174,7 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
               const isActive = activeTab === tab;
               return (
                 <div key={tab} className={isActive ? '' : 'hidden'}>
-                  {tabContents[tab]}
+                  {isActive ? <ErrorBoundary>{tabContents[tab]}</ErrorBoundary> : tabContents[tab]}
                 </div>
               );
             })}
