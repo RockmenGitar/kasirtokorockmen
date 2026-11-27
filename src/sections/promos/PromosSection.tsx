@@ -5,6 +5,7 @@ import type { Promo } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { toDateStr } from '../../api/localStore';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface PromosSectionProps {
   storeId: number;
@@ -38,7 +39,17 @@ export default function PromosSection({ storeId, refreshTrigger, triggerRefresh 
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('promo.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('promo.title')}
+            <HelpBadge
+              text="Promo memberi potongan harga, bisa berupa persentase (%) atau nominal rupiah, dengan periode aktif tertentu."
+              steps={[
+                'Klik Tambah Promo.',
+                'Pilih tipe diskon dan isi nilainya.',
+                'Atur tanggal mulai/selesai, lalu Aktifkan.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('promo.subtitle')}</p>
         </div>
         <button onClick={() => { setEditing(null); setIsOpen(true); }} className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">

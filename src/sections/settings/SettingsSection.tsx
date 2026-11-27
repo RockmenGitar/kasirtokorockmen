@@ -3,6 +3,7 @@ import { Save, Loader2, Receipt, CreditCard, Bell, Clock, Check, RefreshCw, Copy
 import { dbService, DEFAULT_STORE_SETTINGS } from '../../lib/db';
 import type { StoreSettings, Store } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface SettingsSectionProps {
   storeId: number;
@@ -77,7 +78,18 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
     <div className="space-y-6 animate-fadeIn pb-12 max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('set.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('set.title')}
+            <HelpBadge
+              align="right"
+              text="Atur pajak, struk, metode pembayaran, dan sinkron produk antar-outlet di sini."
+              steps={[
+                'Ubah nilai lalu klik Simpan di kanan atas.',
+                'Pajak & biaya layanan berlaku di kasir.',
+                'Sinkron Produk menyalin katalog dari satu outlet ke outlet lain (tanpa mengubah stok).',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('set.subtitle')}</p>
         </div>
         <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer disabled:opacity-50">

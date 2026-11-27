@@ -5,6 +5,7 @@ import type { Expense, UserProfile } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { toDateStr } from '../../api/localStore';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface ExpensesSectionProps {
   storeId: number;
@@ -60,7 +61,17 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('exp.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('exp.title')}
+            <HelpBadge
+              text="Catat biaya operasional seperti sewa, listrik, gaji, dan pembelian bahan. Pengeluaran mengurangi laba bersih di laporan."
+              steps={[
+                'Klik Tambah untuk mencatat pengeluaran baru.',
+                'Isi tanggal, kategori, nominal, dan keterangan.',
+                'Gunakan filter tanggal untuk melihat periode tertentu.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('exp.subtitle')}</p>
         </div>
         <div className="flex gap-2">

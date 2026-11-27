@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Minus, Plus, Trash2, ArrowRight, User, MessageSquare, ImageOff, Percent, Pause, Banknote } from 'lucide-react';
 import type { Product, Customer, StoreSettings, Promo } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 function CartItemImage({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
@@ -130,7 +131,17 @@ export default function CartDrawer({
 
       {/* HEADER */}
       <div className="flex justify-between items-center pb-3 border-b border-slate-50 shrink-0">
-        <h3 className="font-bold text-slate-800 text-sm">{t('pos.cart')}</h3>
+        <div className="flex items-center gap-1.5">
+          <h3 className="font-bold text-slate-800 text-sm">{t('pos.cart')}</h3>
+          <HelpBadge
+            text="Keranjang berisi barang yang akan dibayar. Angka total di bawah adalah jumlah yang harus dibayar pelanggan."
+            steps={[
+              'Tambahkan barang dengan mengetuk produk atau scan barcode.',
+              'Ubah jumlah dengan tombol +/- pada tiap baris.',
+              'Pilih cara bayar (Tunai/QRIS/Transfer), lalu klik Bayar & Selesaikan.',
+            ]}
+          />
+        </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md uppercase">
             {cart.reduce((sum, item) => sum + item.quantity, 0)} {t('pos.items')}

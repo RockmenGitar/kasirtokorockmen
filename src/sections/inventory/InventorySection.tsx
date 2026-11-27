@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
-import { Boxes, AlertTriangle, XCircle, ArrowUpCircle, Settings2, Loader2, Search, History } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Boxes, AlertTriangle, XCircle, ArrowUpCircle, Settings2, Loader2, Search, History, PackagePlus } from 'lucide-react';
 import { dbService } from '../../lib/db';
-import type { Product, StockMovement, StoreSettings, UserProfile } from '../../lib/db';
+import type { Product, StockMovement, StoreSettings, UserProfile, Store } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { movementKey } from '../../lib/labels';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
+import StockReceive from './StockReceive';
 
 interface InventorySectionProps {
   storeId: number;
@@ -21,11 +23,13 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
   const [movements] = useStoreData<StockMovement[]>(dbService.getMovements, storeId, refreshTrigger, []);
 
   const [settings, setSettings] = useState<StoreSettings | null>(null);
-  const [tab, setTab] = useState<'stock' | 'movements'>('stock');
+  const [tab, setTab] = useState<'stock' | 'movements' | 'receive'>('stock');
   const [search, setSearch] = useState('');
   const [adjustTarget, setAdjustTarget] = useState<Product | null>(null);
+  const [store, setStore] = useState<Store | null>(null);
 
   useMemo(() => { dbService.getSettings(storeId).then(setSettings).catch(() => {}); }, [storeId]);
+  useEffect(() => { dbService.getStoreById(storeId).then(setStore).catch(() => {}); }, [storeId]);
   const threshold = settings?.low_stock_threshold ?? 5;
 
   const stats = useMemo(() => {
@@ -46,11 +50,22 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('invt.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('invt.title')}
+            <HelpBadge
+              text="Pantau stok dan catat perubahan barang di outlet aktif. Gunakan Stok Masuk untuk menerima barang datang, atau Sesuaikan untuk koreksi stok."
+              steps={[
+                'Tab Stok: lihat daftar produk & jumlah stoknya.',
+                'Stok Masuk: terima barang datang lewat scan barcode.',
+                'Pergerakan: riwayat semua perubahan stok beserta alasannya.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('invt.subtitle')}</p>
         </div>
         <div className="flex gap-1.5 bg-slate-50 border border-slate-100 p-0.5 rounded-2xl">
           <button onClick={() => setTab('stock')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'stock' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>{t('invt.stockTab')}</button>
+          <button onClick={() => setTab('receive')} className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'receive' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}><PackagePlus className="h-3.5 w-3.5" />{t('invt.receiveTab')}</button>
           <button onClick={() => setTab('movements')} className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${tab === 'movements' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'}`}>{t('invt.movementTab')}</button>
         </div>
       </div>
@@ -63,7 +78,15 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
         <StatCard icon={XCircle} label={t('invt.outStock')} value={String(stats.out)} color="rose" />
       </div>
 
-      {tab === 'stock' ? (
+      {tab === 'receive' ? (
+        <StockReceive
+          storeId={storeId}
+          products={products}
+          currentUser={currentUser}
+          store={store}
+          onDone={() => { triggerRefresh?.(); }}
+        />
+      ) : tab === 'stock' ? (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="p-4 border-b border-slate-50">
             <div className="relative max-w-md">

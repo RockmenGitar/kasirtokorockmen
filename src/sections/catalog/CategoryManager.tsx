@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, X, Check, Tag, AlertCircle } from 'lucide-react';
 import type { Category } from '../../lib/db';
 import { dbService } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface CategoryManagerProps {
   categories: Category[];
@@ -87,7 +88,17 @@ export default function CategoryManager({ categories, storeId, onRefresh }: Cate
             <Tag className="h-4 w-4 text-violet-600" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-sm leading-tight">{t('cat.manageCategory')}</h3>
+            <div className="flex items-center gap-1.5">
+              <h3 className="font-bold text-slate-800 text-sm leading-tight">{t('cat.manageCategory')}</h3>
+              <HelpBadge
+                text="Kategori mengelompokkan barang agar mudah dicari, misalnya Makanan, Minuman, atau Aksesoris."
+                steps={[
+                  'Klik + Tambah untuk membuat kategori baru.',
+                  'Arahkan kursor ke kategori lalu klik ikon pensil untuk ubah nama.',
+                  'Ikon tong sampah untuk menghapus kategori (produk tidak ikut terhapus).',
+                ]}
+              />
+            </div>
             <p className="text-[9px] text-slate-400 font-medium mt-0.5">{localCats.length} {t('cat.activeCategories')}</p>
           </div>
         </div>

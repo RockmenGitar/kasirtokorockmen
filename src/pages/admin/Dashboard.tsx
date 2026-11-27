@@ -2,6 +2,7 @@ import { LayoutDashboard } from 'lucide-react';
 import StatsGrid from '../../sections/dashboard/StatsGrid';
 import RecentActivity from '../../sections/dashboard/RecentActivity';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface DashboardProps {
   storeId: number;
@@ -18,6 +19,14 @@ export default function Dashboard({ storeId, refreshTrigger }: DashboardProps) {
         <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
           <LayoutDashboard className="h-5 w-5 text-indigo-650" />
           <span>{t('dash.title')}</span>
+          <HelpBadge
+            text="Ringkasan cepat performa outlet hari ini: total pendapatan, jumlah transaksi, dan aktivitas terbaru."
+            steps={[
+              'Lihat kartu metrik untuk angka utama.',
+              'Gulir ke bawah untuk transaksi terbaru.',
+              'Buka menu Laporan untuk rekap yang lebih detail.',
+            ]}
+          />
         </h2>
         <p className="text-slate-400 text-xs mt-1.5 font-medium">
           {t('dash.subtitle')}

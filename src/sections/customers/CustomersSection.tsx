@@ -4,6 +4,7 @@ import { dbService } from '../../lib/db';
 import type { Customer, Transaction } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface CustomersSectionProps {
   storeId: number;
@@ -46,7 +47,17 @@ export default function CustomersSection({ storeId, refreshTrigger, triggerRefre
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('cust.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('cust.title')}
+            <HelpBadge
+              text="Simpan data pelanggan agar bisa melihat riwayat pembelian mereka. Pelanggan tidak wajib diisi saat transaksi."
+              steps={[
+                'Klik Tambah Pelanggan untuk menyimpan nama & kontak.',
+                'Klik salah satu pelanggan untuk melihat riwayat belanjanya.',
+                'Saat di kasir, ketik nama pelanggan agar transaksi tercatat.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('cust.subtitle')}</p>
         </div>
         <button onClick={() => { setEditing(null); setIsOpen(true); }} className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">

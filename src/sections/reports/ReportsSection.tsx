@@ -4,6 +4,7 @@ import { dbService } from '../../lib/db';
 import type { Transaction, Expense, Refund } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface ReportsSectionProps {
   storeId: number;
@@ -120,7 +121,17 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('rpt.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('rpt.title')}
+            <HelpBadge
+              text="Rekap bulanan: pilih bulan dan tahun untuk melihat total penjualan, laba, dan perbandingan dengan bulan sebelumnya."
+              steps={[
+                'Pilih bulan dan tahun di kanan atas.',
+                'Lihat kartu metrik & grafik penjualan harian.',
+                'Klik Ekspor CSV untuk mengunduh rekap periode ini.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('rpt.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">

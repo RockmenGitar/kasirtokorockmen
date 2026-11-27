@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { dbService, DEFAULT_STORE_SETTINGS } from '../../lib/db';
-import type { Product, Transaction, Category, UserProfile, Customer, StoreSettings, Promo } from '../../lib/db';
+import type { Product, ProductVariant, Transaction, Category, UserProfile, Customer, StoreSettings, Promo } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { calcPosTotals } from '../../lib/posCalc';
 import { useI18n } from '../../lib/i18n';
@@ -10,7 +10,7 @@ import CartDrawer, { type CartItem } from './CartDrawer';
 import OrderSuccessModal from '../../components/modal/OrderSuccessModal';
 import BarcodeScannerModal from '../../components/modal/BarcodeScannerModal';
 import { useBarcodeScanner } from '../../lib/barcode/useBarcodeScanner';
-import { findByBarcode } from '../../lib/barcode/lookup';
+import { findBarcodeMatches } from '../../lib/barcode/lookup';
 import { beepSuccess, beepError } from '../../lib/barcode/beep';
 import { Camera } from 'lucide-react';
 
@@ -107,19 +107,10 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
     });
   };
 
-  // Tambah ke keranjang dari hasil scan barcode (bisa produk atau varian)
-  const handleBarcodeScan = useCallback((code: string) => {
-    const match = findByBarcode(products, code);
-    if (!match) {
-      beepError();
-      showScanFeedback('err', `Barcode "${code}" tidak ditemukan`);
-      return;
-    }
-    const { product, variant } = match;
-    // Produk ber-varian: jika varian terpilih dipakai, gunakan harga varian & stok varian
+  // Tambah produk (+varian) tertentu ke keranjang.
+  const addScannedMatch = useCallback((product: Product, variant?: ProductVariant) => {
     const effPrice = variant ? variant.price : product.price;
     const effStock = variant ? variant.stock_quantity : product.stock_quantity;
-
     setCart(prev => {
       const key = variant ? `${product.id}::${variant.id}` : product.id;
       const exists = prev.find(i => (i.variant ? `${i.product.id}::${i.variant.id}` : i.product.id) === key);
@@ -146,7 +137,36 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
     });
     beepSuccess();
     showScanFeedback('ok', `${product.name}${variant ? ` (${variant.name})` : ''} ditambahkan`);
-  }, [products]);
+  }, []);
+
+  // Barcode cocok dengan beberapa varian → minta pilih.
+  const [variantPicker, setVariantPicker] = useState<{ product: Product; variants: ProductVariant[] } | null>(null);
+
+  // Tambah ke keranjang dari hasil scan barcode (bisa produk atau varian)
+  const handleBarcodeScan = useCallback((code: string) => {
+    const matches = findBarcodeMatches(products, code);
+    if (matches.length === 0) {
+      beepError();
+      showScanFeedback('err', `Barcode "${code}" tidak ditemukan`);
+      return;
+    }
+    if (matches.length === 1) {
+      addScannedMatch(matches[0].product, matches[0].variant);
+      return;
+    }
+    // Beberapa hasil: bila semuanya menunjuk produk yang sama dengan beberapa varian → minta pilih.
+    const uniqueProducts = new Set(matches.map(m => m.product.id));
+    if (uniqueProducts.size === 1) {
+      const product = matches[0].product;
+      const variants = matches.filter(m => m.variant).map(m => m.variant!) as ProductVariant[];
+      if (variants.length > 1) {
+        setVariantPicker({ product, variants });
+        return;
+      }
+    }
+    // Fallback: ambil kandidat pertama
+    addScannedMatch(matches[0].product, matches[0].variant);
+  }, [products, addScannedMatch]);
 
   useBarcodeScanner({ onScan: handleBarcodeScan });
 
@@ -414,6 +434,27 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
         onClose={() => setIsScannerOpen(false)}
         onDetected={handleBarcodeScan}
       />
+
+      {variantPicker && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setVariantPicker(null)} />
+          <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
+            <h3 className="font-extrabold text-slate-800 text-base">{t('recv.pickVariant')}</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">{variantPicker.product.name}</p>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {variantPicker.variants.map(v => (
+                <button
+                  key={v.id}
+                  onClick={() => { addScannedMatch(variantPicker.product, v); setVariantPicker(null); }}
+                  className="text-xs font-bold bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 border border-slate-100 px-3 py-2 rounded-xl cursor-pointer"
+                >
+                  {v.name} · {t('common.stock')} {v.stock_quantity}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -6,6 +6,7 @@ export { productStockService } from './productStock';
 export { categoryService } from './categories';
 export { transactionService } from './transactions';
 export { stockMovementService } from './inventory';
+export { receiveService } from './receive';
 export { expenseService } from './expenses';
 export { customerService } from './customers';
 export { promoService } from './promos';
@@ -19,6 +20,7 @@ import { productStockService } from './productStock';
 import { categoryService } from './categories';
 import { transactionService } from './transactions';
 import { stockMovementService } from './inventory';
+import { receiveService } from './receive';
 import { expenseService } from './expenses';
 import { customerService } from './customers';
 import { promoService } from './promos';
@@ -52,6 +54,8 @@ export const dbService = {
   getMovements:        stockMovementService.getMovements.bind(stockMovementService),
   recordMovement:      stockMovementService.recordMovement.bind(stockMovementService),
   setStock:            stockMovementService.setStock.bind(stockMovementService),
+  receiveStock:        receiveService.receive.bind(receiveService),
+  listReceipts:        receiveService.listReceipts.bind(receiveService),
 
   // expenses
   getExpenses:         expenseService.getExpenses.bind(expenseService),

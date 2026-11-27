@@ -4,6 +4,7 @@ import { dbService } from '../../lib/db';
 import type { Product, Category } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 // Import modular sections
 import CatalogGrid from './CatalogGrid';
@@ -88,6 +89,14 @@ export default function CatalogSection({ storeId, refreshTrigger, triggerRefresh
               <Package className="h-4.5 w-4.5 text-white" />
             </div>
             <span>{t('cat.title')}</span>
+            <HelpBadge
+              text="Di sini kamu mengelola daftar barang yang dijual: nama, harga, barcode, dan kategori. Stok barang diubah dari menu Inventori."
+              steps={[
+                'Klik "Tambah Produk" untuk membuat barang baru.',
+                'Isi nama, harga, dan barcode (barcode opsional tapi membantu saat scan).',
+                'Untuk barang dengan pilihan rasa/ukuran, tambahkan Varian.',
+              ]}
+            />
           </h2>
           <p className="text-slate-400 text-xs mt-2 font-medium ml-11.5">
             {t('cat.subtitle')}

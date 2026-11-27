@@ -4,6 +4,7 @@ import { dbService } from '../../lib/db';
 import type { Shift, UserProfile, Transaction } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface ShiftsSectionProps {
   storeId: number;
@@ -34,7 +35,17 @@ export default function ShiftsSection({ storeId, refreshTrigger, triggerRefresh,
     <div className="space-y-6 animate-fadeIn pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('shift.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('shift.title')}
+            <HelpBadge
+              text="Shift mencatat uang kas dari buka sampai tutup kasir, sehingga selisih kas bisa diketahui."
+              steps={[
+                'Klik Buka Shift dan masukkan modal awal (uang di laci).',
+                'Setelah selesai, klik Tutup Shift dan isi uang kas aktual.',
+                'Selisih akan dihitung otomatis.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('shift.subtitle')}</p>
         </div>
         {!openShift ? (

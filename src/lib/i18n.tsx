@@ -223,6 +223,17 @@ const dict: Record<string, { id: string; en: string }> = {
   'invt.statusOk': { id: 'Aman', en: 'OK' },
   'invt.statusLow': { id: 'Menipis', en: 'Low' },
   'invt.statusOut': { id: 'Habis', en: 'Out' },
+  'invt.receiveTab': { id: 'Stok Masuk', en: 'Stock In' },
+
+  // ── Stok Masuk (receive) ──
+  'recv.outlet': { id: 'Outlet Aktif', en: 'Active Outlet' },
+  'recv.searchPlaceholder': { id: 'Scan atau ketik barcode / SKU / nama, lalu Enter', en: 'Scan or type barcode / SKU / name, then Enter' },
+  'recv.listTitle': { id: 'Daftar Penerimaan', en: 'Receipt List' },
+  'recv.empty': { id: 'Belum ada barang. Scan barcode untuk menambah.', en: 'No items yet. Scan a barcode to add.' },
+  'recv.note': { id: 'Catatan Penerimaan (opsional)', en: 'Receipt Note (optional)' },
+  'recv.totalItems': { id: 'Total barang', en: 'Total items' },
+  'recv.save': { id: 'Simpan Stok Masuk', en: 'Save Stock In' },
+  'recv.pickVariant': { id: 'Pilih Varian', en: 'Choose Variant' },
 
   // ── Laporan ──
   'rpt.title': { id: 'Laporan & Rekap Bulanan', en: 'Reports & Monthly Recap' },

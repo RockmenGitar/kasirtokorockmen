@@ -4,6 +4,7 @@ import { dbService, PERMISSION_OPTIONS, DEFAULT_CASHIER_PERMISSIONS } from '../.
 import type { Cashier, UserProfile, Store } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface StaffSectionProps {
   storeId: number;
@@ -205,7 +206,17 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('staff.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
+            {t('staff.title')}
+            <HelpBadge
+              text="Kelola outlet, akun pemilik (owner), dan kasir beserta hak aksesnya."
+              steps={[
+                'Tab Outlet: tambah/ubah cabang.',
+                'Tambah Owner untuk akun dengan akses penuh.',
+                'Tambah Staff untuk kasir, lalu centang outlet & menu yang boleh diakses.',
+              ]}
+            />
+          </h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('staff.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
