@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Camera, Store, Mail, ShieldCheck, ImagePlus, Loader2, Trash2, Pencil, Check, X } from 'lucide-react';
 import { authService, type UserProfile, type Store as StoreInfo } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface ProfileSectionProps {
   currentUser: UserProfile;
@@ -75,6 +76,7 @@ function OutletInfoCard({ storeInfo, storeLoading, editable = false, storeId, on
           <Store className="h-3.5 w-3.5 text-indigo-500" />
         </div>
         <h4 className="font-bold text-slate-800 text-sm leading-none">{t('prof.outletInfo')}</h4>
+        <HelpBadge text={t('help.prof.outlet')} />
       </div>
 
       {storeLoading ? (
@@ -155,7 +157,7 @@ function CashierProfile({ currentUser }: ProfileSectionProps) {
   return (
     <div className="max-w-xl space-y-6 animate-fadeIn pb-12">
       <div>
-        <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('prof.cashierTitle')}</h2>
+        <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">{t('prof.cashierTitle')}<HelpBadge text={t('help.prof.identity')} /></h2>
         <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('prof.cashierSubtitle')}</p>
       </div>
 
@@ -268,7 +270,7 @@ function AdminProfile({ currentUser, avatarUrl, onAvatarChange, onStoreNameChang
   return (
     <div className="max-w-xl space-y-6 animate-fadeIn pb-12">
       <div>
-        <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('prof.adminTitle')}</h2>
+        <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">{t('prof.adminTitle')}<HelpBadge text={t('help.prof.identity')} /></h2>
         <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('prof.adminSubtitle')}</p>
       </div>
 

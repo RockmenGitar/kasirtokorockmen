@@ -148,6 +148,10 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
       </div>
 
       {/* Metric cards */}
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.summary')}</h4>
+        <HelpBadge text={t('help.rpt.metric')} />
+      </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard icon={Receipt} label={t('rpt.grossSales')} value={fmt(metrics.grossSales)} delta={delta(metrics.netSales, prevMetrics.netSales)} color="indigo" />
         <MetricCard icon={Wallet} label={t('rpt.netSales')} value={fmt(metrics.netSales)} delta={delta(metrics.netSales, prevMetrics.netSales)} color="blue" />
@@ -155,6 +159,10 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
         <MetricCard icon={TrendingUp} label={t('rpt.netProfit')} value={fmt(metrics.netProfit)} delta={delta(metrics.netProfit, prevMetrics.netProfit)} color="violet" />
       </div>
 
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('rpt.mini')}</h4>
+        <HelpBadge text={t('help.rpt.mini')} />
+      </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MiniStat icon={Undo2} label={t('rpt.refund')} value={fmt(metrics.totalRefund)} />
         <MiniStat icon={Package} label={t('rpt.unitsSold')} value={String(metrics.unitsSold)} />
@@ -164,7 +172,7 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
 
       {/* Daily chart */}
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-        <h3 className="font-bold text-slate-800 text-sm mb-4">{t('rpt.dailySales')} — {MONTH_NAMES[month]} {year}</h3>
+        <h3 className="font-bold text-slate-800 text-sm mb-4 flex items-center gap-1.5">{t('rpt.dailySales')} — {MONTH_NAMES[month]} {year}<HelpBadge text={t('help.rpt.daily')} /></h3>
         <div className="flex items-end gap-1 h-48">
           {daily.map((d, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
@@ -179,7 +187,7 @@ export default function ReportsSection({ storeId, refreshTrigger }: ReportsSecti
 
       {/* P&L summary */}
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-        <h3 className="font-bold text-slate-800 text-sm mb-4">{t('rpt.pnl')}</h3>
+        <h3 className="font-bold text-slate-800 text-sm mb-4 flex items-center gap-1.5">{t('rpt.pnl')}<HelpBadge text={t('help.rpt.pnl')} /></h3>
         <div className="space-y-2.5">
           <PnLRow label={t('rpt.grossSales')} value={metrics.grossSales} />
           <PnLRow label={`(−) ${t('rpt.discount')}`} value={-metrics.totalDiscount} negative />

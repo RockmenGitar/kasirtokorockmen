@@ -1,6 +1,7 @@
 import { UserCheck, Crown } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   transactions: Transaction[];
@@ -44,7 +45,7 @@ export default function CashierPerformanceTable({ transactions }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.cashierPerf')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.cashierPerf')}<HelpBadge text={t('help.sales.cashierPerf')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Ranking kasir berdasarkan pendapatan</p>
         </div>
         <div className="h-8 w-8 bg-violet-50 rounded-xl flex items-center justify-center">

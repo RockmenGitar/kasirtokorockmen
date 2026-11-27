@@ -12,6 +12,7 @@ import BarcodeScannerModal from '../../components/modal/BarcodeScannerModal';
 import { useBarcodeScanner } from '../../lib/barcode/useBarcodeScanner';
 import { findBarcodeMatches } from '../../lib/barcode/lookup';
 import { beepSuccess, beepError } from '../../lib/barcode/beep';
+import HelpBadge from '../../components/ui/HelpBadge';
 import { Camera } from 'lucide-react';
 
 interface POSSectionProps {
@@ -201,7 +202,17 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
     return promo.type === 'percentage' ? Math.round(rawSubtotal * (promo.value / 100)) : promo.value;
   }, [activePromos, selectedPromoId, cart]);
 
-  const effectiveTransactionDiscount = transactionDiscount + promoDiscount;
+  // Diskon khusus pelanggan terpilih (persen) — otomatis saat pelanggan dipilih.
+  const customerDiscount = useMemo(() => {
+    if (!customerId) return 0;
+    const cust = customers.find(c => c.id === customerId);
+    const pct = cust?.discount_percent || 0;
+    if (pct <= 0) return 0;
+    const rawSubtotal = cart.reduce((s, i) => s + i.product.price * i.quantity - (i.discount || 0), 0);
+    return Math.round(rawSubtotal * (pct / 100));
+  }, [customers, customerId, cart]);
+
+  const effectiveTransactionDiscount = transactionDiscount + promoDiscount + customerDiscount;
 
   const totals = useMemo(
     () => calcPosTotals(
@@ -316,7 +327,7 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
       <div className="flex-1 space-y-6 py-8">
         <div className="flex justify-between items-center shrink-0">
           <div>
-            <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('pos.title')}</h2>
+            <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">{t('pos.title')}<HelpBadge text={t('help.pos.header')} /></h2>
             <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('pos.subtitle')}</p>
           </div>
           <div className="flex items-center gap-2">

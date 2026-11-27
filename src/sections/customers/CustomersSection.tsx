@@ -68,7 +68,11 @@ export default function CustomersSection({ storeId, refreshTrigger, triggerRefre
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* List */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-slate-50">
+          <div className="p-4 border-b border-slate-50 space-y-3">
+            <div className="flex items-center gap-1.5">
+              <h4 className="font-bold text-slate-800 text-sm leading-none">{t('cust.title')}</h4>
+              <HelpBadge text={t('help.cust.list')} />
+            </div>
             <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('cust.searchPlaceholder')}
@@ -90,6 +94,11 @@ export default function CustomersSection({ storeId, refreshTrigger, triggerRefre
                   <p className="text-sm font-bold text-slate-800 truncate">{c.name}</p>
                   <p className="text-[11px] text-slate-400 font-medium truncate">{c.phone || c.email || '—'}</p>
                 </div>
+                {(c.discount_percent || 0) > 0 && (
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md">
+                    {c.discount_percent}%
+                  </span>
+                )}
                 {(c.points || 0) > 0 && (
                   <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-md flex items-center gap-1">
                     <Star className="h-3 w-3" /> {c.points}
@@ -106,6 +115,10 @@ export default function CustomersSection({ storeId, refreshTrigger, triggerRefre
 
         {/* Detail */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+          <div className="flex items-center gap-1.5 mb-3">
+            <h4 className="font-bold text-slate-800 text-sm leading-none">{t('cust.history')}</h4>
+            <HelpBadge text={t('help.cust.detail')} />
+          </div>
           {!selected ? (
             <div className="h-full flex flex-col items-center justify-center text-slate-300 py-16">
               <Users className="h-8 w-8 mb-2" />
@@ -170,14 +183,17 @@ function CustomerModal({ customer, storeId, onClose, onDone }: {
   const [email, setEmail] = useState(customer?.email || '');
   const [address, setAddress] = useState(customer?.address || '');
   const [note, setNote] = useState(customer?.note || '');
+  const [discount, setDiscount] = useState(customer?.discount_percent ? String(customer.discount_percent) : '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const submit = async () => {
     if (!name.trim()) { setError('Nama wajib diisi.'); return; }
+    const disc = Number(discount);
+    if (disc < 0 || disc > 100) { setError('Diskon pelanggan harus antara 0–100%.'); return; }
     setSaving(true); setError('');
     try {
-      const payload = { name: name.trim(), phone, email, address, note };
+      const payload = { name: name.trim(), phone, email, address, note, discount_percent: disc || 0 };
       if (customer) await dbService.updateCustomer(customer.id, payload, storeId);
       else await dbService.addCustomer(payload, storeId);
       onDone();
@@ -201,6 +217,9 @@ function CustomerModal({ customer, storeId, onClose, onDone }: {
             <Field label={t('cust.email')}><input value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" /></Field>
           </div>
           <Field label={t('cust.address')}><input value={address} onChange={e => setAddress(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" /></Field>
+          <Field label={t('cust.discount')}>
+            <input type="number" min={0} max={100} value={discount} onChange={e => setDiscount(e.target.value)} placeholder="0" className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+          </Field>
           <Field label={t('common.note')}><input value={note} onChange={e => setNote(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" /></Field>
         </div>
         {error && <p className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-3.5 py-2.5 mt-3">{error}</p>}

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { dbService } from '../../lib/db';
 import type { Transaction, UserProfile } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
+import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 // Import modular sections
 import InvoicesTable from './InvoicesTable';
@@ -16,6 +18,7 @@ interface InvoicesSectionProps {
 }
 
 export default function InvoicesSection({ storeId, refreshTrigger, setActiveTab, currentUser, triggerRefresh }: InvoicesSectionProps) {
+  const { t } = useI18n();
   const [transactions] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeStatusTab, setActiveStatusTab] = useState('All');
@@ -30,7 +33,7 @@ export default function InvoicesSection({ storeId, refreshTrigger, setActiveTab,
       {/* Table grid directory (Left Side) */}
       <div className="flex-1 space-y-6 py-8">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">Penjualan</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">Penjualan<HelpBadge text={t('help.inv.section')} /></h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">Riwayat penjualan, status, dan cetak ulang struk.</p>
         </div>
 

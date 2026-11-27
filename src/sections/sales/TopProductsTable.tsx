@@ -1,6 +1,7 @@
 import { Trophy, Package } from 'lucide-react';
 import type { TopProductRow } from './SalesSection';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   data: TopProductRow[];
@@ -28,7 +29,7 @@ export default function TopProductsTable({ data }: Props) {
           <Trophy className="h-3.5 w-3.5 text-amber-500" />
         </div>
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.topProducts')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.topProducts')}<HelpBadge text={t('help.sales.topProducts')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">Berdasarkan jumlah unit terjual</p>
         </div>
       </div>

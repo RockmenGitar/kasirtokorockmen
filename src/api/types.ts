@@ -107,6 +107,7 @@ export interface Customer {
   address?: string;
   note?: string;
   points?: number;          // poin loyalitas (opsional)
+  discount_percent?: number; // diskon khusus pelanggan (%) — otomatis di kasir
   store_id: number;
 }
 

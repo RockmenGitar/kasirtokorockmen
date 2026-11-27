@@ -336,9 +336,10 @@ export default function CartDrawer({
             <div className="relative">
               <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
               <input
-                type="number"
-                value={paidAmount || ''}
-                onChange={(e) => setPaidAmount(Number(e.target.value) || 0)}
+                type="text"
+                inputMode="numeric"
+                value={paidAmount ? new Intl.NumberFormat('id-ID').format(paidAmount) : ''}
+                onChange={(e) => setPaidAmount(Number(e.target.value.replace(/\D/g, '')) || 0)}
                 placeholder="Rp 0"
                 className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-indigo-500"
               />

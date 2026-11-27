@@ -4,6 +4,7 @@ import { dbService, authService } from '../../lib/db';
 import type { Transaction, Product } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 import KPIOverview from './KPIOverview';
 import RevenueChart from './RevenueChart';
 import CategoryDonut from './CategoryDonut';
@@ -350,7 +351,7 @@ export default function SalesSection({ storeId, refreshTrigger }: Props) {
       {/* Header + Time Range Filter */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('sales.title')}</h2>
+          <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">{t('sales.title')}<HelpBadge text={t('help.sales.header')} /></h2>
           <p className="text-slate-400 text-xs mt-1.5 font-medium">
             {t('sales.showing')} <span className="text-slate-600 font-semibold">{rangeLabel}</span>
           </p>

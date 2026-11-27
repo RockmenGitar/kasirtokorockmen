@@ -87,6 +87,10 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
       {/* Filter + total */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-white border border-slate-100 rounded-2xl p-4 shadow-sm flex flex-wrap items-end gap-3">
+          <div className="w-full flex items-center gap-1.5 mb-1">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('common.search')}</span>
+            <HelpBadge text={t('help.exp.filter')} />
+          </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.from')}</label>
             <input type="date" value={from} onChange={e => setFrom(e.target.value)} className="bg-slate-50 border border-slate-150 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
@@ -100,7 +104,7 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
         <div className="bg-indigo-600 rounded-2xl p-4 shadow-sm text-white flex items-center gap-3">
           <Wallet className="h-8 w-8 opacity-80" />
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider opacity-80">{t('exp.total')}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider opacity-80 flex items-center gap-1.5">{t('exp.total')}<HelpBadge text={t('help.exp.total')} /></p>
             <p className="text-xl font-extrabold leading-tight">{fmt(total)}</p>
           </div>
         </div>
@@ -118,6 +122,10 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
       )}
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-50 flex items-center gap-1.5">
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('exp.title')}</h4>
+          <HelpBadge text={t('help.exp.table')} />
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

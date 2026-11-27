@@ -1,6 +1,7 @@
 import { PieChart } from 'lucide-react';
 import type { CategoryPoint } from './SalesSection';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   data: CategoryPoint[];
@@ -37,7 +38,7 @@ export default function CategoryDonut({ data, totalOrders }: Props) {
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.byCategory')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.byCategory')}<HelpBadge text={t('help.sales.category')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Distribusi penjualan</p>
         </div>
         <div className="h-8 w-8 bg-violet-50 rounded-xl flex items-center justify-center">

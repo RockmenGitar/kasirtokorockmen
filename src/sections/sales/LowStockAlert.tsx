@@ -1,6 +1,7 @@
 import { AlertTriangle, PackageX } from 'lucide-react';
 import type { Product } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   products: Product[];
@@ -17,7 +18,7 @@ export default function LowStockAlert({ products, threshold = 5 }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.lowStock')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.lowStock')}<HelpBadge text={t('help.sales.lowStock')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Produk dengan stok ≤ {threshold} unit</p>
         </div>
         <div className="h-8 w-8 bg-rose-50 rounded-xl flex items-center justify-center">

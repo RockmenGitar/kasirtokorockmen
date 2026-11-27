@@ -2,6 +2,7 @@ import { Search, ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import type { Product, Category } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 function ProductImage({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
@@ -67,6 +68,11 @@ export default function ProductGrid({
   return (
     <div className="flex-1 flex flex-col gap-6">
       
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('menu.pos')}</h4>
+        <HelpBadge text={t('help.pos.grid')} />
+      </div>
+
       {/* Top Search & Tabs */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-stretch sm:items-center">
         {/* Search */}

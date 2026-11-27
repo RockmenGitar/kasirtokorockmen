@@ -1,6 +1,7 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   currentPeriod: Transaction[];
@@ -35,7 +36,7 @@ export default function PeriodComparison({ currentPeriod, previousPeriod, rangeL
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
       <div className="flex items-start justify-between mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.periodCompare')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.periodCompare')}<HelpBadge text={t('help.sales.period')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">
             {rangeLabel} {t('sales.vsPrevPeriod')}
           </p>

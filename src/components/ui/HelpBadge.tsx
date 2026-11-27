@@ -43,6 +43,8 @@ export default function HelpBadge({ text, steps, align = 'left', className = '' 
       <button
         type="button"
         aria-label="Bantuan"
+        aria-expanded={open}
+        title="Bantuan"
         onClick={() => setOpen(v => !v)}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}

@@ -1,6 +1,7 @@
 import { BarChart2 } from 'lucide-react';
 import type { ChartPoint } from './SalesSection';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   data: ChartPoint[];
@@ -38,7 +39,7 @@ export default function RevenueChart({ data, timeRange }: Props) {
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.revenue')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.revenue')}<HelpBadge text={t('help.sales.revenue')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">
             {t('common.total')}: <span className="font-bold text-slate-600">{fmtIDR(totalAmount)}</span>
           </p>

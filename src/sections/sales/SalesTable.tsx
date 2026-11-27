@@ -1,6 +1,7 @@
 import { ClipboardList, Receipt } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   transactions: Transaction[];
@@ -34,7 +35,7 @@ export default function SalesTable({ transactions }: Props) {
           <ClipboardList className="h-3.5 w-3.5 text-indigo-500" />
         </div>
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.salesList')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.salesList')}<HelpBadge text={t('help.sales.table')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">
             {transactions.length} transaksi dalam periode ini
           </p>

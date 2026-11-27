@@ -65,6 +65,7 @@ export default function ShiftsSection({ storeId, refreshTrigger, triggerRefresh,
           <div className="flex items-center gap-2 mb-4">
             <Clock className="h-4 w-4" />
             <span className="text-xs font-bold uppercase tracking-wider">{t('shift.active')} — {openShift.cashier_name}</span>
+            <span className="text-white/70"><HelpBadge text={t('help.shift.active')} /></span>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Stat label={t('shift.openingCash')} value={fmt(openShift.opening_cash)} />
@@ -81,8 +82,9 @@ export default function ShiftsSection({ storeId, refreshTrigger, triggerRefresh,
 
       {/* History */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-50">
+        <div className="px-4 py-3 border-b border-slate-50 flex items-center gap-1.5">
           <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('shift.history')}</h3>
+          <HelpBadge text={t('help.shift.history')} />
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

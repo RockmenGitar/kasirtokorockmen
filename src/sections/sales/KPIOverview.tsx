@@ -1,6 +1,7 @@
 import { Wallet, ShoppingBag, BarChart3, Package } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   transactions: Transaction[];
@@ -52,7 +53,12 @@ export default function KPIOverview({ transactions }: Props) {
   ] as const;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div className="space-y-3">
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.summary')}</h4>
+        <HelpBadge text={t('help.sales.kpi')} />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {metrics.map((m, i) => {
         const Icon = m.icon;
         return (
@@ -71,6 +77,7 @@ export default function KPIOverview({ transactions }: Props) {
           </div>
         );
       })}
+      </div>
     </div>
   );
 }

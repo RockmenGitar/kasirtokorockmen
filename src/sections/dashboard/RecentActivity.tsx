@@ -5,6 +5,7 @@ import type { Transaction } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { txStatusKey, paymentKey } from '../../lib/labels';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface RecentActivityProps {
   storeId: number;
@@ -36,6 +37,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
         <h4 className="font-extrabold text-slate-800 text-sm leading-none flex items-center gap-2">
           <History className="h-4.5 w-4.5 text-indigo-650" />
           <span>{t('dash.recentActivity')}</span>
+          <HelpBadge text={t('help.dash.recent')} />
         </h4>
         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Live Feed</span>
       </div>

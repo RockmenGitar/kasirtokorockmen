@@ -3,6 +3,8 @@ import { X, Printer, Receipt, Undo2 } from 'lucide-react';
 import { authService } from '../../lib/db';
 import type { Transaction, UserProfile } from '../../lib/db';
 import RefundModal from '../../components/modal/RefundModal';
+import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface ReceiptSidebarProps {
   transaction: Transaction | null;
@@ -13,6 +15,7 @@ interface ReceiptSidebarProps {
 }
 
 export default function ReceiptSidebar({ transaction, onClose, storeId, currentUser, onRefresh }: ReceiptSidebarProps) {
+  const { t } = useI18n();
   const [storeName, setStoreName] = useState('KasirToko');
   const [showRefund, setShowRefund] = useState(false);
 
@@ -92,6 +95,7 @@ export default function ReceiptSidebar({ transaction, onClose, storeId, currentU
         <h3 className="font-bold text-slate-800 text-xs tracking-wider uppercase mb-5 flex items-center gap-2">
           <Receipt className="h-4 w-4 text-indigo-500" />
           Struk Pembayaran
+          <HelpBadge text={t('help.inv.receipt')} />
         </h3>
         
         {/* Thermal paper panel */}

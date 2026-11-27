@@ -3,6 +3,7 @@ import type { Transaction } from '../../lib/db';
 import { fmtIDR } from '../../lib/format';
 import { useI18n } from '../../lib/i18n';
 import { paymentKey } from '../../lib/labels';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface Props {
   transactions: Transaction[];
@@ -43,7 +44,7 @@ export default function PaymentMethodCard({ transactions }: Props) {
     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col h-full min-h-[340px]">
       <div className="flex justify-between items-start mb-5">
         <div>
-          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.byPayment')}</h4>
+          <h4 className="font-bold text-slate-800 text-sm leading-none flex items-center gap-1.5">{t('sales.byPayment')}<HelpBadge text={t('help.sales.payment')} /></h4>
           <p className="text-[10px] text-slate-400 font-medium mt-1">Distribusi Tunai vs QRIS</p>
         </div>
         <div className="h-8 w-8 bg-indigo-50 rounded-xl flex items-center justify-center">

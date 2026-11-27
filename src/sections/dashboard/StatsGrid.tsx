@@ -3,6 +3,7 @@ import { dbService } from '../../lib/db';
 import type { Transaction, Cashier } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface StatsGridProps {
   storeId: number;
@@ -60,7 +61,12 @@ export default function StatsGrid({ storeId, refreshTrigger }: StatsGridProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fadeIn">
+    <div className="space-y-3 animate-fadeIn">
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.summary')}</h4>
+        <HelpBadge text={t('help.dash.kpi')} />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {statCards.map((c, i) => {
         const Icon = c.icon;
         return (
@@ -77,6 +83,7 @@ export default function StatsGrid({ storeId, refreshTrigger }: StatsGridProps) {
           </div>
         );
       })}
+      </div>
     </div>
   );
 }

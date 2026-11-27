@@ -2,6 +2,7 @@ import { Search, Plus } from 'lucide-react';
 import type { Transaction } from '../../lib/db';
 import { txStatusKey, paymentKey } from '../../lib/labels';
 import { useI18n } from '../../lib/i18n';
+import HelpBadge from '../../components/ui/HelpBadge';
 
 interface InvoicesTableProps {
   transactions: Transaction[];
@@ -59,6 +60,11 @@ export default function InvoicesTable({
 
   return (
     <div className="flex-1 flex flex-col gap-6">
+
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('inv.title')}</h4>
+        <HelpBadge text={t('help.inv.section')} />
+      </div>
 
       {/* Search & Tabs */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">

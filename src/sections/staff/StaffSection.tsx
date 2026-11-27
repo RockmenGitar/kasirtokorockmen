@@ -253,6 +253,11 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
       </div>
 
       {tab === 'outlet' && (
+        <div className="space-y-3">
+        <div className="flex items-center gap-1.5">
+          <h4 className="font-bold text-slate-800 text-sm leading-none">{t('staff.tabOutlet')}</h4>
+          <HelpBadge text={t('help.staff.outlet')} />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {outlets.length === 0 ? (
             <div className="col-span-full bg-slate-50 border border-slate-100/80 rounded-3xl p-10 text-center text-slate-400 text-xs font-semibold">{t('staff.noOutlet')}</div>
@@ -275,6 +280,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
             </div>
           ))}
         </div>
+        </div>
       )}
 
       {/* Owner list */}
@@ -282,6 +288,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
         <div>
         <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
           <Crown className="h-3.5 w-3.5 text-amber-500" /> {t('staff.ownerSection')}
+          <HelpBadge text={t('help.staff.owner')} />
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {owners.length === 0 ? (
@@ -325,6 +332,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
       <div>
         <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> {t('staff.cashierSection')}
+          <HelpBadge text={t('help.staff.cashier')} />
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {cashiers.length === 0 ? (

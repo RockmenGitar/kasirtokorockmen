@@ -71,6 +71,10 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
       </div>
 
       {/* Stats */}
+      <div className="flex items-center gap-1.5">
+        <h4 className="font-bold text-slate-800 text-sm leading-none">{t('sales.summary')}</h4>
+        <HelpBadge text={t('help.invt.stats')} />
+      </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Boxes} label={t('invt.totalProducts')} value={String(stats.total)} color="indigo" />
         <StatCard icon={ArrowUpCircle} label={t('invt.safeStock')} value={String(stats.inStock)} color="emerald" />

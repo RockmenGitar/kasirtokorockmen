@@ -100,7 +100,7 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
 
       {/* Sinkron produk antar-outlet */}
       {outlets.length >= 2 && (
-        <Card icon={Copy} title={t('set.syncTitle')}>
+        <Card icon={Copy} title={t('set.syncTitle')} help={t('help.set.sync')}>
           <p className="text-[11px] text-slate-400 font-medium mb-3 leading-relaxed">
             {t('set.syncDesc')}
           </p>
@@ -127,7 +127,7 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
       )}
 
       {/* Pajak & biaya */}
-      <Card icon={Receipt} title={t('set.taxTitle')}>
+      <Card icon={Receipt} title={t('set.taxTitle')} help={t('help.set.tax')}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.taxRate')}</label>
@@ -149,7 +149,7 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
       </Card>
 
       {/* Struk & penomoran */}
-      <Card icon={Receipt} title={t('set.receiptTitle')}>
+      <Card icon={Receipt} title={t('set.receiptTitle')} help={t('help.set.receipt')}>
         <div className="space-y-4">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.orderPrefix')}</label>
@@ -167,7 +167,7 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
       </Card>
 
       {/* Pembayaran */}
-      <Card icon={CreditCard} title={t('set.paymentTitle')}>
+      <Card icon={CreditCard} title={t('set.paymentTitle')} help={t('help.set.payment')}>
         <div className="flex flex-wrap gap-2">
           {ALL_PAYMENT_METHODS.map(m => {
             const active = settings.payment_methods.includes(m);
@@ -182,7 +182,7 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
       </Card>
 
       {/* Zona waktu & notifikasi */}
-      <Card icon={Clock} title={t('set.tzTitle')}>
+      <Card icon={Clock} title={t('set.tzTitle')} help={t('help.set.tz')}>
         <div className="space-y-4">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.tz')}</label>
@@ -204,12 +204,13 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
   );
 }
 
-function Card({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) {
+function Card({ icon: Icon, title, children, help, steps }: { icon: any; title: string; children: React.ReactNode; help?: string; steps?: string[] }) {
   return (
     <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
       <div className="flex items-center gap-2.5 mb-4">
         <div className="h-8 w-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><Icon className="h-4 w-4" /></div>
         <h3 className="font-bold text-slate-800 text-sm">{title}</h3>
+        {help && <HelpBadge text={help} steps={steps} />}
       </div>
       {children}
     </div>
