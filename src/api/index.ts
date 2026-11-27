@@ -12,6 +12,7 @@ export { customerService } from './customers';
 export { promoService } from './promos';
 export { shiftService } from './shifts';
 export { refundService } from './refunds';
+export { debtService } from './debts';
 export { settingsService } from './settings';
 
 import { authService } from './auth';
@@ -26,6 +27,7 @@ import { customerService } from './customers';
 import { promoService } from './promos';
 import { shiftService } from './shifts';
 import { refundService } from './refunds';
+import { debtService } from './debts';
 import { settingsService } from './settings';
 
 export const dbService = {
@@ -87,6 +89,12 @@ export const dbService = {
   getRefunds:          refundService.getRefunds.bind(refundService),
   addRefund:           refundService.addRefund.bind(refundService),
   getRefundedAmount:   refundService.getRefundedAmountByOrder.bind(refundService),
+
+  // debts (kasbon)
+  getDebts:            debtService.getDebts.bind(debtService),
+  addDebt:             debtService.addDebt.bind(debtService),
+  payDebt:             debtService.payDebt.bind(debtService),
+  deleteDebt:          debtService.deleteDebt.bind(debtService),
 
   // settings
   getSettings:         settingsService.getSettings.bind(settingsService),

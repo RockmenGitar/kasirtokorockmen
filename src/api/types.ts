@@ -157,6 +157,32 @@ export interface Refund {
   store_id: number;
 }
 
+export interface Debt {
+  id: string;
+  created_at?: string;
+  customer_id?: string;
+  customer_name: string;
+  transaction_id?: string;
+  order_id?: string;
+  amount: number;         // total utang awal
+  paid_amount: number;    // sudah dibayar
+  status: 'unpaid' | 'partial' | 'paid';
+  note?: string;
+  due_date?: string;
+  store_id: number;
+  user_name?: string;
+}
+
+export interface DebtPayment {
+  id: string;
+  created_at?: string;
+  debt_id: string;
+  amount: number;
+  note?: string;
+  user_name?: string;
+  store_id: number;
+}
+
 export interface StoreSettings {
   store_id: number;
   tax_rate: number;             // persen, mis. 11
@@ -183,7 +209,7 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   receipt_footer: 'Terima kasih atas kunjungan Anda',
   order_prefix: 'ORD',
   low_stock_threshold: 5,
-  payment_methods: ['Cash', 'QRIS', 'Transfer'],
+  payment_methods: ['Cash', 'QRIS', 'Transfer', 'Kasbon'],
   notification_stock: true,
 };
 

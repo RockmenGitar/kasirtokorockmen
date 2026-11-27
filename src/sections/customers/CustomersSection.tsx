@@ -1,20 +1,22 @@
 import { useMemo, useState } from 'react';
 import { Plus, Pencil, Trash2, X, Loader2, Search, Users, Star } from 'lucide-react';
 import { dbService } from '../../lib/db';
-import type { Customer, Transaction } from '../../lib/db';
+import type { Customer, Transaction, UserProfile } from '../../lib/db';
 import { useStoreData } from '../../hooks/useStoreData';
 import { useI18n } from '../../lib/i18n';
 import HelpBadge from '../../components/ui/HelpBadge';
+import DebtsPanel from './DebtsPanel';
 
 interface CustomersSectionProps {
   storeId: number;
   refreshTrigger: number;
   triggerRefresh?: () => void;
+  currentUser: UserProfile;
 }
 
 const fmt = (n: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Math.round(n || 0));
 
-export default function CustomersSection({ storeId, refreshTrigger, triggerRefresh }: CustomersSectionProps) {
+export default function CustomersSection({ storeId, refreshTrigger, triggerRefresh, currentUser }: CustomersSectionProps) {
   const { t } = useI18n();
   const [customers] = useStoreData<Customer[]>(dbService.getCustomers, storeId, refreshTrigger, []);
   const [transactions] = useStoreData<Transaction[]>(dbService.getTransactions, storeId, refreshTrigger, []);
@@ -64,6 +66,13 @@ export default function CustomersSection({ storeId, refreshTrigger, triggerRefre
           <Plus className="h-3.5 w-3.5" /> {t('cust.add')}
         </button>
       </div>
+
+      <DebtsPanel
+        storeId={storeId}
+        refreshTrigger={refreshTrigger}
+        triggerRefresh={triggerRefresh}
+        currentUser={currentUser}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* List */}

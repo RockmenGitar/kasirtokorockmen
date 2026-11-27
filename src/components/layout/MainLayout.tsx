@@ -123,7 +123,7 @@ export default function MainLayout({ currentUser, onLogout }: MainLayoutProps) {
     invoices: <Invoices storeId={activeStoreId} refreshTrigger={refreshTrigger} setActiveTab={setActiveTab} currentUser={currentUser} triggerRefresh={triggerRefresh} />,
     catalog: <Catalog storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
     inventory: <Inventory storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,
-    customers: <Customers storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
+    customers: <Customers storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,
     promos: <Promos storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} />,
     sales: <Sales storeId={activeStoreId} refreshTrigger={refreshTrigger} />,
     expenses: <Expenses storeId={activeStoreId} refreshTrigger={refreshTrigger} triggerRefresh={triggerRefresh} currentUser={currentUser} />,

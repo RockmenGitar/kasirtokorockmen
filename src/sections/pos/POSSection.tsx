@@ -249,6 +249,12 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
   const handleCheckoutSubmit = async () => {
     if (cart.length === 0) return;
 
+    const isKasbon = paymentMethod === 'Kasbon';
+    if (isKasbon && !customerId) {
+      alert('Kasbon perlu pelanggan terdaftar. Pilih/isi pelanggan yang ada di menu Pelanggan.');
+      return;
+    }
+
     const prefix = settings.order_prefix || 'ORD';
     const invoiceNo = `#${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -281,14 +287,32 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
       cogs,
       payment_method: paymentMethod,
       order_type: settings.payment_methods ? 'Retail' : 'Retail',
-      status: 'Success',
-      paid_amount: paymentMethod === 'Cash' ? (paidAmount || totals.grandTotal) : totals.grandTotal,
+      status: isKasbon ? 'Pending' : 'Success',
+      paid_amount: isKasbon ? 0 : (paymentMethod === 'Cash' ? (paidAmount || totals.grandTotal) : totals.grandTotal),
       change_amount: paymentMethod === 'Cash' ? totals.change : 0,
       store_id: storeId,
       items,
     };
 
     const newTx = await dbService.createTransaction(transactionPayload, storeId);
+
+    // Kasbon: catat utang pelanggan
+    if (isKasbon) {
+      const cust = customers.find(c => c.id === customerId);
+      try {
+        await dbService.addDebt({
+          customer_id: customerId,
+          customer_name: cust?.name || customerName.trim() || 'Umum',
+          transaction_id: newTx.id,
+          order_id: invoiceNo,
+          amount: totals.grandTotal,
+          note: `Kasbon ${invoiceNo}`,
+          user_name: currentUser.name || currentUser.email,
+        }, storeId);
+      } catch (err) {
+        alert(err instanceof Error ? err.message : 'Gagal mencatat kasbon.');
+      }
+    }
 
     // Decrement stock via inventory ledger (records movement + updates product)
     await Promise.all(cart.map(item => {
