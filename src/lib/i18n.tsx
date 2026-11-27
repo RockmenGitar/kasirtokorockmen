@@ -144,6 +144,23 @@ const dict: Record<string, { id: string; en: string }> = {
   'pos.scannerActive': { id: 'Scanner siap', en: 'Scanner ready' },
   'pos.scan': { id: 'Scan', en: 'Scan' },
 
+  // ── Popup pembayaran berhasil ──
+  'pay.doneTitle': { id: 'Pembayaran Berhasil', en: 'Payment Successful' },
+  'pay.doneSubtitle': { id: 'Transaksi sudah tersimpan.', en: 'Transaction has been saved.' },
+  'pay.invoiceNo': { id: 'No. Invoice', en: 'Invoice No.' },
+  'pay.customer': { id: 'Pelanggan', en: 'Customer' },
+  'pay.cashier': { id: 'Kasir', en: 'Cashier' },
+  'pay.method': { id: 'Metode Bayar', en: 'Payment Method' },
+  'pay.paid': { id: 'Uang Diterima', en: 'Cash Received' },
+  'pay.change': { id: 'Kembalian', en: 'Change' },
+  'pay.qrisTitle': { id: 'Scan QRIS untuk Membayar', en: 'Scan QRIS to Pay' },
+  'pay.qrisHint': { id: 'Minta pelanggan memindai kode ini dengan aplikasi e-wallet atau m-banking.', en: 'Ask the customer to scan this code with their e-wallet or banking app.' },
+  'pay.transferTitle': { id: 'Transfer ke Salah Satu Bank', en: 'Transfer to One of These Banks' },
+  'pay.transferHint': { id: 'Tunjukkan halaman ini ke pelanggan, lalu konfirmasi setelah transfer diterima.', en: 'Show this page to the customer, then confirm once the transfer is received.' },
+  'pay.thanks': { id: 'Terima kasih atas kunjungan Anda!', en: 'Thank you for your visit!' },
+  'pay.print': { id: 'Cetak Struk', en: 'Print Receipt' },
+  'pay.newOrder': { id: 'Transaksi Baru', en: 'New Transaction' },
+
   // ── Penjualan (Invoices) ──
   'inv.title': { id: 'Penjualan', en: 'Sales' },
   'inv.subtitle': { id: 'Riwayat penjualan, status, dan cetak ulang struk.', en: 'Sales history, statuses, and reprint receipts.' },

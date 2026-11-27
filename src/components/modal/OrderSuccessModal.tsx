@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Check, Printer, X } from 'lucide-react';
+import { Check, Printer, X, QrCode, Landmark, Banknote, Copy } from 'lucide-react';
 import { authService } from '../../lib/db';
 import type { Transaction } from '../../lib/db';
+import { useI18n } from '../../lib/i18n';
+import { paymentKey } from '../../lib/labels';
 import Modal from '../ui/Modal';
 
 interface OrderSuccessModalProps {
@@ -11,43 +13,53 @@ interface OrderSuccessModalProps {
   storeId: number;
 }
 
+const BANKS = [
+  { code: 'BCA', name: 'BCA', account: '1234567890' },
+  { code: 'MANDIRI', name: 'Mandiri', account: '1234567890' },
+  { code: 'BRI', name: 'BRI', account: '1234567890' },
+  { code: 'BNI', name: 'BNI', account: '1234567890' },
+  { code: 'CIMB', name: 'CIMB Niaga', account: '1234567890' },
+];
+
 export default function OrderSuccessModal({ isOpen, onClose, transaction, storeId }: OrderSuccessModalProps) {
+  const { t } = useI18n();
   const [storeName, setStoreName] = useState('KasirToko');
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchStoreName = async () => {
-      try {
-        const store = await authService.getStoreById(storeId);
-        if (store) setStoreName(store.name);
-      } catch (err) {
-        console.error('Failed to fetch store name:', err);
-      }
-    };
-    if (storeId) fetchStoreName();
+    if (!storeId) return;
+    authService.getStoreById(storeId).then(store => { if (store) setStoreName(store.name); }).catch(() => {});
   }, [storeId]);
 
   if (!transaction) return null;
 
   const grandTotal = Number(transaction.total_amount);
-  const subtotal = grandTotal / 1.11;
-  const taxAmount = grandTotal - subtotal;
+  const paid = Number(transaction.paid_amount ?? grandTotal);
+  const change = Number(transaction.change_amount ?? Math.max(0, paid - grandTotal));
+  const isCash = transaction.payment_method === 'Cash';
+  const isQris = transaction.payment_method === 'QRIS';
+  const isTransfer = transaction.payment_method === 'Transfer';
+
+  const qrisData = `https://kasirtoko.id/pay/${transaction.order_id}?amount=${Math.round(grandTotal)}`;
+  const qrisImage = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrisData)}`;
+
+  const fmt = (n: number) => new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
 
   const formatDate = (isoString?: string) => {
     if (!isoString) return '-';
-    const date = new Date(isoString);
-    return date.toLocaleString('id-ID', {
-      day: '2-digit', month: 'long', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', hour12: false,
+    return new Date(isoString).toLocaleString('id-ID', {
+      day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
+    });
+  };
+  const formatShortDate = (isoString?: string) => {
+    if (!isoString) return '-';
+    return new Date(isoString).toLocaleString('id-ID', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
     });
   };
 
-  const formatShortDate = (isoString?: string) => {
-    if (!isoString) return '-';
-    const date = new Date(isoString);
-    return date.toLocaleString('id-ID', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', hour12: false,
-    });
+  const copyText = (text: string, key: string) => {
+    try { navigator.clipboard?.writeText(text); setCopied(key); setTimeout(() => setCopied(null), 1500); } catch {}
   };
 
   const handlePrint = () => {
@@ -56,9 +68,6 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
       alert('Pop-up diblokir browser. Izinkan pop-up untuk mencetak struk.');
       return;
     }
-
-    const fmt = (n: number) => new Intl.NumberFormat('id-ID').format(Math.round(n));
-
     printWindow.document.write(`
       <html><head><title>Struk - ${transaction.order_id}</title>
       <style>
@@ -104,10 +113,9 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
         ${item.note ? `<div class="item-note"><span>Catatan:</span> ${item.note}</div>` : ''}
       `).join('')}
       <hr>
-      <div class="row"><span class="label">Subtotal</span><span>Rp ${fmt(subtotal)}</span></div>
-      <div class="row"><span class="label">PPN (11%)</span><span>Rp ${fmt(taxAmount)}</span></div>
-      <hr class="solid">
       <div class="row total-row"><span>TOTAL</span><span>Rp ${fmt(grandTotal)}</span></div>
+      ${isCash ? `<div class="row"><span class="label">Tunai</span><span>Rp ${fmt(paid)}</span></div>
+      <div class="row"><span class="label">Kembali</span><span>Rp ${fmt(change)}</span></div>` : ''}
       <hr>
       <div class="center" style="margin-top:10px">
         <div class="status">${transaction.status === 'Success' ? 'LUNAS' : transaction.status.toUpperCase()}</div>
@@ -119,52 +127,57 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
     `);
     printWindow.document.close();
     printWindow.print();
-    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Order Placement Success"
-      description="Transaction recorded isolated under store database."
+      title={t('pay.doneTitle')}
+      description={t('pay.doneSubtitle')}
     >
       <div className="text-center">
-        {/* Success icon */}
-        <div className="h-16 w-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100/50 shadow-inner animate-pulse">
+        {/* Icon sukses */}
+        <div className="h-16 w-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100/50">
           <Check className="h-8 w-8" />
         </div>
 
-        {/* Receipt box */}
-        <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl my-5 text-left space-y-2 text-xs">
+        {/* Ringkasan total */}
+        <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl my-4 text-left space-y-2 text-xs">
           <div className="flex justify-between font-semibold text-slate-500">
-            <span>Invoice No</span>
+            <span>{t('pay.invoiceNo')}</span>
             <span className="font-mono font-bold text-slate-700">{transaction.order_id}</span>
           </div>
           <div className="flex justify-between font-semibold text-slate-500">
-            <span>Customer Name</span>
+            <span>{t('pay.customer')}</span>
             <span className="font-bold text-slate-700">{transaction.customer_name}</span>
           </div>
           <div className="flex justify-between font-semibold text-slate-500">
-            <span>Subtotal</span>
-            <span className="font-semibold text-slate-600">Rp {new Intl.NumberFormat('id-ID').format(Math.round(subtotal))}</span>
-          </div>
-          <div className="flex justify-between font-semibold text-slate-500">
-            <span>PPN (11%)</span>
-            <span className="font-semibold text-slate-600">Rp {new Intl.NumberFormat('id-ID').format(Math.round(taxAmount))}</span>
-          </div>
-          <div className="flex justify-between font-semibold text-slate-500 pt-2 border-t border-slate-200">
-            <span>Total Paid</span>
-            <span className="font-extrabold text-slate-800">Rp {new Intl.NumberFormat('id-ID').format(Math.round(grandTotal))}</span>
-          </div>
-          <div className="flex justify-between font-semibold text-slate-500">
-            <span>Payment Method</span>
-            <span className="font-extrabold text-indigo-650 bg-indigo-50 px-1.5 py-0.5 rounded-md text-[10px] uppercase">
-              {transaction.payment_method}
+            <span>{t('pay.method')}</span>
+            <span className="font-extrabold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-md text-[10px] uppercase">
+              {t(paymentKey(transaction.payment_method))}
             </span>
           </div>
+          <div className="flex justify-between font-semibold text-slate-500 pt-2 border-t border-slate-200">
+            <span className="font-extrabold text-slate-700">{t('common.total')}</span>
+            <span className="font-extrabold text-slate-900 text-base">Rp {fmt(grandTotal)}</span>
+          </div>
 
-          {/* Items list */}
+          {/* Tunai: uang diterima & kembalian */}
+          {isCash && (
+            <>
+              <div className="flex justify-between font-semibold text-slate-500">
+                <span>{t('pay.paid')}</span>
+                <span className="font-semibold text-slate-600">Rp {fmt(paid)}</span>
+              </div>
+              <div className="flex justify-between items-center bg-emerald-50 border border-emerald-100 rounded-lg px-2.5 py-1.5">
+                <span className="font-bold text-emerald-700">{t('pay.change')}</span>
+                <span className="font-extrabold text-emerald-700 text-base">Rp {fmt(change)}</span>
+              </div>
+            </>
+          )}
+
+          {/* Detail item */}
           {transaction.items && transaction.items.length > 0 && (
             <div className="pt-3 mt-1 border-t border-slate-200 space-y-2">
               <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Detail Pesanan</span>
@@ -185,17 +198,46 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
           )}
         </div>
 
-        {/* QRIS mockup */}
-        {transaction.payment_method === 'QRIS' && (
+        {/* QRIS */}
+        {isQris && (
           <div className="pb-4">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-2">Scan QRIS Invoice</span>
-            <div className="h-32 w-32 bg-white border border-slate-150 rounded-2xl mx-auto flex items-center justify-center p-2 shadow-inner">
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://kasirtoko.id/invoice/ORD-9911"
-                alt="QRIS Mockup"
-                className="h-full w-full object-contain"
-              />
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider flex items-center justify-center gap-1.5 mb-1">
+              <QrCode className="h-3.5 w-3.5" /> {t('pay.qrisTitle')}
+            </span>
+            <p className="text-[10px] text-slate-400 mb-2 px-2">{t('pay.qrisHint')}</p>
+            <div className="h-44 w-44 bg-white border border-slate-200 rounded-2xl mx-auto flex items-center justify-center p-2 shadow-inner">
+              <img src={qrisImage} alt="QRIS" className="h-full w-full object-contain" />
             </div>
+            <p className="text-sm font-extrabold text-slate-800 mt-2">Rp {fmt(grandTotal)}</p>
+          </div>
+        )}
+
+        {/* Transfer: tombol bank */}
+        {isTransfer && (
+          <div className="pb-4 text-left">
+            <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+              <Landmark className="h-3.5 w-3.5" /> {t('pay.transferTitle')}
+            </span>
+            <p className="text-[10px] text-slate-400 mb-2">{t('pay.transferHint')}</p>
+            <div className="space-y-1.5">
+              {BANKS.map(b => (
+                <button
+                  key={b.code}
+                  onClick={() => copyText(b.account, b.code)}
+                  className="w-full flex items-center justify-between gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-100 rounded-xl px-3 py-2.5 cursor-pointer transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <Banknote className="h-4 w-4 text-slate-400" />
+                    <span className="text-xs font-bold text-slate-700">{b.name}</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-xs font-mono font-bold text-slate-800">{b.account}</span>
+                    <Copy className={`h-3.5 w-3.5 ${copied === b.code ? 'text-emerald-500' : 'text-slate-300'}`} />
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-slate-400 mt-2">Nominal: <span className="font-bold text-slate-700">Rp {fmt(grandTotal)}</span></p>
           </div>
         )}
 
@@ -205,13 +247,13 @@ export default function OrderSuccessModal({ isOpen, onClose, transaction, storeI
             className="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl cursor-pointer shadow-md transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
           >
             <Printer className="h-4 w-4" />
-            Cetak Struk
+            {t('pay.print')}
           </button>
           <button
             onClick={onClose}
-            title="Lanjut tanpa cetak"
-            className="h-full px-4 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold rounded-xl cursor-pointer transition-all hover:scale-[1.01] flex items-center justify-center"
+            className="px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl cursor-pointer transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
           >
+            {t('pay.newOrder')}
             <X className="h-4 w-4" />
           </button>
         </div>
