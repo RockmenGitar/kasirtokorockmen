@@ -76,7 +76,7 @@ export default function InvoicesTable({
             placeholder="Cari nomor struk atau nama pelanggan..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-650 shadow-xs"
+            className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 shadow-xs"
           />
         </div>
 
@@ -133,7 +133,7 @@ export default function InvoicesTable({
                     onClick={() => setSelectedTxId(tx.id)}
                     className={`cursor-pointer transition-colors duration-250 ${
                       selectedTxId === tx.id
-                        ? 'bg-indigo-50/20 border-l-2 border-indigo-650'
+                        ? 'bg-indigo-50/20 border-l-2 border-indigo-600'
                         : 'hover:bg-slate-50/30'
                     }`}
                   >

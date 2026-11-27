@@ -204,7 +204,7 @@ export default function StockReceive({ storeId, products, currentUser, store, on
                 }
               }}
               placeholder={t('recv.searchPlaceholder')}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
             />
           </div>
           <button
@@ -299,7 +299,7 @@ export default function StockReceive({ storeId, products, currentUser, store, on
                     step={1}
                     value={l.quantity || ''}
                     onChange={e => updateQty(l.key, Math.floor(Number(e.target.value) || 0))}
-                    className="w-20 bg-slate-50 border border-slate-150 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-800 text-center focus:outline-none focus:border-indigo-500"
+                    className="w-20 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-800 text-center focus:outline-none focus:border-indigo-500"
                   />
                   <button onClick={() => removeLine(l.key)} className="h-8 w-8 rounded-lg hover:bg-rose-50 hover:text-rose-500 text-slate-300 flex items-center justify-center cursor-pointer">
                     <Trash2 className="h-4 w-4" />
@@ -318,7 +318,7 @@ export default function StockReceive({ storeId, products, currentUser, store, on
                 value={note}
                 onChange={e => setNote(e.target.value)}
                 placeholder={t('common.optional')}
-                className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
               />
             </div>
             <div className="flex items-center justify-between">

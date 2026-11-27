@@ -99,7 +99,7 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('invt.searchPlaceholder')}
-                className="w-full bg-slate-50 border border-slate-150 rounded-xl pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500"
               />
             </div>
           </div>
@@ -272,12 +272,12 @@ function AdjustStockModal({ product, userName, threshold, onClose, onDone }: {
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{mode === 'opname' ? t('invt.actualQty') : t('invt.qty')}</label>
             <input type="number" value={qty} onChange={e => setQty(e.target.value)} placeholder="0"
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('invt.movementNote')}</label>
             <input type="text" value={reason} onChange={e => setReason(e.target.value)} placeholder={t('invt.notePlaceholder')}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
 

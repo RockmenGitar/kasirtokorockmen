@@ -247,7 +247,7 @@ export default function EditProductModal({
                   placeholder="https://contoh.com/gambar-produk.jpg"
                   value={imgUrl.startsWith('data:') ? '' : imgUrl}
                   onChange={(e) => handleUrlChange(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-300"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-300"
                 />
               ) : (
                 <div
@@ -288,7 +288,7 @@ export default function EditProductModal({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
           />
         </div>
 
@@ -308,7 +308,7 @@ export default function EditProductModal({
                   setPrice(new Intl.NumberFormat('id-ID').format(parseInt(digits)));
                 }
               }}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
             />
           </div>
           <div>
@@ -318,7 +318,7 @@ export default function EditProductModal({
               required
               value={qty}
               onChange={(e) => setQty(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
             />
           </div>
         </div>
@@ -329,7 +329,7 @@ export default function EditProductModal({
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
           >
             {categories.length > 0 ? (
               categories.map((cat) => (
@@ -346,17 +346,17 @@ export default function EditProductModal({
           <div>
             <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">SKU</label>
             <input type="text" value={sku} onChange={e => setSku(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Barcode</label>
             <input type="text" value={barcode} onChange={e => setBarcode(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Satuan</label>
             <input type="text" value={unit} onChange={e => setUnit(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
 
@@ -366,12 +366,12 @@ export default function EditProductModal({
             <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Harga Modal (Rp)</label>
             <input type="text" value={cost}
               onChange={e => { const d = e.target.value.replace(/\D/g, ''); setCost(d ? new Intl.NumberFormat('id-ID').format(parseInt(d)) : ''); }}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block mb-1.5">Stok Minimum</label>
             <input type="number" value={minStock} onChange={e => setMinStock(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
 
@@ -391,7 +391,7 @@ export default function EditProductModal({
             rows={2}
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
           />
         </div>
 

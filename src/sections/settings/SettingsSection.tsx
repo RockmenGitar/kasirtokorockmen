@@ -107,13 +107,13 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.sourceOutlet')}</label>
-              <select value={syncSource} onChange={e => setSyncSource(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
+              <select value={syncSource} onChange={e => setSyncSource(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
                 {outlets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.targetOutlet')}</label>
-              <select value={syncTarget} onChange={e => setSyncTarget(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
+              <select value={syncTarget} onChange={e => setSyncTarget(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
                 {outlets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
@@ -131,11 +131,11 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.taxRate')}</label>
-            <input type="number" value={settings.tax_rate} onChange={e => set('tax_rate', Number(e.target.value) || 0)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+            <input type="number" value={settings.tax_rate} onChange={e => set('tax_rate', Number(e.target.value) || 0)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.serviceRate')}</label>
-            <input type="number" value={settings.service_charge_rate} onChange={e => set('service_charge_rate', Number(e.target.value) || 0)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+            <input type="number" value={settings.service_charge_rate} onChange={e => set('service_charge_rate', Number(e.target.value) || 0)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
         <label className="flex items-center gap-2.5 mt-4 cursor-pointer">
@@ -144,7 +144,7 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
         </label>
         <div className="mt-4">
           <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.roundingTo')}</label>
-          <input type="number" value={settings.rounding} onChange={e => set('rounding', Number(e.target.value) || 0)} placeholder="0 = tanpa pembulatan" className="w-full sm:w-48 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+          <input type="number" value={settings.rounding} onChange={e => set('rounding', Number(e.target.value) || 0)} placeholder="0 = tanpa pembulatan" className="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
         </div>
       </Card>
 
@@ -153,15 +153,15 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
         <div className="space-y-4">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.orderPrefix')}</label>
-            <input value={settings.order_prefix || ''} onChange={e => set('order_prefix', e.target.value)} placeholder="ORD" className="w-full sm:w-48 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+            <input value={settings.order_prefix || ''} onChange={e => set('order_prefix', e.target.value)} placeholder="ORD" className="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.receiptHeader')}</label>
-            <input value={settings.receipt_header || ''} onChange={e => set('receipt_header', e.target.value)} placeholder="Nama/alamat toko" className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+            <input value={settings.receipt_header || ''} onChange={e => set('receipt_header', e.target.value)} placeholder="Nama/alamat toko" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.receiptFooter')}</label>
-            <input value={settings.receipt_footer || ''} onChange={e => set('receipt_footer', e.target.value)} placeholder="Terima kasih..." className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+            <input value={settings.receipt_footer || ''} onChange={e => set('receipt_footer', e.target.value)} placeholder="Terima kasih..." className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
         </div>
       </Card>
@@ -186,13 +186,13 @@ export default function SettingsSection({ storeId, refreshTrigger, triggerRefres
         <div className="space-y-4">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.tz')}</label>
-            <select value={settings.timezone} onChange={e => set('timezone', e.target.value)} className="w-full sm:w-64 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
+            <select value={settings.timezone} onChange={e => set('timezone', e.target.value)} className="w-full sm:w-64 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 cursor-pointer">
               {TIMEZONES.map(tz => <option key={tz} value={tz}>{tz}</option>)}
             </select>
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('set.lowStockThreshold')}</label>
-            <input type="number" value={settings.low_stock_threshold} onChange={e => set('low_stock_threshold', Number(e.target.value) || 0)} className="w-full sm:w-48 bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+            <input type="number" value={settings.low_stock_threshold} onChange={e => set('low_stock_threshold', Number(e.target.value) || 0)} className="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <label className="flex items-center gap-2.5 cursor-pointer">
             <input type="checkbox" checked={settings.notification_stock} onChange={e => set('notification_stock', e.target.checked)} className="h-4 w-4 rounded accent-indigo-600" />

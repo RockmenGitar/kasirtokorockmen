@@ -74,7 +74,7 @@ export default function EditStockModal({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-805 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-650"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
           />
         </div>
 
@@ -94,7 +94,7 @@ export default function EditStockModal({
                   setPrice(new Intl.NumberFormat('id-ID').format(parseInt(digits)));
                 }
               }}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-805 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-655"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
             />
           </div>
           <div>
@@ -104,7 +104,7 @@ export default function EditStockModal({
               required
               value={qty}
               onChange={(e) => setQty(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-805 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-655"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
             />
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function EditStockModal({
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-855 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-655"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
           >
             <option value="Makanan">🍽️ Makanan</option>
             <option value="Minuman">🥤 Minuman</option>
@@ -130,7 +130,7 @@ export default function EditStockModal({
             required
             value={imgUrl}
             onChange={(e) => setImgUrl(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-805 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-655"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
           />
         </div>
 
@@ -140,13 +140,13 @@ export default function EditStockModal({
             rows={2}
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-805 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-655 resize-none"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 resize-none"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl mt-4 cursor-pointer shadow-md shadow-indigo-155"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl mt-4 cursor-pointer shadow-md shadow-indigo-200"
         >
           Save Changes
         </button>

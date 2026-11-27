@@ -93,11 +93,11 @@ export default function ExpensesSection({ storeId, refreshTrigger, triggerRefres
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.from')}</label>
-            <input type="date" value={from} onChange={e => setFrom(e.target.value)} className="bg-slate-50 border border-slate-150 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
+            <input type="date" value={from} onChange={e => setFrom(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.to')}</label>
-            <input type="date" value={to} onChange={e => setTo(e.target.value)} className="bg-slate-50 border border-slate-150 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
+            <input type="date" value={to} onChange={e => setTo(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700" />
           </div>
           {(from || to) && <button onClick={() => { setFrom(''); setTo(''); }} className="text-[11px] font-bold text-slate-400 hover:text-rose-500 pb-2">Reset</button>}
         </div>
@@ -210,22 +210,22 @@ function ExpenseModal({ expense, storeId, userName, onClose, onDone }: {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.date')}</label>
-              <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+              <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
             </div>
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.category')}</label>
-              <select value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800">
+              <select value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800">
                 {EXPENSE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.amount')} (Rp)</label>
-            <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+            <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('exp.description')}</label>
-            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder={t('exp.descPlaceholder')} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder={t('exp.descPlaceholder')} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
         </div>
         {error && <p className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-3.5 py-2.5 mt-3">{error}</p>}

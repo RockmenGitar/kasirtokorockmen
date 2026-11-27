@@ -93,7 +93,7 @@ export default function ProductGrid({
                 }
               }
             }}
-            className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-650 shadow-xs transition-all"
+            className="w-full bg-white border border-slate-100 rounded-2xl pl-11 pr-6 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 shadow-xs transition-all"
           />
         </div>
 
@@ -140,7 +140,7 @@ export default function ProductGrid({
               >
                 <div>
                   {/* Photo with floating tags */}
-                  <div className="h-32 w-full rounded-2xl overflow-hidden relative border border-slate-50 shadow-inner bg-slate-55 bg-gradient-to-br from-slate-100 to-indigo-50/20">
+                  <div className="h-32 w-full rounded-2xl overflow-hidden relative border border-slate-50 shadow-inner bg-slate-50 bg-gradient-to-br from-slate-100 to-indigo-50/20">
                     <ProductImage src={p.image_url} alt={p.name} />
                     
                     {/* Floating stock pill */}
@@ -149,7 +149,7 @@ export default function ProductGrid({
                         ? 'bg-rose-500 text-white' 
                         : p.stock_status === 'Low Stock'
                           ? 'bg-amber-500 text-white'
-                          : 'bg-indigo-650 text-white'
+                          : 'bg-indigo-600 text-white'
                     }`}>
                       {isOutOfStock ? t('pos.soldOut') : `${t('pos.stockLeft')} ${p.stock_quantity}`}
                     </span>
@@ -161,7 +161,7 @@ export default function ProductGrid({
 
                 {/* Footer price */}
                 <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-50">
-                  <span className="text-xs font-bold text-slate-450 tracking-wide uppercase">{p.category}</span>
+                  <span className="text-xs font-bold text-slate-500 tracking-wide uppercase">{p.category}</span>
                   <span className="font-extrabold text-slate-800 text-sm">Rp {new Intl.NumberFormat('id-ID').format(p.price)}</span>
                 </div>
               </div>

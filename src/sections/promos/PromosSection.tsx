@@ -154,13 +154,13 @@ function PromoModal({ promo, storeId, onClose, onDone }: {
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('promo.name')}</label>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="Mis. Diskon Lebaran"
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('promo.type')}</label>
               <select value={type} onChange={e => setType(e.target.value as 'nominal' | 'percentage')}
-                className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800">
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800">
                 <option value="percentage">{t('promo.percent')}</option>
                 <option value="nominal">{t('promo.nominal')}</option>
               </select>
@@ -168,24 +168,24 @@ function PromoModal({ promo, storeId, onClose, onDone }: {
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('promo.value')} {type === 'percentage' ? '(%)' : '(Rp)'}</label>
               <input type="number" value={value} onChange={e => setValue(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
             </div>
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('promo.minPurchase')}</label>
             <input type="number" value={minPurchase} onChange={e => setMinPurchase(e.target.value)} placeholder="0"
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('promo.start')}</label>
               <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
             </div>
             <div>
               <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('promo.end')}</label>
               <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
             </div>
           </div>
           <label className="flex items-center gap-2.5 cursor-pointer">

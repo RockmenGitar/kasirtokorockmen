@@ -119,7 +119,7 @@ export default function RefundModal({ transaction, storeId, currentUser, onClose
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Alasan Refund *</label>
             <input value={reason} onChange={e => setReason(e.target.value)} placeholder="Mis. barang rusak / salah pesan"
-              className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500" />
           </div>
           <label className="flex items-center gap-2.5 cursor-pointer">
             <input type="checkbox" checked={restock} onChange={e => setRestock(e.target.checked)} className="h-4 w-4 rounded accent-indigo-600" />

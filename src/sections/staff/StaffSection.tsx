@@ -349,7 +349,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
             cashiers.map(cashier => (
               <div key={cashier.id} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between min-h-36 text-left">
                 <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-indigo-50 border border-indigo-100 text-indigo-650 rounded-xl flex items-center justify-center font-bold text-sm shrink-0">
+                  <div className="h-10 w-10 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-sm shrink-0">
                     {cashier.name.substring(0, 2).toUpperCase()}
                   </div>
                   <div className="text-left overflow-hidden">
@@ -438,7 +438,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                   return (
                     <button type="button" key={s.id} onClick={() => toggleStaffStore(s.id)}
                       className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold border cursor-pointer transition-all ${
-                        active ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-150 bg-slate-50 text-slate-500'
+                        active ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-500'
                       }`}>
                       <span className={`h-4 w-4 rounded-md border flex items-center justify-center ${active ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-300'}`}>
                         {active && <Check className="h-3 w-3" />}
@@ -462,7 +462,7 @@ export default function StaffSection({ storeId, refreshTrigger, triggerRefresh, 
                       key={opt.key}
                       onClick={() => togglePermission(opt.key)}
                       className={`flex items-start gap-2.5 text-left border rounded-xl px-3 py-2.5 transition-all cursor-pointer ${
-                        active ? 'border-indigo-300 bg-indigo-50/60' : 'border-slate-150 bg-slate-50 hover:bg-slate-100/60'
+                        active ? 'border-indigo-300 bg-indigo-50/60' : 'border-slate-200 bg-slate-50 hover:bg-slate-100/60'
                       }`}
                     >
                       <span className={`mt-0.5 h-4 w-4 rounded-md border flex items-center justify-center shrink-0 ${
@@ -606,7 +606,7 @@ function OutletModal({ outlet, onClose, onSave }: {
 }
 
 // ── Small presentational helpers ───────────────────────────────────────
-const INPUT_CLASS = 'w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-300';
+const INPUT_CLASS = 'w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-300';
 const BTN_PRIMARY = 'flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold text-[11px] px-4 py-2.5 rounded-xl cursor-pointer transition-all shadow-sm';
 const BTN_SECONDARY = 'flex items-center gap-1.5 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 text-slate-500 font-bold text-[11px] px-4 py-2.5 rounded-xl cursor-pointer transition-all';
 

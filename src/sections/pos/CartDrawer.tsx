@@ -167,7 +167,7 @@ export default function CartDrawer({
               <div className="flex gap-2.5 items-center">
                 <CartItemImage src={item.product.image_url} alt={item.product.name} />
                 <div className="flex-1 min-w-0">
-                  <span className="text-xs font-bold text-slate-750 block leading-tight truncate">{item.product.name}</span>
+                  <span className="text-xs font-bold text-slate-700 block leading-tight truncate">{item.product.name}</span>
                   <span className="text-[10px] font-extrabold text-indigo-600 mt-0.5 block">
                     Rp {fmt(item.product.price * item.quantity - (item.discount || 0))}
                     {item.discount ? <span className="text-rose-500 font-bold ml-1">-{fmt(item.discount)}</span> : null}

@@ -17,7 +17,7 @@ export default function Dashboard({ storeId, refreshTrigger }: DashboardProps) {
       {/* HEADER SECTION */}
       <div>
         <h2 className="font-extrabold text-slate-800 text-xl leading-none flex items-center gap-2">
-          <LayoutDashboard className="h-5 w-5 text-indigo-650" />
+          <LayoutDashboard className="h-5 w-5 text-indigo-600" />
           <span>{t('dash.title')}</span>
           <HelpBadge
             text="Ringkasan cepat performa outlet hari ini: total pendapatan, jumlah transaksi, dan aktivitas terbaru."

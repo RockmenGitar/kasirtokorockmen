@@ -98,7 +98,7 @@ export default function HelpSection({ role }: HelpSectionProps) {
               key={idx}
               className="bg-white border border-slate-100 rounded-3xl p-5 shadow-xs flex gap-4 group hover:border-indigo-100 hover:shadow-md hover:shadow-slate-100/50 transition-all duration-300"
             >
-              <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-650 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105">
+              <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105">
                 <Icon className="h-4 w-4" />
               </div>
               <div>

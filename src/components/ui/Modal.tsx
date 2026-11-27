@@ -42,7 +42,7 @@ export default function Modal({
         </button>
 
         {/* Header Block */}
-        <h3 className="font-extrabold text-slate-805 text-lg mb-1 leading-snug pr-8">{title}</h3>
+        <h3 className="font-extrabold text-slate-800 text-lg mb-1 leading-snug pr-8">{title}</h3>
         {description && (
           <p className="text-slate-400 text-xs mb-5 font-semibold leading-relaxed">{description}</p>
         )}

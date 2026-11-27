@@ -46,7 +46,7 @@ function App() {
     return (
       <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center font-sans">
         <div className="text-center space-y-4">
-          <div className="h-16 w-16 bg-indigo-650 rounded-3xl flex items-center justify-center text-white mx-auto animate-bounce shadow-xl shadow-indigo-155/20">
+          <div className="h-16 w-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white mx-auto animate-bounce shadow-xl shadow-indigo-200/20">
             <KasirIcon className="h-8 w-8" />
           </div>
           <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block animate-pulse">

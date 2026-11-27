@@ -106,7 +106,7 @@ export default function Sidebar({
       <button
         onClick={onToggleCollapsed}
         title={collapsed ? 'Perbesar sidebar' : 'Perkecil sidebar'}
-        className="absolute -right-3 top-9 h-6 w-6 bg-white border border-slate-150 rounded-full flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:border-indigo-200 shadow-sm cursor-pointer z-30 transition-colors"
+        className="absolute -right-3 top-9 h-6 w-6 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:border-indigo-200 shadow-sm cursor-pointer z-30 transition-colors"
       >
         {collapsed ? <ChevronsRight className="h-3.5 w-3.5" /> : <ChevronsLeft className="h-3.5 w-3.5" />}
       </button>

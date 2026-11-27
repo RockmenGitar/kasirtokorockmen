@@ -35,7 +35,7 @@ export default function RecentActivity({ storeId, refreshTrigger }: RecentActivi
       
       <div className="flex items-center justify-between">
         <h4 className="font-extrabold text-slate-800 text-sm leading-none flex items-center gap-2">
-          <History className="h-4.5 w-4.5 text-indigo-650" />
+          <History className="h-4.5 w-4.5 text-indigo-600" />
           <span>{t('dash.recentActivity')}</span>
           <HelpBadge text={t('help.dash.recent')} />
         </h4>

@@ -22,8 +22,8 @@ export default function Button({
 
   // Variant mappings
   const variantClasses = {
-    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-155',
-    secondary: 'border border-slate-150 text-slate-655 hover:bg-slate-50 shadow-xs',
+    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-200',
+    secondary: 'border border-slate-200 text-slate-655 hover:bg-slate-50 shadow-xs',
     danger: 'bg-rose-500 hover:bg-rose-600 text-white shadow-md shadow-rose-100',
     light: 'bg-slate-50 hover:bg-slate-100 text-slate-655 border border-slate-100',
     dark: 'bg-slate-800 hover:bg-slate-900 text-white shadow-sm'

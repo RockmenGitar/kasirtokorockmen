@@ -165,7 +165,7 @@ function OpenShiftModal({ storeId, currentUser, onClose, onDone }: {
     <Shell title={t('shift.open')} onClose={onClose}>
       <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('shift.openingCash')} (Rp)</label>
       <input type="number" value={openingCash} onChange={e => setOpeningCash(e.target.value)} placeholder="0"
-        className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
       {error && <p className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-3.5 py-2.5 mt-3">{error}</p>}
       <Footer onCancel={onClose} onConfirm={submit} saving={saving} label={t('shift.open')} />
     </Shell>
@@ -213,15 +213,15 @@ function CloseShiftModal({ shift, expectedCash, storeId, onClose, onDone }: {
         <div className="grid grid-cols-3 gap-2">
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('shift.actualCash')}</label>
-            <input type="number" value={actual} onChange={e => setActual(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-2.5 py-2.5 text-xs font-semibold text-slate-800" />
+            <input type="number" value={actual} onChange={e => setActual(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('shift.cashIn')}</label>
-            <input type="number" value={cashIn} onChange={e => setCashIn(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-2.5 py-2.5 text-xs font-semibold text-slate-800" />
+            <input type="number" value={cashIn} onChange={e => setCashIn(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
           <div>
             <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('shift.cashOut')}</label>
-            <input type="number" value={cashOut} onChange={e => setCashOut(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-2.5 py-2.5 text-xs font-semibold text-slate-800" />
+            <input type="number" value={cashOut} onChange={e => setCashOut(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs font-semibold text-slate-800" />
           </div>
         </div>
         {actual !== '' && (
@@ -232,7 +232,7 @@ function CloseShiftModal({ shift, expectedCash, storeId, onClose, onDone }: {
         )}
         <div>
           <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">{t('common.note')}</label>
-          <input value={note} onChange={e => setNote(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
+          <input value={note} onChange={e => setNote(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800" />
         </div>
       </div>
       {error && <p className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-3.5 py-2.5 mt-3">{error}</p>}
