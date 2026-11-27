@@ -8,9 +8,11 @@ import { useI18n } from '../../lib/i18n';
 import ProductGrid from './ProductGrid';
 import CartDrawer, { type CartItem } from './CartDrawer';
 import OrderSuccessModal from '../../components/modal/OrderSuccessModal';
+import BarcodeScannerModal from '../../components/modal/BarcodeScannerModal';
 import { useBarcodeScanner } from '../../lib/barcode/useBarcodeScanner';
 import { findByBarcode } from '../../lib/barcode/lookup';
 import { beepSuccess, beepError } from '../../lib/barcode/beep';
+import { Camera } from 'lucide-react';
 
 interface POSSectionProps {
   storeId: number;
@@ -48,6 +50,7 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
 
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [scanFeedback, setScanFeedback] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
   const feedbackTimer = useRef<number | null>(null);
 
@@ -295,10 +298,19 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
             <h2 className="font-extrabold text-slate-800 text-xl leading-none">{t('pos.title')}</h2>
             <p className="text-slate-400 text-xs mt-1.5 font-medium">{t('pos.subtitle')}</p>
           </div>
-          <span className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1.5 rounded-full text-[10px] font-bold">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            {t('pos.scannerActive')}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1.5 rounded-full text-[10px] font-bold">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              {t('pos.scannerActive')}
+            </span>
+            <button
+              onClick={() => setIsScannerOpen(true)}
+              className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3.5 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all"
+            >
+              <Camera className="h-4 w-4" />
+              {t('pos.scan')}
+            </button>
+          </div>
         </div>
 
         <ProductGrid
@@ -344,6 +356,12 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
         onClose={() => setIsSuccessOpen(false)}
         transaction={lastTransaction}
         storeId={storeId}
+      />
+
+      <BarcodeScannerModal
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onDetected={handleBarcodeScan}
       />
 
     </div>

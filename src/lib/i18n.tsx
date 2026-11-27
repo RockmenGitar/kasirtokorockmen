@@ -142,6 +142,7 @@ const dict: Record<string, { id: string; en: string }> = {
   'pos.soldOut': { id: 'Stok Habis', en: 'Sold Out' },
   'pos.noProducts': { id: 'Produk tidak ditemukan', en: 'No products found' },
   'pos.scannerActive': { id: 'Scanner siap', en: 'Scanner ready' },
+  'pos.scan': { id: 'Scan', en: 'Scan' },
 
   // ── Penjualan (Invoices) ──
   'inv.title': { id: 'Penjualan', en: 'Sales' },
