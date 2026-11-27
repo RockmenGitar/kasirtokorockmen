@@ -301,45 +301,56 @@ export default function POSSection({ storeId, refreshTrigger, triggerRefresh, cu
       items,
     };
 
-    const newTx = await dbService.createTransaction(transactionPayload, storeId);
+    try {
+      const newTx = await dbService.createTransaction(transactionPayload, storeId);
 
-    // Kasbon: catat utang pelanggan
-    if (isKasbon) {
-      const cust = customers.find(c => c.id === customerId);
-      try {
-        await dbService.addDebt({
-          customer_id: customerId,
-          customer_name: cust?.name || customerName.trim() || 'Umum',
-          transaction_id: newTx.id,
-          order_id: invoiceNo,
-          amount: totals.grandTotal,
-          note: `Kasbon ${invoiceNo}`,
-          user_name: currentUser.name || currentUser.email,
-        }, storeId);
-      } catch (err) {
-        alert(err instanceof Error ? err.message : 'Gagal mencatat kasbon.');
+      // Tampilkan popup SEJAK transaksi tersimpan, agar langkah stok/kasbon
+      // yang gagal tidak menghalangi popup pembayaran muncul.
+      setLastTransaction({ ...newTx, items: items as Transaction['items'] });
+      setIsSuccessOpen(true);
+
+      // Kasbon: catat utang pelanggan (non-fatal)
+      if (isKasbon) {
+        const cust = customers.find(c => c.id === customerId);
+        try {
+          await dbService.addDebt({
+            customer_id: customerId,
+            customer_name: cust?.name || customerName.trim() || 'Umum',
+            transaction_id: newTx.id,
+            order_id: invoiceNo,
+            amount: totals.grandTotal,
+            note: `Kasbon ${invoiceNo}`,
+            user_name: currentUser.name || currentUser.email,
+          }, storeId);
+        } catch (err) {
+          console.error('Gagal mencatat kasbon:', err);
+        }
       }
+
+      // Kurangi stok via ledger (non-fatal bila gagal)
+      try {
+        await Promise.all(cart.map(item => {
+          const fresh = products.find(p => p.id === item.product.id) || item.product;
+          return dbService.recordMovement({
+            product: fresh,
+            type: 'sale',
+            quantity: -item.quantity,
+            reference: invoiceNo,
+            reason: `Penjualan ${invoiceNo}`,
+            user_name: currentUser.name || currentUser.email,
+            threshold: settings.low_stock_threshold,
+          });
+        }));
+      } catch (err) {
+        console.error('Gagal mengurangi stok:', err);
+      }
+
+      // Keranjang dikosongkan saat popup ditutup (lihat handleCloseSuccess).
+      triggerRefresh();
+    } catch (err) {
+      console.error('Checkout gagal:', err);
+      alert(err instanceof Error ? `Transaksi gagal: ${err.message}` : 'Transaksi gagal disimpan.');
     }
-
-    // Decrement stock via inventory ledger (records movement + updates product)
-    await Promise.all(cart.map(item => {
-      const fresh = products.find(p => p.id === item.product.id) || item.product;
-      return dbService.recordMovement({
-        product: fresh,
-        type: 'sale',
-        quantity: -item.quantity,
-        reference: invoiceNo,
-        reason: `Penjualan ${invoiceNo}`,
-        user_name: currentUser.name || currentUser.email,
-        threshold: settings.low_stock_threshold,
-      });
-    }));
-
-    setLastTransaction({ ...newTx, items: items as Transaction['items'] });
-    setIsSuccessOpen(true);
-    // Keranjang dikosongkan saat popup ditutup (lihat handleCloseSuccess),
-    // agar kasir masih bisa melihat isi keranjang selama popup terbuka.
-    triggerRefresh();
   };
 
   return (
