@@ -55,20 +55,21 @@ export default function CatalogTable({
         <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="border-b border-slate-50 bg-slate-50/50 text-[10px] font-bold text-slate-400 tracking-wider uppercase">
-              <th className="px-6 py-4">Item Details</th>
-              <th className="px-6 py-4">Category</th>
-              <th className="px-6 py-4">Unit Price</th>
-              <th className="px-6 py-4 text-center">Stock Count</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-center">Actions</th>
+              <th className="px-6 py-4">{t('common.product')}</th>
+              <th className="px-6 py-4">{t('cat.barcode')} / {t('cat.code')}</th>
+              <th className="px-6 py-4">{t('common.category')}</th>
+              <th className="px-6 py-4">{t('cat.sellingPrice')}</th>
+              <th className="px-6 py-4 text-center">{t('common.stock')}</th>
+              <th className="px-6 py-4">{t('common.status')}</th>
+              <th className="px-6 py-4 text-center">{t('common.action')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-16 text-center text-slate-400">
-                  <p className="font-bold text-xs">No products found</p>
-                  <p className="text-[10px] text-slate-300 mt-1">Try adjusting your search or category filter.</p>
+                <td colSpan={7} className="px-6 py-16 text-center text-slate-400">
+                  <p className="font-bold text-xs">{t('pos.noProducts')}</p>
+                  <p className="text-[10px] text-slate-300 mt-1">{t('cat.searchPlaceholder')}</p>
                 </td>
               </tr>
             ) : (
@@ -81,8 +82,15 @@ export default function CatalogTable({
                       <TableImage src={p.image_url} alt={p.name} />
                       <div>
                         <span className="text-xs font-bold text-slate-800 block leading-tight">{p.name}</span>
+                        <span className="text-[10px] text-slate-400 font-medium">{p.unit || 'pcs'}</span>
                       </div>
                     </div>
+                  </td>
+
+                  {/* Barcode / SKU */}
+                  <td className="px-6 py-4">
+                    <span className="text-[11px] font-mono text-slate-600 block">{p.barcode || '—'}</span>
+                    {p.sku && <span className="text-[10px] font-mono text-slate-400 block">{p.sku}</span>}
                   </td>
 
                   {/* Category */}

@@ -31,36 +31,46 @@ export default function VariantEditor({ variants, onChange }: VariantEditorProps
       ) : (
         <div className="space-y-2">
           {variants.map(v => (
-            <div key={v.id} className="grid grid-cols-12 gap-1.5 items-center">
-              <input
-                value={v.name}
-                onChange={e => update(v.id, { name: e.target.value })}
-                placeholder="Nama (mis. L)"
-                className="col-span-4 bg-white border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
-              />
-              <input
-                value={v.sku || ''}
-                onChange={e => update(v.id, { sku: e.target.value })}
-                placeholder="SKU"
-                className="col-span-3 bg-white border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
-              />
-              <input
-                type="number"
-                value={v.price || ''}
-                onChange={e => update(v.id, { price: Number(e.target.value) || 0 })}
-                placeholder="Harga"
-                className="col-span-3 bg-white border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
-              />
-              <input
-                type="number"
-                value={v.stock_quantity || ''}
-                onChange={e => update(v.id, { stock_quantity: Number(e.target.value) || 0 })}
-                placeholder="Stok"
-                className="col-span-1 bg-white border border-slate-150 rounded-lg px-1.5 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
-              />
-              <button type="button" onClick={() => remove(v.id)} className="col-span-1 h-7 rounded-lg hover:bg-rose-50 hover:text-rose-500 text-slate-300 flex items-center justify-center cursor-pointer">
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
+            <div key={v.id} className="bg-white border border-slate-150 rounded-lg p-2 space-y-1.5">
+              <div className="grid grid-cols-12 gap-1.5 items-center">
+                <input
+                  value={v.name}
+                  onChange={e => update(v.id, { name: e.target.value })}
+                  placeholder="Nama (mis. L)"
+                  className="col-span-5 bg-slate-50 border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
+                />
+                <input
+                  value={v.sku || ''}
+                  onChange={e => update(v.id, { sku: e.target.value })}
+                  placeholder="SKU"
+                  className="col-span-4 bg-slate-50 border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
+                />
+                <input
+                  value={v.barcode || ''}
+                  onChange={e => update(v.id, { barcode: e.target.value })}
+                  placeholder="Barcode"
+                  className="col-span-3 bg-slate-50 border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+              <div className="grid grid-cols-12 gap-1.5 items-center">
+                <input
+                  type="number"
+                  value={v.price || ''}
+                  onChange={e => update(v.id, { price: Number(e.target.value) || 0 })}
+                  placeholder="Harga"
+                  className="col-span-5 bg-slate-50 border border-slate-150 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
+                />
+                <input
+                  type="number"
+                  value={v.stock_quantity || ''}
+                  onChange={e => update(v.id, { stock_quantity: Number(e.target.value) || 0 })}
+                  placeholder="Stok"
+                  className="col-span-3 bg-slate-50 border border-slate-150 rounded-lg px-1.5 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-indigo-500"
+                />
+                <button type="button" onClick={() => remove(v.id)} className="col-span-2 h-7 rounded-lg hover:bg-rose-50 hover:text-rose-500 text-slate-300 flex items-center justify-center gap-1 cursor-pointer text-[10px] font-bold">
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
           ))}
         </div>

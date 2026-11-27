@@ -81,7 +81,7 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
               <thead>
                 <tr className="text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-50">
                   <th className="text-left font-bold px-4 py-3">{t('common.product')}</th>
-                  <th className="text-left font-bold px-4 py-3">{t('cat.code')}</th>
+                  <th className="text-left font-bold px-4 py-3">{t('cat.barcode')} / {t('cat.code')}</th>
                   <th className="text-right font-bold px-4 py-3">{t('common.stock')}</th>
                   <th className="text-left font-bold px-4 py-3">{t('common.status')}</th>
                   <th className="text-right font-bold px-4 py-3">{t('common.action')}</th>
@@ -93,7 +93,10 @@ export default function InventorySection({ storeId, refreshTrigger, triggerRefre
                 ) : filteredProducts.map(p => (
                   <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50/50">
                     <td className="px-4 py-3 font-semibold text-slate-700">{p.name}</td>
-                    <td className="px-4 py-3 text-slate-400 font-mono text-xs">{p.sku || '—'}</td>
+                    <td className="px-4 py-3 text-slate-400 font-mono text-xs">
+                      <span className="block text-slate-600">{p.barcode || '—'}</span>
+                      {p.sku && <span className="block">{p.sku}</span>}
+                    </td>
                     <td className="px-4 py-3 text-right font-bold text-slate-800">{fmt(p.stock_quantity)} <span className="text-slate-400 font-medium text-xs">{p.unit || ''}</span></td>
                     <td className="px-4 py-3"><StockBadge qty={p.stock_quantity} threshold={threshold} /></td>
                     <td className="px-4 py-3 text-right">
